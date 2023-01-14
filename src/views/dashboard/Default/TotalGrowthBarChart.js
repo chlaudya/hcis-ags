@@ -19,15 +19,15 @@ import chartData from './chart-data/total-growth-bar-chart';
 const status = [
     {
         value: 'today',
-        label: 'Today'
+        label: 'Hari Ini'
     },
     {
         value: 'month',
-        label: 'This Month'
+        label: 'Bulan Ini'
     },
     {
         value: 'year',
-        label: 'This Year'
+        label: 'Tahun Ini'
     }
 ];
 
@@ -95,10 +95,10 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                                 <Grid item>
                                     <Grid container direction="column" spacing={1}>
                                         <Grid item>
-                                            <Typography variant="subtitle2">Total Growth</Typography>
+                                            <Typography variant="subtitle2">Chart Posisi & Lokasi</Typography>
                                         </Grid>
                                         <Grid item>
-                                            <Typography variant="h3">$2,324.00</Typography>
+                                            <Typography variant="h3">1.600 Karyawan</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>

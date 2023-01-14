@@ -1,10 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import MainCard from 'ui-component/cards/MainCard';
-import { Typography, IconButton } from '@material-ui/core';
-import { blue, red } from "@material-ui/core/colors";
-import AddKaryawan from './modalAdd';
-import { Delete, Edit } from '@material-ui/icons';
+import { Typography } from '@material-ui/core';
 
 const columns = [
     { field: 'id', headerName: 'NIP', width: 110 },
@@ -25,35 +22,6 @@ const columns = [
         headerName: 'Habis Kontrak',
         width: 180,
         
-    },
-    {
-        field: "action",
-        headerName: "Action",
-        width: 130,
-        renderCell: (cellValues) => {
-            return (
-                <>
-                    <IconButton
-                        color="secondary"
-                        aria-label="add an alarm"
-                        onClick={(event) =>
-                            this.handleModalDelete(event, cellValues)
-                        }
-                    >
-                        <Edit style={{ color: blue[900] }} />
-                    </IconButton>
-                    <IconButton
-                        color="warning"
-                        aria-label="add an alarm"
-                        onClick={(event) =>
-                            this.handleModalDelete(event, cellValues)
-                        }
-                    >
-                        <Delete style={{ color: red[900] }} />
-                    </IconButton>
-                </>
-            );
-        },
     }
 ];
 
@@ -69,10 +37,9 @@ const rows = [
     { id: '009', lastName: 'Roxie', firstName: 'Software Enggineer', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
 ];
 
-const Karyawan = () => (
-    <MainCard title="Data Karyawan">
+const KontrakHabis = () => (
+    <MainCard title="Data Kontrak Habis">
         <Typography variant="body2">
-            <AddKaryawan />
             <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
                     rows={rows}
@@ -85,4 +52,4 @@ const Karyawan = () => (
     </MainCard>
 );
 
-export default Karyawan;
+export default KontrakHabis;
