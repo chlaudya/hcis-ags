@@ -21,31 +21,31 @@ const pages = {
     type: 'group',
     children: [
         {
-            id: 'authentication',
+            id: 'karyawan',
             title: 'Karyawan',
             type: 'collapse',
             icon: icons.IconUsers,
             children: [
                 {
-                    id: 'login3',
+                    id: 'karyawan',
                     title: 'Input Karyawan',
                     type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
+                    url: '/human-capital/karyawan',
+                    breadcrumbs: false
                 },
                 {
-                    id: 'register3',
+                    id: 'kontrak-karyawan',
                     title: 'Input Kontrak',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/human-capital/kontrak',
+                    breadcrumbs: false
                 },
                 {
-                    id: 'register3',
+                    id: 'cv-karyawan',
                     title: 'Data CV',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/human-capital/data-cv',
+                    breadcrumbs: false
                 }
             ]
         },
