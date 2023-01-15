@@ -22,95 +22,95 @@ const utilities = {
     type: 'group',
     children: [
         {
-            id: 'util-shadow',
+            id: 'template',
             title: 'Template',
             type: 'item',
-            url: '/utils/util-shadow',
+            url: '/utilities/templates',
             icon: icons.IconTemplate,
             breadcrumbs: false
         },
         {
-            id: 'icons',
+            id: 'master',
             title: 'Master',
             type: 'collapse',
             icon: icons.IconAdjustments,
             children: [
                 {
-                    id: 'tabler-icons',
+                    id: 'mjabatan',
                     title: 'Jabatan',
                     type: 'item',
-                    url: '/icons/tabler-icons',
+                    url: '/utilities/master-jabatan',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'munitbisnis',
                     title: 'Unit Bisnis',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/master-unit-bisnis',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'mtempattugas',
                     title: 'Tempat Tugas',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/master-tempat-tugas',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'mtunjangan',
                     title: 'Tunjangan',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/master-tunjangan',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'miuran',
                     title: 'Iuran',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/master-iuran',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'mpajak',
                     title: 'Pajak',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/master-pajak',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'msimpwajib',
                     title: 'Sim. Wajib',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/master-simpwajib',
                     breadcrumbs: false
                 }
             ]
         },
         {
-            id: 'icons',
+            id: 'usermanajemen',
             title: 'User Manajemen',
             type: 'collapse',
             icon: icons.IconUserCheck,
             children: [
                 {
-                    id: 'tabler-icons',
+                    id: 'userdata',
                     title: 'User Data',
                     type: 'item',
-                    url: '/icons/tabler-icons',
+                    url: '/utilities/user-manajemen-userdata',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'groupakses',
                     title: 'Group User',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/user-manajemen-group-akses',
                     breadcrumbs: false
                 },
                 {
-                    id: 'material-icons',
+                    id: 'hakakses',
                     title: 'Hak Ases User',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    url: '/utilities/user-manajemen-hak-akses',
                     breadcrumbs: false
                 }
             ]

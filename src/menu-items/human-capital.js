@@ -50,60 +50,67 @@ const pages = {
             ]
         },
         {
-            id: 'authentication',
+            id: 'koperasi',
             title: 'Koperasi',
             type: 'collapse',
             icon: icons.IconCoinBitcoin,
             children: [
                 {
-                    id: 'login3',
+                    id: 'simpwajib',
                     title: 'Simp. Wajib',
                     type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
+                    url: '/human-capital/koperasi-simpwajib',
+                    breadcrumbs: false
                 },
                 {
-                    id: 'register3',
+                    id: 'simpsukarela',
                     title: 'Simp. Sukarela',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/human-capital/koperasi-simpsukarela',
+                    breadcrumbs: false
                 },
                 {
-                    id: 'register3',
+                    id: 'datapkpl',
                     title: 'Data PKPL',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/human-capital/koperasi-pkpl',
+                    breadcrumbs: false
                 }
             ]
         },
         {
-            id: 'authentication',
+            id: 'payroll',
             title: 'Payroll',
             type: 'collapse',
             icon: icons.IconBrandPaypal,
             children: [
                 {
-                    id: 'login3',
-                    title: 'Simp. Wajib',
+                    id: 'tagihangaji',
+                    title: 'Tagihan Gaji',
                     type: 'item',
-                    url: '/pages/login/login3',
-                    target: true
+                    url: '/human-capital/payroll-tagihangaji',
+                    breadcrumbs: false
                 },
                 {
-                    id: 'register3',
-                    title: 'Simp. Sukarela',
+                    id: 'generate-slip',
+                    title: 'Generate Slip',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/human-capital/payroll-generate-slip',
+                    breadcrumbs: false
                 },
                 {
-                    id: 'register3',
-                    title: 'Data PKPL',
+                    id: 'generatesliptransfer',
+                    title: 'Generate Slip Transfer',
                     type: 'item',
-                    url: '/pages/register/register3',
-                    target: true
+                    url: '/human-capital/payroll-generate-slip-transfer',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'blashtingemail',
+                    title: 'Blashting Email Slip',
+                    type: 'item',
+                    url: '/human-capital/payroll-blashting-email-slip',
+                    breadcrumbs: false
                 }
             ]
         }
