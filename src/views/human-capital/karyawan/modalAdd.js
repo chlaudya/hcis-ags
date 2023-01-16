@@ -14,7 +14,11 @@ const customStyles = {
         width: '60%',
         height: '70%'
     },
-    overlay: { zIndex: 1000 }
+    overlay: { zIndex: 1000 },
+    upload:{
+        top:'8px',
+        left:'5px'
+    }
 };
 
 
@@ -127,6 +131,11 @@ function KaryawanModal() {
                                 <MenuItem value={'0'}>In Active</MenuItem>
                             </Select>
                         </FormControl>
+                        <Button variant="contained" component="label" style={customStyles.upload}>
+                            Upload CV
+                            <input hidden accept="pdf/*" multiple type="file" />                          
+                        </Button>
+                        <TextField disabled label="File name" id="k-tlahir" size="small" />
                     </div>
                 </Box>
                 <hr />

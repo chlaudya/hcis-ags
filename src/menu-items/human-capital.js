@@ -39,13 +39,6 @@ const pages = {
                     type: 'item',
                     url: '/human-capital/kontrak',
                     breadcrumbs: false
-                },
-                {
-                    id: 'cv-karyawan',
-                    title: 'Data CV',
-                    type: 'item',
-                    url: '/human-capital/data-cv',
-                    breadcrumbs: false
                 }
             ]
         },
@@ -56,24 +49,24 @@ const pages = {
             icon: icons.IconCoinBitcoin,
             children: [
                 {
-                    id: 'simpwajib',
-                    title: 'Simp. Wajib',
+                    id: 'inquirykop',
+                    title: 'Inquiry Koperasi',
                     type: 'item',
-                    url: '/human-capital/koperasi-simpwajib',
+                    url: '/human-capital/koperasi/inquiry',
                     breadcrumbs: false
                 },
                 {
-                    id: 'simpsukarela',
-                    title: 'Simp. Sukarela',
+                    id: 'pengajuankoperasi',
+                    title: 'Pengajuan',
                     type: 'item',
-                    url: '/human-capital/koperasi-simpsukarela',
+                    url: '/human-capital/koperasi/pengajuan',
                     breadcrumbs: false
                 },
                 {
-                    id: 'datapkpl',
-                    title: 'Data PKPL',
+                    id: 'bayarkop',
+                    title: 'Bayar Koperasi',
                     type: 'item',
-                    url: '/human-capital/koperasi-pkpl',
+                    url: '/human-capital/koperasi/bayar',
                     breadcrumbs: false
                 }
             ]

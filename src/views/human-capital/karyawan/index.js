@@ -19,6 +19,7 @@ const columns = [
     { field: 'status', headerName: 'Status', width: 180 },
     { field: 'noBPJSKet', headerName: 'BPJS Ket', width: 180 },
     { field: 'noBPJSKes', headerName: 'BPJS Kes', width: 180 },
+    { field: 'cv', headerName: 'CV', width: 150 },
     {
         field: "action",
         headerName: "Action",
@@ -51,15 +52,15 @@ const columns = [
 ];
 
 const rows = [
-    { id: '001', lastName: 'Snow', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '002', lastName: 'Lannister', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '003', lastName: 'Lannister', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '004', lastName: 'Stark', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '005', lastName: 'Targaryen', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '006', lastName: 'Melisandre', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '007', lastName: 'Clifford', firstName: 'Perempuan', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '008', lastName: 'Frances', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
-    { id: '009', lastName: 'Roxie', firstName: 'Laki - Laki', age: 'Bandung', habiskontrak: '01-12-2014', mulaikontrak: '01-12-2014' },
+    { id: '001', lastName: 'Snow', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '002', lastName: 'Lannister', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '003', lastName: 'Lannister', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '004', lastName: 'Stark', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '005', lastName: 'Targaryen', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '006', lastName: 'Melisandre', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '007', lastName: 'Clifford', firstName: 'Perempuan', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '008', lastName: 'Frances', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
+    { id: '009', lastName: 'Roxie', firstName: 'Laki - Laki', age: 'Bandung', pendidikan: 'Strata 1', kontak: '08884233822',email:'test@mail.com', status: 'K1', noBPJSKet: '87343948934', noBPJSKes: '74343422', cv:'download' },
 ];
 
 const Karyawan = () => (

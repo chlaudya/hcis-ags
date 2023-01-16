@@ -5,7 +5,6 @@ import Loadable from "ui-component/Loadable";
 
 const HCKaryawan = Loadable(lazy(() => import('views/human-capital/karyawan')));
 const HCKontrak = Loadable(lazy(() => import('views/human-capital/kontrak')));
-const HCDataCV = Loadable(lazy(() => import('views/human-capital/datacv')));
 
 const UtilitiesRoutes = {
     path: '/',
@@ -21,39 +20,39 @@ const UtilitiesRoutes = {
         },
         {
             path: '/utilities/master-unit-bisnis',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/master-tempat-tugas',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/master-tunjangan',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/master-iuran',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/master-pajak',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/master-simpwajib',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/user-manajemen-userdata',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/user-manajemen-group-akses',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/utilities/user-manajemen-hak-akses',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         }
     ]
 };

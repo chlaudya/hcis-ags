@@ -6,7 +6,8 @@ import Loadable from "ui-component/Loadable";
 // View Routing
 const HCKaryawan = Loadable(lazy(() => import('views/human-capital/karyawan')));
 const HCKontrak = Loadable(lazy(() => import('views/human-capital/kontrak')));
-const HCDataCV = Loadable(lazy(() => import('views/human-capital/datacv')));
+const HCTagihanGaji = Loadable(lazy(() => import('views/human-capital/payroll/tagihan-gaji')));
+const HCGenSlipGaji = Loadable(lazy(() => import('views/human-capital/payroll/generate-slip')));
 
 const HumanCapitalRoutes = {
     path: '/',
@@ -21,36 +22,32 @@ const HumanCapitalRoutes = {
             element: <HCKontrak/>
         },
         {
-            path: '/human-capital/data-cv',
-            element : <HCDataCV />
+            path: '/human-capital/koperasi/inquiry',
+            element : <HCKaryawan />
         },
         {
-            path: '/human-capital/koperasi-simpwajib',
-            element : <HCDataCV />
+            path: '/human-capital/koperasi/pengajuan',
+            element : <HCKaryawan />
         },
         {
-            path: '/human-capital/koperasi-simpsukarela',
-            element : <HCDataCV />
-        },
-        {
-            path: '/human-capital/koperasi-pkpl',
-            element : <HCDataCV />
+            path: '/human-capital/koperasi/bayar',
+            element : <HCKaryawan />
         },
         {
             path: '/human-capital/payroll-tagihangaji',
-            element : <HCDataCV />
+            element : <HCTagihanGaji />
         },
         {
             path: '/human-capital/payroll-generate-slip',
-            element : <HCDataCV />
+            element : <HCGenSlipGaji />
         },
         {
             path: '/human-capital/payroll-generate-slip-transfer',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         },
         {
             path: '/human-capital/payroll-blashting-email-slip',
-            element : <HCDataCV />
+            element : <HCKaryawan />
         }
     ]
 };
