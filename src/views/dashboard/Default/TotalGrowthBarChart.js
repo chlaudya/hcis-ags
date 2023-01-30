@@ -1,18 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 // material-ui
 import { Grid, MenuItem, TextField, Typography, useTheme } from '@material-ui/core';
-
 // third-party
 import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
-
 // project imports
 import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-
 // chart data
 import chartData from './chart-data/total-growth-bar-chart';
 

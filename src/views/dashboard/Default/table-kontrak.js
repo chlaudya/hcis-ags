@@ -1,5 +1,8 @@
 import React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SecurityIcon from '@mui/icons-material/Security';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import MainCard from 'ui-component/cards/MainCard';
 import { Typography } from '@material-ui/core';
 
@@ -21,8 +24,28 @@ const columns = [
         field: 'habiskontrak',
         headerName: 'Habis Kontrak',
         width: 180,
-        
-    }
+    },
+    {
+        field: 'actions',
+        type: 'actions',
+        width: 80,
+        getActions: (params) => [
+            <GridActionsCellItem
+                icon={<FileCopyIcon />}
+                label="Perpanjang"
+                showInMenu
+            />,
+            <GridActionsCellItem
+                icon={<SecurityIcon />}
+                label="Resign"
+                showInMenu
+            />,
+            <GridActionsCellItem
+                icon={<DeleteIcon />}
+                label="Delete"
+            />,
+        ],
+    },
 ];
 
 const rows = [
