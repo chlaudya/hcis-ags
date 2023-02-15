@@ -12,22 +12,28 @@ import themes from './themes';
 
 // project imports
 import NavigationScroll from './layout/NavigationScroll';
+import KeycloakProvider from './keycloak/KeycloakProvider';
+// import { ModalProvider } from 'ui-component/modal';
 
 // ===========================|| APP ||=========================== //
 
 const App = () => {
-    const customization = useSelector((state) => state.customization);
+  const customization = useSelector((state) => state.customization);
 
-    return (
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={themes(customization)}>
-                <CssBaseline />
-                <NavigationScroll>
-                    <Routes />
-                </NavigationScroll>
-            </ThemeProvider>
-        </StyledEngineProvider>
-    );
+  return (
+    <KeycloakProvider>
+      {/* <ModalProvider> */}
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={themes(customization)}>
+          <CssBaseline />
+          <NavigationScroll>
+            <Routes />
+          </NavigationScroll>
+        </ThemeProvider>
+      </StyledEngineProvider>
+      {/* </ModalProvider> */}
+    </KeycloakProvider>
+  );
 };
 
 export default App;
