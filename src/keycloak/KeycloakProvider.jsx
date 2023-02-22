@@ -1,35 +1,41 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
+import CircularProgress from '@mui/material/CircularProgress';
 import keycloakParam from '../keycloak';
-// import { store } from '../../redux/storeConfig/store';
-// import { loginWithToken } from '../../redux/actions/auth/loginActions';
-// import { history } from '../../history';
-// import Spinner from '../../components/@vuexy/spinner/Loading-spinner';
 
 const KeycloakProvider = ({ children }) => {
-  const onInitError = () => {
-    // history.push('/error/sso');
-    console.log('error ygy')
-  };
+  const navigate = useNavigate();
+
   return (
     <ReactKeycloakProvider
       authClient={keycloakParam}
-      // LoadingComponent={<Spinner />}
+      LoadingComponent={
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh'
+          }}
+        >
+          <CircularProgress />
+        </div>
+      }
       initOptions={{
         onLoad: 'login-required',
         checkLoginIframe: true,
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/silent-check-sso.html',
+        silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html'
       }}
-      onEvent={(event, error) => {
+      onEvent={(_event, error) => {
         if (error) {
-          onInitError();
+          navigate('/error-sso');
         }
       }}
       onTokens={(res) => {
-        // store.dispatch(loginWithToken(res.token));
-        // store.dispatch(ListClient());
-      }}>
+        console.log(res);
+      }}
+    >
       {children}
     </ReactKeycloakProvider>
   );
