@@ -1,10 +1,12 @@
-import React, { lazy } from "react";
+import React, { lazy } from 'react';
 
-import MainLayout from "layout/MainLayout";
-import Loadable from "ui-component/Loadable";
+import MainLayout from 'layout/MainLayout';
+import Loadable from 'ui-component/Loadable';
 
 const HCKaryawan = Loadable(lazy(() => import('views/human-capital/karyawan')));
 const HCKontrak = Loadable(lazy(() => import('views/human-capital/kontrak')));
+
+const Jabatan = Loadable(lazy(() => import('views/utilities/master/jabatan')));
 
 const UtilitiesRoutes = {
     path: '/',
@@ -12,47 +14,47 @@ const UtilitiesRoutes = {
     children: [
         {
             path: '/utilities/templates',
-            element: <HCKaryawan/>
+            element: <HCKaryawan />
         },
         {
-            path:'/utilities/master-jabatan',
-            element: <HCKontrak/>
+            path: '/utilities/master-jabatan',
+            element: <Jabatan />
         },
         {
             path: '/utilities/master-unit-bisnis',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/master-tempat-tugas',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/master-tunjangan',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/master-iuran',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/master-pajak',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/master-simpwajib',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/user-manajemen-userdata',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/user-manajemen-group-akses',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         },
         {
             path: '/utilities/user-manajemen-hak-akses',
-            element : <HCKaryawan />
+            element: <HCKaryawan />
         }
     ]
 };

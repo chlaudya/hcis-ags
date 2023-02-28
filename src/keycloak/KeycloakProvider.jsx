@@ -1,12 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import CircularProgress from '@mui/material/CircularProgress';
 import keycloakParam from '../keycloak';
+import { loginWithToken } from 'store/actions/auth/loginActions';
 
 const KeycloakProvider = ({ children }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const onInitError = () => {
+    navigate('/error-sso');
+  };
   return (
     <ReactKeycloakProvider
       authClient={keycloakParam}
@@ -29,11 +35,11 @@ const KeycloakProvider = ({ children }) => {
       }}
       onEvent={(_event, error) => {
         if (error) {
-          navigate('/error-sso');
+          onInitError();
         }
       }}
       onTokens={(res) => {
-        console.log(res);
+        dispatch(loginWithToken(res.token));
       }}
     >
       {children}

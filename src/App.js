@@ -13,7 +13,7 @@ import themes from './themes';
 // project imports
 import NavigationScroll from './layout/NavigationScroll';
 import KeycloakProvider from './keycloak/KeycloakProvider';
-// import { ModalProvider } from 'ui-component/modal';
+import { ModalProvider } from 'ui-component/modal';
 
 // ===========================|| APP ||=========================== //
 
@@ -22,16 +22,16 @@ const App = () => {
 
   return (
     <KeycloakProvider>
-      {/* <ModalProvider> */}
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={themes(customization)}>
-          <CssBaseline />
-          <NavigationScroll>
-            <Routes />
-          </NavigationScroll>
-        </ThemeProvider>
-      </StyledEngineProvider>
-      {/* </ModalProvider> */}
+      <ModalProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={themes(customization)}>
+            <CssBaseline />
+            <NavigationScroll>
+              <Routes />
+            </NavigationScroll>
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </ModalProvider>
     </KeycloakProvider>
   );
 };
