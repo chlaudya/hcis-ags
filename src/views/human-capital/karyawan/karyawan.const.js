@@ -18,5 +18,5 @@ export const INITIAL_VALUES_KARYAWAN = {
   noBPJSTenagaKerja: '',
   noBPJSKesehatan: '',
   bankName: '',
-  filePath: ''
+  filePath: null
 };

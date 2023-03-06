@@ -1,59 +1,43 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
-import { Typography, IconButton, Button } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import { blue, red } from '@material-ui/core/colors';
 import { Delete, Edit } from '@material-ui/icons';
+import { Typography, IconButton, Button } from '@material-ui/core';
 
-// Modal
-import { ModalContext } from 'ui-component/modal';
-import { MODAL_TYPES } from 'ui-component/modal/modalConstant';
-import FormFieldKaryawan from './FormFieldKaryawan';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import FilterKaryawan from './components/FilterKaryawan';
+import DataTable from 'ui-component/data-table';
 import { getStateKaryawan } from 'store/stateSelector';
 import { getKaryawanList } from 'store/actions/karyawan';
-import DataTable from 'ui-component/data-table';
-import FilterKaryawan from './components/FilterKaryawan';
 
 const Karyawan = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { karyawanList, loading } = useSelector(getStateKaryawan);
-  const { showModal, hideModal } = useContext(ModalContext);
-  const [karyawan, setKaryawan] = useState();
+  const [params, setParams] = useState({
+    page: 1,
+    size: 10,
+    dropdown: false
+  });
 
   useEffect(() => {
-    dispatch(getKaryawanList());
-    // setKaryawanList();
+    dispatch(getKaryawanList(params));
   }, []);
-
-  console.log(karyawanList?.data);
-
-  const setKaryawanList = () => {
-    const karyawanUpdate = [...karyawanList?.data, { id: 1 }];
-    console.log('update', karyawanUpdate);
-    // setKaryawan(karyawanList)
-  };
-
-  const openModalAddKaryawan = (id) => {
-    showModal(MODAL_TYPES.MODAL_ADD, {
-      modalTitle: 'View Pending Approval Detail',
-      children: (
-        <FormFieldKaryawan />
-        // <div>halo WT</div>
-        // <ViewFieldApproval
-        //   id={id}
-        //   onSubmit={onSubmitApproval}
-        //   onCancel={hideModal}
-        // />
-      )
-    });
-  };
 
   const redirectToEdit = (karyawanId, NIK, NIP) => {
     navigate('/human-capital/karyawan/input-karyawan', { state: { karyawanId, NIK, NIP } });
+  };
+
+  const onChangePage = (page) => {
+    setParams({ ...params, page: page });
+    dispatch(getKaryawanList({ ...params, page: page, size: karyawanList?.size }));
+  };
+
+  const onChangeRowsPerPage = (row, page) => {
+    setParams({ ...params, size: row });
+    dispatch(getKaryawanList({ ...params, page: page, size: row }));
   };
 
   const KARYAWAN_COLUMN = [
@@ -100,7 +84,11 @@ const Karyawan = () => {
           >
             <Edit style={{ color: blue[900] }} />
           </IconButton>
-          <IconButton color="warning" aria-label="add an alarm" onClick={(event) => this.handleModalDelete(event)}>
+          <IconButton
+            color="warning"
+            aria-label="add an alarm"
+            onClick={(event) => this.handleModalDelete(event)}
+          >
             <Delete style={{ color: red[900] }} />
           </IconButton>
         </>
@@ -111,10 +99,10 @@ const Karyawan = () => {
   return (
     <MainCard title="Data Karyawan">
       <Typography variant="body2">
-        <FilterKaryawan />
+        <FilterKaryawan params={params} />
 
         <Link to="/human-capital/karyawan/input-karyawan" style={{ textDecoration: 'none' }}>
-          <Button>Input Karyawan</Button>
+          <Button variant="contained">Input Karyawan</Button>
         </Link>
 
         <div style={{ height: 500, width: '100%' }}>
@@ -122,9 +110,9 @@ const Karyawan = () => {
             columns={KARYAWAN_COLUMN}
             data={karyawanList?.data}
             progressPending={loading}
-            // onChangePage={onChangePage}
-            // onChangeRowsPerPage={onChangeRowsPerPage}
-            // paginationTotalRows={agentList?.total_record}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            paginationTotalRows={karyawanList?.totalRecord}
           />
         </div>
       </Typography>
