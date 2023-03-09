@@ -14,7 +14,7 @@ const cookieToken = {
   },
   publicToken: function () {
     return axios.get(BASE_URL + `/api/v1/auth/cookie`, {
-      withCredentials: true
+      // withCredentials: true
     });
   },
   privateToken: function () {

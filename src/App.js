@@ -14,6 +14,8 @@ import themes from './themes';
 import NavigationScroll from './layout/NavigationScroll';
 import KeycloakProvider from './keycloak/KeycloakProvider';
 import { ModalProvider } from 'ui-component/modal';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // ===========================|| APP ||=========================== //
 
@@ -28,6 +30,18 @@ const App = () => {
             <CssBaseline />
             <NavigationScroll>
               <Routes />
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+              />
             </NavigationScroll>
           </ThemeProvider>
         </StyledEngineProvider>

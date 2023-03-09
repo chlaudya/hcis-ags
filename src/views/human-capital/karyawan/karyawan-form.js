@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Input, Label, Row } from 'reactstrap';
+import { Button, Col, Input, Label, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -18,7 +18,7 @@ const FormFieldKaryawan = () => {
   const dispatch = useDispatch();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { karyawanDetail } = useSelector(getStateKaryawan);
+  const { karyawanDetail, isSubmitting } = useSelector(getStateKaryawan);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KARYAWAN);
   const [fileCV, setFileCV] = useState();
 
@@ -60,9 +60,8 @@ const FormFieldKaryawan = () => {
       enableReinitialize={true}
       initialValues={initialValues}
       validationSchema={karyawanValidationSchema}
-      // onSubmit={(values) => handleSubmit(values)}
     >
-      {({ values }) => {
+      {({ values, isValid }) => {
         return (
           <Form>
             <MainCard
@@ -250,21 +249,18 @@ const FormFieldKaryawan = () => {
                 color="primary"
                 className="m-2 pe-4 ps-4"
                 type="submit"
-                // disabled={isSubmitting}
+                disabled={isValid}
                 onClick={() => handleSubmit(values)}
               >
-                {/* {isSubmitting ? (
-                <>
-                  <Spinner size='sm' />
-                  <span> Loading</span>
-                </>
-              ) : ( */}
-                Save
-                {/* )} */}
+                {isSubmitting ? (
+                  <>
+                    <Spinner size="sm" />
+                    <span> Loading</span>
+                  </>
+                ) : (
+                  'Save'
+                )}
               </Button>
-              {/* <Button outline color="primary" className="m-2" onClick={hideModal}>
-                Cancel
-              </Button> */}
             </MainCard>
           </Form>
         );
