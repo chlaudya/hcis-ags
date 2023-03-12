@@ -1,0 +1,10 @@
+{
+  "keycloak": {
+      "Url": "http://103.190.28.147:8080",
+      "Realms": "hcis-user-management",
+      "ClientId": "hcis-user-app-client"
+  },
+  "hcisApi": {
+      "Url": "https://user1677401524155.requestly.dev/api"
+ }
+}

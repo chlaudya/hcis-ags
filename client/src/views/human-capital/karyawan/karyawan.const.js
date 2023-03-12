@@ -1,0 +1,22 @@
+export const INITIAL_VALUES_KARYAWAN = {
+  karyawanNip: '',
+  karyawanName: '',
+  tempatTinggal: '',
+  tanggalLahir: '',
+  agama: '',
+  gender: '',
+  statusNikah: '',
+  alamatRumah: '',
+  noRekening: '',
+  isActive: '',
+  noNIK: '',
+  noKK: '',
+  noNPWP: '',
+  pendidikanTerakhir: '',
+  jurusan: '',
+  asalSekolah: '',
+  noBPJSTenagaKerja: '',
+  noBPJSKesehatan: '',
+  bankName: '',
+  filePath: null
+};
