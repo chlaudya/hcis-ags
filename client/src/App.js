@@ -25,12 +25,12 @@ const App = () => {
   dotenv.config();
 
   return (
-    <ModalProvider>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={themes(customization)}>
-          <CssBaseline />
-          <KeycloakProvider>
-            <NavigationScroll>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={themes(customization)}>
+        <CssBaseline />
+        <KeycloakProvider>
+          <NavigationScroll>
+            <ModalProvider>
               <Routes />
               <ToastContainer
                 position="top-right"
@@ -44,11 +44,11 @@ const App = () => {
                 pauseOnHover
                 theme="colored"
               />
-            </NavigationScroll>
-          </KeycloakProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </ModalProvider>
+            </ModalProvider>
+          </NavigationScroll>
+        </KeycloakProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

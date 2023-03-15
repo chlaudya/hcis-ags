@@ -46,24 +46,10 @@ const utilities = {
       icon: icons.IconAdjustments,
       children: [
         {
-          id: 'mjabatan',
-          title: 'Jabatan',
+          id: 'mbank',
+          title: 'Bank',
           type: 'item',
-          url: '/human-capital/master-jabatan',
-          breadcrumbs: false
-        },
-        {
-          id: 'munitbisnis',
-          title: 'Unit Bisnis',
-          type: 'item',
-          url: '/human-capital/master-unit-bisnis',
-          breadcrumbs: false
-        },
-        {
-          id: 'mtempattugas',
-          title: 'Tempat Tugas',
-          type: 'item',
-          url: '/human-capital/master-tempat-tugas',
+          url: '/human-capital/master-bank',
           breadcrumbs: false
         },
         {
@@ -71,6 +57,14 @@ const utilities = {
           title: 'Iuran',
           type: 'item',
           url: '/human-capital/master-iuran',
+          breadcrumbs: false
+        },
+
+        {
+          id: 'mjabatan',
+          title: 'Jabatan',
+          type: 'item',
+          url: '/human-capital/master-jabatan',
           breadcrumbs: false
         },
         {
@@ -81,10 +75,17 @@ const utilities = {
           breadcrumbs: false
         },
         {
-          id: 'mbank',
-          title: 'Bank',
+          id: 'mtempattugas',
+          title: 'Tempat Tugas',
           type: 'item',
-          url: '/human-capital/master-bank',
+          url: '/human-capital/master-tempat-tugas',
+          breadcrumbs: false
+        },
+        {
+          id: 'munitbisnis',
+          title: 'Unit Bisnis',
+          type: 'item',
+          url: '/human-capital/master-unit-bisnis',
           breadcrumbs: false
         }
       ]

@@ -1,49 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Row, Spinner } from 'reactstrap';
+import { Button, Row, Spinner } from 'reactstrap';
+import { useSelector } from 'react-redux';
 import { Form, Formik } from 'formik';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
-import { getStateMasterJabatan } from 'store/stateSelector';
+import { getStateMasterBank } from 'store/stateSelector';
 import { bankValidationSchema } from './bank.validation';
-import { IS_ACTIVE } from 'constants/general.constant';
 import { INITIAL_VALUES_BANK } from './bank.const';
-import { getMasterJabatanDetail, updateMasterJabatan } from 'store/actions/master-jabatan';
 
-const FormFieldPajak = () => {
-  const dispatch = useDispatch();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { masterJabatanDetail, isSubmitting } = useSelector(getStateMasterJabatan);
+const FormFieldBank = ({ id, onSubmit }) => {
+  const { masterBankList, isSubmitting } = useSelector(getStateMasterBank);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_BANK);
 
-  useEffect(() => {
-    if (state) {
-      dispatch(getMasterJabatanDetail({ ...state }));
-    }
-  }, [state]);
-
-  useEffect(() => {
-    setInitialValues(masterJabatanDetail);
-  }, [masterJabatanDetail]);
-
-  const redirectToMasterUnitBisnis = () => {
-    navigate('/human-capital/master-unit-bisnis');
+  const getMasterBankById = (id) => {
+    const masterBank = masterBankList?.data.find((data) => data.bank_id === id);
+    const initialData = {
+      bank_id: masterBank?.bank_id,
+      bank_name: masterBank?.bank_name,
+      bank_desc: masterBank?.bank_desc,
+      is_active: masterBank?.is_active
+    };
+    setInitialValues(initialData);
   };
 
-  const handleSubmit = (values) => {
-    if (state) {
-      dispatch(
-        updateMasterJabatan({ ...values, karyawanId: state.karyawanId }, redirectToMasterUnitBisnis)
-      );
-    } else {
-      dispatch(updateMasterJabatan({ ...values }, redirectToMasterUnitBisnis));
+  useEffect(() => {
+    if (id) {
+      getMasterBankById(id);
     }
-  };
+  }, [id]);
 
   return (
     <Formik
@@ -55,45 +40,22 @@ const FormFieldPajak = () => {
       {({ values, isValid }) => {
         return (
           <Form>
-            <MainCard
-              title={state ? 'Edit Pajak' : 'Input Pajak'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToMasterUnitBisnis}
-            >
+            <MainCard>
               <Row>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtTipePajak"
-                    name="tipePajak"
-                    label="Tipe Pajak"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtStatus"
-                    name="status"
-                    label="Status"
-                    tag="input"
-                  />
-                </Col>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtPersentase"
-                    name="persentase"
-                    label="Persentase"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="DrpIsActive"
-                    name="isActive"
-                    label="Is Active"
-                    tag="select"
-                    options={IS_ACTIVE}
-                  />
-                </Col>
+                <FormField
+                  className="mb-2"
+                  id="TxtBankName"
+                  name="bank_name"
+                  label="Bank Name"
+                  tag="input"
+                />
+                <FormField
+                  className="mb-2"
+                  id="TxtBankDesc"
+                  name="bank_desc"
+                  label="Bank Description"
+                  tag="input"
+                />
               </Row>
 
               <Button
@@ -101,7 +63,7 @@ const FormFieldPajak = () => {
                 className="m-2 pe-4 ps-4"
                 type="submit"
                 disabled={!isValid}
-                onClick={() => handleSubmit(values)}
+                onClick={() => onSubmit({ values, id })}
               >
                 {isSubmitting ? (
                   <>
@@ -120,4 +82,4 @@ const FormFieldPajak = () => {
   );
 };
 
-export default FormFieldPajak;
+export default FormFieldBank;

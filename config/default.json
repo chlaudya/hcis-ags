@@ -5,6 +5,6 @@
       "ClientId": "hcis-user-app-client"
   },
   "hcisApi": {
-      "Url": "https://user1677401524155.requestly.dev/api"
+      "Url": "http://103.190.28.147:8091/api"
  }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,35 +8,91 @@ import { Delete, Edit } from '@material-ui/icons';
 import { Typography, IconButton, Button } from '@material-ui/core';
 
 import DataTable from 'src/ui-component/data-table';
-import { getStateMasterJabatan } from 'store/stateSelector';
-import { getMasterJabatan } from 'store/actions/master-jabatan';
+import { getStateMasterPajak, getStateUser } from 'store/stateSelector';
+import FormFieldPajak from './pajak-form';
+import { ModalContext } from 'src/ui-component/modal';
+import csrfProtection from 'utils/csrfProtection';
+import { addMasterPajak, getMasterPajak, updateMasterPajak } from 'store/actions/master-pajak';
+import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 
 const PajakPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { masterJabatanList, loading } = useSelector(getStateMasterJabatan);
+  const { showModal, hideModal } = useContext(ModalContext);
+  const { masterPajakList, loading, isSubmitting } = useSelector(getStateMasterPajak);
+  const { user } = useSelector(getStateUser);
   const [params, setParams] = useState({
     page: 1,
-    size: 10,
-    dropdown: false
+    size: 10
   });
 
   useEffect(() => {
-    dispatch(getMasterJabatan(params));
+    csrfProtection.setHeaderCsrfToken();
+    dispatch(getMasterPajak(params));
   }, []);
 
-  const redirectToEdit = (JabatanId) => {
-    navigate('/human-capital/master-pajak/input', { state: { JabatanId } });
+  const onSubmitFormField = async ({ values, id }) => {
+    const reqBodyEdit = {
+      ...values,
+      usr_update: user.preferred_username
+    };
+
+    const reqBodyAdd = {
+      ...values
+    };
+
+    if (id) {
+      dispatch(updateMasterPajak({ reqBody: reqBodyEdit, hideModal }));
+    } else {
+      dispatch(addMasterPajak(reqBodyAdd, hideModal));
+    }
+  };
+
+  const onConfirmDelete = (id) => {
+    const masterPajak = masterPajakList?.data.find((data) => data.pajak_id === id);
+    const reqBody = {
+      pajak_id: masterPajak?.pajak_id,
+      pajak_persen: masterPajak?.pajak_persen,
+      pajak_status: masterPajak?.pajak_status,
+      pajak_type: masterPajak?.pajak_type,
+      usr_update: user.preferred_username,
+      is_active: false
+    };
+    dispatch(updateMasterPajak({ reqBody, hideModal, isDelete: true }));
+  };
+
+  const openModalAdd = () => {
+    showModal(MODAL_TYPES.MODAL_ADD, {
+      modalTitle: 'Add Master Pajak',
+      children: <FormFieldPajak onSubmit={onSubmitFormField} />
+    });
+  };
+
+  const openModalEdit = (id) => {
+    showModal(MODAL_TYPES.MODAL_EDIT, {
+      modalTitle: 'Edit Master Pajak',
+      children: <FormFieldPajak id={id} onSubmit={onSubmitFormField} />
+    });
+  };
+
+  const openModalConfirmation = (id) => {
+    showModal(MODAL_TYPES.MODAL_CONFIRMATION, {
+      modalTitle: 'Hapus Master Pajak',
+      modalDescription: 'Anda yakin ingin menghapus Pajak ini?',
+      confirmText: 'Yes',
+      cancelText: 'No',
+      handleConfirm: () => onConfirmDelete(id),
+      isSubmitting: isSubmitting
+    });
   };
 
   const onChangePage = (page) => {
     setParams({ ...params, page: page });
-    dispatch(getMasterJabatan({ ...params, page: page, size: masterJabatanList?.size }));
+    dispatch(getMasterPajak({ ...params, page: page, size: masterPajakList?.size }));
   };
 
   const onChangeRowsPerPage = (row, page) => {
     setParams({ ...params, size: row });
-    dispatch(getMasterJabatan({ ...params, page: page, size: row }));
+    dispatch(getMasterPajak({ ...params, page: page, size: row }));
   };
 
   const COLUMN = [
@@ -44,28 +100,23 @@ const PajakPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => index + 1
+      selector: (_row, index) => `${index + 1}.`
     },
     {
       name: 'Tipe Pajak',
       width: '100px',
       center: true,
-      selector: (row) => row.unitId
+      selector: (row) => row.pajak_type
     },
     {
       name: 'Status',
       center: true,
-      selector: (row) => row.unitName
+      selector: (row) => row.pajak_status
     },
     {
       name: 'Persentase',
       center: true,
-      selector: (row) => row.jabatanDesc
-    },
-    {
-      name: 'Aktif',
-      center: true,
-      selector: (row) => (row.isActive === 1 ? 'Aktif' : 'Tidak aktif')
+      selector: (row) => `${row.pajak_persen}%`
     },
     {
       name: 'Aksi',
@@ -75,14 +126,14 @@ const PajakPage = () => {
           <IconButton
             color="secondary"
             aria-label="add an alarm"
-            onClick={() => redirectToEdit(row.jabatanId)}
+            onClick={() => openModalEdit(row.pajak_id)}
           >
             <Edit style={{ color: blue[900] }} />
           </IconButton>
           <IconButton
             color="warning"
             aria-label="add an alarm"
-            onClick={(event) => this.handleModalDelete(event)}
+            onClick={() => openModalConfirmation(row.pajak_id)}
           >
             <Delete style={{ color: red[900] }} />
           </IconButton>
@@ -94,20 +145,18 @@ const PajakPage = () => {
   return (
     <MainCard title="Master Pajak">
       <Typography variant="body2">
-        <Link to="/human-capital/master-pajak/input" style={{ textDecoration: 'none' }}>
-          <Button variant="contained" className="mb-3">
-            Input Pajak
-          </Button>
-        </Link>
+        <Button variant="contained" className="mb-3" onClick={openModalAdd}>
+          Input Pajak
+        </Button>
 
         <div style={{ height: 500, width: '100%' }}>
           <DataTable
             columns={COLUMN}
-            data={masterJabatanList?.data}
+            data={masterPajakList?.data}
             progressPending={loading}
             onChangePage={onChangePage}
             onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterJabatanList?.totalRecord}
+            paginationTotalRows={masterPajakList?.totalRecord}
           />
         </div>
       </Typography>

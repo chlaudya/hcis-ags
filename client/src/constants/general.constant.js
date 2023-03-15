@@ -26,8 +26,8 @@ export const EDUCATION = [
 ];
 
 export const IS_ACTIVE = [
-  { value: 1, label: 'Active' },
-  { value: 0, label: 'Inactive' }
+  { value: true, label: 'Aktif' },
+  { value: false, label: 'Tidak Aktif' }
 ];
 
 export const GENDER = [
@@ -36,6 +36,6 @@ export const GENDER = [
 ];
 
 export const TUNJANGAN = [
-  { value: 1, label: 'Ada Tunjangan' },
-  { value: 0, label: 'Tidak Ada Tunjangan' }
+  { value: true, label: 'Ada Tunjangan' },
+  { value: false, label: 'Tidak Ada Tunjangan' }
 ];

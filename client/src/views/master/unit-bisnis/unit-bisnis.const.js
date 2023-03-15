@@ -1,6 +1,4 @@
 export const INITIAL_VALUES_UNIT_BISNIS = {
-  unitId: '',
-  unitName: '',
-  unitDesc: '',
-  isActive: 0
+  unit_name: '',
+  unit_description: ''
 };

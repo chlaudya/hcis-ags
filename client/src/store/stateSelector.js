@@ -1,4 +1,10 @@
+export const getStateUser = (state) => state.auth.login;
 export const getStateKaryawan = (state) => state.karyawan;
+export const getStateMasterBank = (state) => state.masterBank;
 export const getStateMasterJabatan = (state) => state.masterJabatan;
+export const getStateMasterIuran = (state) => state.masterIuran;
+export const getStateMasterPajak = (state) => state.masterPajak;
+export const getStateMasterTempatTugas = (state) => state.masterTempatTugas;
+export const getStateMasterUnitBisnis = (state) => state.masterUnitBisnis;
 // export const getStateKaryawanList = (state) => state.customization;
 // export const getStateLevelingDetail = (state) => state.levelingAgent.levelingDetailReducer;

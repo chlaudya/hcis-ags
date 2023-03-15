@@ -1,6 +1,5 @@
 export const INITIAL_VALUES_PAJAK = {
-  tipePajak: '',
-  status: '',
-  persentase: '',
-  isActive: 0
+  pajak_persen: '',
+  pajak_status: '',
+  pajak_type: ''
 };

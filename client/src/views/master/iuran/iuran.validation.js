@@ -1,9 +1,7 @@
 import * as Yup from 'yup';
 
 export const iuranValidationSchema = Yup.object().shape({
-  iuranId: Yup.string().required(),
-  tipeIuran: Yup.string().required(),
-  beban: Yup.string().required(),
-  persentase: Yup.number().required(),
-  isActive: Yup.number().required()
+  iuran_type: Yup.string().required('Tipe Iuran wajib diisi!'),
+  iuran_beban: Yup.string().required('Beban Iuran wajib diisi!'),
+  iuran_persen: Yup.number().required('Persentase Iuran wajib diisi!')
 });

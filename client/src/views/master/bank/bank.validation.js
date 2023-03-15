@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
 
 export const bankValidationSchema = Yup.object().shape({
-  bankId: Yup.string().required(),
-  namaBank: Yup.string().required(),
-  isActive: Yup.number().required()
+  bank_name: Yup.string().required('Bank Name harus diisi'),
+  bank_desc: Yup.string().required('Bank Description harus diisi')
 });

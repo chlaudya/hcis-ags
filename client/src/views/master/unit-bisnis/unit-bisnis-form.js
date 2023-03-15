@@ -1,49 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Row, Spinner } from 'reactstrap';
+import { useSelector } from 'react-redux';
+import { Button, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
-import { getStateMasterJabatan } from 'store/stateSelector';
+import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { unitValidationSchema } from './unit-bisnis.validation';
-import { IS_ACTIVE } from 'constants/general.constant';
 import { INITIAL_VALUES_UNIT_BISNIS } from './unit-bisnis.const';
-import { getMasterJabatanDetail, updateMasterJabatan } from 'store/actions/master-jabatan';
 
-const FormFieldUnitBisnis = () => {
-  const dispatch = useDispatch();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { masterJabatanDetail, isSubmitting } = useSelector(getStateMasterJabatan);
+const FormFieldUnitBisnis = ({ id, onSubmit }) => {
+  const { masterUnitBisnisList, isSubmitting } = useSelector(getStateMasterUnitBisnis);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_UNIT_BISNIS);
 
-  useEffect(() => {
-    if (state) {
-      dispatch(getMasterJabatanDetail({ ...state }));
-    }
-  }, [state]);
-
-  useEffect(() => {
-    setInitialValues(masterJabatanDetail);
-  }, [masterJabatanDetail]);
-
-  const redirectToMasterUnitBisnis = () => {
-    navigate('/human-capital/master-unit-bisnis');
+  const getMasterUnitBisnisById = (id) => {
+    const masterUnitBisnis = masterUnitBisnisList?.data.find((data) => data.unit_id === id);
+    const initialData = {
+      unit_id: masterUnitBisnis?.unit_id,
+      unit_name: masterUnitBisnis?.unit_name,
+      unit_description: masterUnitBisnis?.unit_description,
+      is_active: masterUnitBisnis?.is_active
+    };
+    setInitialValues(initialData);
   };
 
-  const handleSubmit = (values) => {
-    if (state) {
-      dispatch(
-        updateMasterJabatan({ ...values, karyawanId: state.karyawanId }, redirectToMasterUnitBisnis)
-      );
-    } else {
-      dispatch(updateMasterJabatan({ ...values }, redirectToMasterUnitBisnis));
+  useEffect(() => {
+    if (id) {
+      getMasterUnitBisnisById(id);
     }
-  };
+  }, [id]);
 
   return (
     <Formik
@@ -55,45 +41,22 @@ const FormFieldUnitBisnis = () => {
       {({ values, isValid }) => {
         return (
           <Form>
-            <MainCard
-              title={state ? 'Edit Unit Bisnis' : 'Input Unit Bisnis'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToMasterUnitBisnis}
-            >
+            <MainCard>
               <Row>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtUnitId"
-                    name="unitId"
-                    label="Unit ID"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtUnitName"
-                    name="unitName"
-                    label="Unit Name"
-                    tag="input"
-                  />
-                </Col>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtUnitDesc"
-                    name="unitDesc"
-                    label="Unit Description"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="DrpIsActive"
-                    name="isActive"
-                    label="Is Active"
-                    tag="select"
-                    options={IS_ACTIVE}
-                  />
-                </Col>
+                <FormField
+                  className="mb-2"
+                  id="TxtUnitName"
+                  name="unit_name"
+                  label="Unit Name"
+                  tag="input"
+                />
+                <FormField
+                  className="mb-2"
+                  id="TxtUnitDesc"
+                  name="unit_description"
+                  label="Unit Description"
+                  tag="input"
+                />
               </Row>
 
               <Button
@@ -101,7 +64,7 @@ const FormFieldUnitBisnis = () => {
                 className="m-2 pe-4 ps-4"
                 type="submit"
                 disabled={!isValid}
-                onClick={() => handleSubmit(values)}
+                onClick={() => onSubmit({ values, id })}
               >
                 {isSubmitting ? (
                   <>

@@ -1,49 +1,55 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
-import { getStateMasterJabatan } from 'store/stateSelector';
+import {
+  getStateMasterJabatan,
+  getStateMasterTempatTugas,
+  getStateMasterUnitBisnis
+} from 'store/stateSelector';
 import { tempatTugasValidationSchema } from './tempat-tugas.validation';
-import { IS_ACTIVE } from 'constants/general.constant';
 import { INITIAL_VALUES_TEMPAT_TUGAS } from './tempat-tugas.const';
-import { getMasterJabatanDetail, updateMasterJabatan } from 'store/actions/master-jabatan';
+import { inputThousandSeparator, setThousandSeparatorNominal } from 'utils/thousandSeparator';
 
-const FormFieldTempatTugas = () => {
-  const dispatch = useDispatch();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { masterJabatanDetail, isSubmitting } = useSelector(getStateMasterJabatan);
+const FormFieldTempatTugas = ({ id, onSubmit, dropdownJabatan, dropdownUnitBisnis }) => {
+  const { masterTempatTugasList, isSubmitting } = useSelector(getStateMasterTempatTugas);
+
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_TEMPAT_TUGAS);
 
-  useEffect(() => {
-    if (state) {
-      dispatch(getMasterJabatanDetail({ ...state }));
-    }
-  }, [state]);
-
-  useEffect(() => {
-    setInitialValues(masterJabatanDetail);
-  }, [masterJabatanDetail]);
-
-  const redirectToMasterUnitBisnis = () => {
-    navigate('/human-capital/master-unit-bisnis');
+  const getMasterTempatTugasById = (id) => {
+    const masterTempatTugas = masterTempatTugasList?.data.find(
+      (data) => data.tempat_tugas_id === id
+    );
+    const initialData = {
+      tempat_tugas_id: masterTempatTugas?.tempat_tugas_id,
+      jabatan_id: masterTempatTugas?.jabatan_id,
+      lokasi_tempat_tugas: masterTempatTugas?.lokasi_tempat_tugas,
+      nama_proyek: masterTempatTugas?.nama_proyek,
+      nominal_tunjangan: inputThousandSeparator(masterTempatTugas?.nominal_tunjangan),
+      tunjangan_tetap: inputThousandSeparator(masterTempatTugas?.tunjangan_tetap),
+      unit_id: masterTempatTugas?.unit_id,
+      is_active: masterTempatTugas?.is_active
+    };
+    setInitialValues(initialData);
   };
 
-  const handleSubmit = (values) => {
-    if (state) {
-      dispatch(
-        updateMasterJabatan({ ...values, karyawanId: state.karyawanId }, redirectToMasterUnitBisnis)
-      );
-    } else {
-      dispatch(updateMasterJabatan({ ...values }, redirectToMasterUnitBisnis));
-    }
+  const handleChangeNominalTunjangan = (value, setFieldValue) => {
+    setFieldValue('nominal_tunjangan', setThousandSeparatorNominal(value));
   };
+
+  const handleChangeTunjanganTetap = (value, setFieldValue) => {
+    setFieldValue('tunjangan_tetap', setThousandSeparatorNominal(value));
+  };
+
+  useEffect(() => {
+    if (id) {
+      getMasterTempatTugasById(id);
+    }
+  }, [id]);
 
   return (
     <Formik
@@ -52,84 +58,71 @@ const FormFieldTempatTugas = () => {
       initialValues={initialValues}
       validationSchema={tempatTugasValidationSchema}
     >
-      {({ values, isValid }) => {
+      {({ values, isValid, setFieldValue }) => {
         return (
           <Form>
-            <MainCard
-              title={state ? 'Edit Unit Bisnis' : 'Input Unit Bisnis'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToMasterUnitBisnis}
-            >
+            <MainCard>
               <Row>
                 <Col>
                   <FormField
                     className="mb-2"
-                    id="TxtTempatTugasId"
-                    name="tempatTugasId"
-                    label="Tempat Tugas ID"
-                    tag="input"
+                    id="TxtJabatanId"
+                    name="jabatan_id"
+                    label="Jabatan Id"
+                    tag="select"
+                    options={dropdownJabatan}
                   />
                   <FormField
                     className="mb-2"
                     id="TxtUnitId"
-                    name="unitId"
-                    label="Unit ID"
-                    tag="input"
+                    name="unit_id"
+                    label="Unit Id"
+                    tag="select"
+                    options={dropdownUnitBisnis}
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtJabatanId"
-                    name="jabatanId"
-                    label="Jabatan ID"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtNamaProyek"
-                    name="namaProyek"
-                    label="Nama Proyek"
+                    id="TxtLokasiTempatTugas"
+                    name="lokasi_tempat_tugas"
+                    label="Lokasi Tempat Tugas"
                     tag="input"
                   />
                 </Col>
                 <Col>
                   <FormField
                     className="mb-2"
-                    id="TxtLokasiTempatTugas"
-                    name="lokasiTempatTugas"
-                    label="Lokasi Tempat Tugas"
+                    id="TxtNamaProyek"
+                    name="nama_proyek"
+                    label="Nama Proyek"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtNominalTunjangan"
-                    name="nominalTunjangan"
+                    name="nominal_tunjangan"
                     label="Nominal Tunjangan"
                     tag="input"
+                    type="tel"
+                    onChangeInput={(event) => handleChangeNominalTunjangan(event, setFieldValue)}
                   />
                   <FormField
                     className="mb-2"
                     id="TxtTunjanganTetap"
-                    name="tunjanganTetap"
+                    name="tunjangan_tetap"
                     label="Tunjangan Tetap"
                     tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="DrpIsActive"
-                    name="isActive"
-                    label="Is Active"
-                    tag="select"
-                    options={IS_ACTIVE}
+                    type="tel"
+                    onChangeInput={(event) => handleChangeTunjanganTetap(event, setFieldValue)}
                   />
                 </Col>
               </Row>
 
               <Button
                 color="primary"
-                className="m-2 pe-4 ps-4"
+                className="pe-4 ps-4"
                 type="submit"
                 disabled={!isValid}
-                onClick={() => handleSubmit(values)}
+                onClick={() => onSubmit({ values, id })}
               >
                 {isSubmitting ? (
                   <>

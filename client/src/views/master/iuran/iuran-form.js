@@ -1,49 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Row, Spinner } from 'reactstrap';
+import { useSelector } from 'react-redux';
+import { Button, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
-import { getStateMasterJabatan } from 'store/stateSelector';
+import { getStateMasterIuran } from 'store/stateSelector';
 import { iuranValidationSchema } from './iuran.validation';
-import { IS_ACTIVE } from 'constants/general.constant';
 import { INITIAL_VALUES_IURAN } from './iuran.const';
-import { getMasterJabatanDetail, updateMasterJabatan } from 'store/actions/master-jabatan';
+import { inputThousandSeparator, setThousandSeparatorNominal } from 'utils/thousandSeparator';
 
-const FormFieldIuran = () => {
-  const dispatch = useDispatch();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { masterJabatanDetail, isSubmitting } = useSelector(getStateMasterJabatan);
+const FormFieldIuran = ({ id, onSubmit }) => {
+  const { masterIuranList, isSubmitting } = useSelector(getStateMasterIuran);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_IURAN);
 
-  useEffect(() => {
-    if (state) {
-      dispatch(getMasterJabatanDetail({ ...state }));
-    }
-  }, [state]);
-
-  useEffect(() => {
-    setInitialValues(masterJabatanDetail);
-  }, [masterJabatanDetail]);
-
-  const redirectToMasterUnitBisnis = () => {
-    navigate('/human-capital/master-unit-bisnis');
+  const getMasterIuranById = (id) => {
+    const masterIuran = masterIuranList?.data.find((data) => data.iuran_id === id);
+    const initialData = {
+      iuran_id: masterIuran?.iuran_id,
+      iuran_beban: inputThousandSeparator(masterIuran?.iuran_beban),
+      iuran_persen: masterIuran?.iuran_persen,
+      iuran_type: masterIuran?.iuran_type,
+      is_active: masterIuran?.is_active
+    };
+    setInitialValues(initialData);
   };
 
-  const handleSubmit = (values) => {
-    if (state) {
-      dispatch(
-        updateMasterJabatan({ ...values, karyawanId: state.karyawanId }, redirectToMasterUnitBisnis)
-      );
-    } else {
-      dispatch(updateMasterJabatan({ ...values }, redirectToMasterUnitBisnis));
-    }
+  const handleChangeIuranBeban = (value, setFieldValue) => {
+    setFieldValue('iuran_beban', setThousandSeparatorNominal(value));
   };
+
+  useEffect(() => {
+    if (id) {
+      getMasterIuranById(id);
+    }
+  }, [id]);
 
   return (
     <Formik
@@ -52,55 +44,35 @@ const FormFieldIuran = () => {
       initialValues={initialValues}
       validationSchema={iuranValidationSchema}
     >
-      {({ values, isValid }) => {
+      {({ values, isValid, setFieldValue }) => {
         return (
           <Form>
-            <MainCard
-              title={state ? 'Edit Iuran' : 'Input Iuran'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToMasterUnitBisnis}
-            >
+            <MainCard>
               <Row>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtIuranId"
-                    name="iuranId"
-                    label="Iuran ID"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtIuranTipe"
-                    name="iuranTipe"
-                    label="Tipe Iuran"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtBeban"
-                    name="beban"
-                    label="Beban"
-                    tag="input"
-                  />
-                </Col>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtPersentase"
-                    name="persentase"
-                    label="Persentase"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="DrpIsActive"
-                    name="isActive"
-                    label="Is Active"
-                    tag="select"
-                    options={IS_ACTIVE}
-                  />
-                </Col>
+                <FormField
+                  className="mb-2"
+                  id="TxtIuranTipe"
+                  name="iuran_type"
+                  label="Tipe Iuran"
+                  tag="input"
+                />
+                <FormField
+                  className="mb-2"
+                  id="TxtBeban"
+                  name="iuran_beban"
+                  label="Beban"
+                  tag="input"
+                  type="tel"
+                  onChangeInput={(event) => handleChangeIuranBeban(event, setFieldValue)}
+                />
+                <FormField
+                  className="mb-2"
+                  id="TxtPersentase"
+                  name="iuran_persen"
+                  label="Persentase"
+                  tag="input"
+                  type="number"
+                />
               </Row>
 
               <Button
@@ -108,7 +80,7 @@ const FormFieldIuran = () => {
                 className="m-2 pe-4 ps-4"
                 type="submit"
                 disabled={!isValid}
-                onClick={() => handleSubmit(values)}
+                onClick={() => onSubmit({ values, id })}
               >
                 {isSubmitting ? (
                   <>

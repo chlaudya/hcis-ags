@@ -49,8 +49,16 @@ const MainCard = React.forwardRef(
         className="fs-6"
       >
         {/* card header and action */}
-        {!darkTitle && !IconAction && title && <CardHeader sx={headerSX} title={title} action={secondary} />}
-        {darkTitle && title && <CardHeader sx={headerSX} title={<Typography variant="h3">{title}</Typography>} action={secondary} />}
+        {!darkTitle && !IconAction && title && (
+          <CardHeader sx={headerSX} title={title} action={secondary} />
+        )}
+        {darkTitle && title && (
+          <CardHeader
+            sx={headerSX}
+            title={<Typography variant="h3">{title}</Typography>}
+            action={secondary}
+          />
+        )}
         {title && IconAction && (
           <Grid container alignItems="center" textAlign="left">
             <Grid item className="p-2">

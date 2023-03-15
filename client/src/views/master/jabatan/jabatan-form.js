@@ -1,57 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Input, Label, Row, Spinner } from 'reactstrap';
+import { useSelector } from 'react-redux';
+import { Button, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { getStateMasterJabatan } from 'store/stateSelector';
 import { jabatanValidationSchema } from './jabatan.validation';
-import {
-  EDUCATION,
-  GENDER,
-  IS_ACTIVE,
-  MARITAL_STATUS,
-  RELIGION,
-  TUNJANGAN
-} from 'constants/general.constant';
 import { INITIAL_VALUES_JABATAN } from './jabatan.const';
-import { getMasterJabatanDetail, updateMasterJabatan } from 'store/actions/master-jabatan';
+import { inputThousandSeparator, setThousandSeparatorNominal } from 'utils/thousandSeparator';
 
-const FormFieldMasterJabatan = () => {
-  const dispatch = useDispatch();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { masterJabatanDetail, isSubmitting } = useSelector(getStateMasterJabatan);
+const FormFieldMasterJabatan = ({ id, onSubmit }) => {
+  const { masterJabatanList, isSubmitting } = useSelector(getStateMasterJabatan);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_JABATAN);
 
-  useEffect(() => {
-    if (state) {
-      dispatch(getMasterJabatanDetail({ ...state }));
-    }
-  }, [state]);
-
-  useEffect(() => {
-    setInitialValues(masterJabatanDetail);
-  }, [masterJabatanDetail]);
-
-  const redirectToMasterJabatan = () => {
-    navigate('/human-capital/master-jabatan');
+  const getMasterJabatanById = (id) => {
+    const masterJabatan = masterJabatanList?.data.find((data) => data.jabatan_id === id);
+    const initialData = {
+      jabatan_id: masterJabatan?.jabatan_id,
+      jabatan_name: masterJabatan?.jabatan_name,
+      jabatan_desc: masterJabatan?.jabatan_desc,
+      tunjangan: inputThousandSeparator(masterJabatan?.tunjangan),
+      is_active: masterJabatan?.is_active
+    };
+    setInitialValues(initialData);
   };
 
-  const handleSubmit = (values, isValid) => {
-    console.log(isValid);
-    if (state) {
-      dispatch(
-        updateMasterJabatan({ ...values, karyawanId: state.karyawanId }, redirectToMasterJabatan)
-      );
-    } else {
-      dispatch(updateMasterJabatan({ ...values }, redirectToMasterJabatan));
-    }
+  const handleChangeTunjangan = (value, setFieldValue) => {
+    setFieldValue('tunjangan', setThousandSeparatorNominal(value));
   };
+
+  useEffect(() => {
+    if (id) {
+      getMasterJabatanById(id);
+    }
+  }, [id]);
 
   return (
     <Formik
@@ -60,56 +44,34 @@ const FormFieldMasterJabatan = () => {
       initialValues={initialValues}
       validationSchema={jabatanValidationSchema}
     >
-      {({ values, isValid }) => {
+      {({ values, isValid, setFieldValue }) => {
         return (
           <Form>
-            <MainCard
-              title={state ? 'Edit Data Karyawan' : 'Input Data Karyawan'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToMasterJabatan}
-            >
+            <MainCard>
               <Row>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtJabatanId"
-                    name="jabatanId"
-                    label="Jabatan ID"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtJabatanName"
-                    name="jabatanName"
-                    label="Jabatan Name"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtJabatanDesc"
-                    name="jabatanDesc"
-                    label="Jabatan Description"
-                    tag="input"
-                  />
-                </Col>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="DrpTunjangan"
-                    name="tunjangan"
-                    label="Tunjangan"
-                    tag="select"
-                    options={TUNJANGAN}
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="DrpIsActive"
-                    name="isActive"
-                    label="Is Active"
-                    tag="select"
-                    options={IS_ACTIVE}
-                  />
-                </Col>
+                <FormField
+                  className="mb-2"
+                  id="TxtJabatanName"
+                  name="jabatan_name"
+                  label="Jabatan Name"
+                  tag="input"
+                />
+                <FormField
+                  className="mb-2"
+                  id="TxtJabatanDesc"
+                  name="jabatan_desc"
+                  label="Jabatan Description"
+                  tag="input"
+                />
+                <FormField
+                  className="mb-2"
+                  id="DrpTunjangan"
+                  name="tunjangan"
+                  label="Tunjangan"
+                  tag="input"
+                  type="tel"
+                  onChangeInput={(event) => handleChangeTunjangan(event, setFieldValue)}
+                />
               </Row>
 
               <Button
@@ -117,7 +79,7 @@ const FormFieldMasterJabatan = () => {
                 className="m-2 pe-4 ps-4"
                 type="submit"
                 disabled={!isValid}
-                onClick={() => handleSubmit(values, isValid)}
+                onClick={() => onSubmit({ values, id })}
               >
                 {isSubmitting ? (
                   <>

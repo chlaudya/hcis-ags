@@ -1,8 +1,6 @@
 import * as Yup from 'yup';
 
 export const unitValidationSchema = Yup.object().shape({
-  unitId: Yup.string().required(),
-  unitName: Yup.string().required(),
-  unitDesc: Yup.string().required(),
-  isActive: Yup.number().required()
+  unit_name: Yup.string().required('Unit name wajib diisi!'),
+  unit_description: Yup.string().required('Unit description wajib diisi!')
 });

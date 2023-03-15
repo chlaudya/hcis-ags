@@ -3,7 +3,8 @@ const initialState = {
   masterJabatanDetail: {},
   loading: false,
   loadingDetail: false,
-  isSubmitting: false
+  isSubmitting: false,
+  dropdownJabatan: []
 };
 
 export const masterJabatanReducer = (state = initialState, action) => {
@@ -29,6 +30,10 @@ export const masterJabatanReducer = (state = initialState, action) => {
     SET_LOADING_SUBMIT_BUTTON: {
       ...state,
       isSubmitting: action.payload
+    },
+    GET_DROPDOWN_JABATAN: {
+      ...state,
+      dropdownJabatan: action.payload
     }
   };
 

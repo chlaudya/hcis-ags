@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { generateCsurfToken } from '../redux/actions/csurf/csurfActions';
+import { generateCsurfToken } from 'store/actions/csurf/csurfActions';
 
 const csrfProtection = {
   setHeaderCsrfToken: async function () {
@@ -8,7 +8,7 @@ const csrfProtection = {
   },
   deleteHeaderCsrfToken: () => {
     delete axios.defaults.headers.common['X-CSRF-Token'];
-  },
+  }
 };
 
 export default csrfProtection;

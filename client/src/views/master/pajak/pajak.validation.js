@@ -1,8 +1,7 @@
 import * as Yup from 'yup';
 
 export const pajakValidationSchema = Yup.object().shape({
-  tipePajak: Yup.string().required(),
-  status: Yup.string().required(),
-  persentase: Yup.string().required(),
-  isActive: Yup.number().required()
+  pajak_persen: Yup.number().required('Persentase wajib diisi!'),
+  pajak_status: Yup.string().required('Status wajib diisi!'),
+  pajak_type: Yup.string().required('Tipe wajib diisi!')
 });

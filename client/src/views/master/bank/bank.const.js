@@ -1,5 +1,4 @@
 export const INITIAL_VALUES_BANK = {
-  bankId: '',
-  namaBank: '',
-  isActive: 0
+  bank_name: '',
+  bank_desc: ''
 };

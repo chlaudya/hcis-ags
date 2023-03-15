@@ -19,6 +19,7 @@ module.exports = {
       keycloak: path.resolve(__dirname, './client/src/keycloak'),
       layout: path.resolve(__dirname, './client/src/layout'),
       menuItems: path.resolve(__dirname, './client/src/menu-items'),
+      uiComponent: path.resolve(__dirname, './client/src/ui-component'),
       routes: path.resolve(__dirname, './client/src/routes'),
       store: path.resolve(__dirname, './client/src/store'),
       themes: path.resolve(__dirname, './client/src/themes'),
