@@ -3,9 +3,9 @@ import { X } from 'react-feather';
 import classNames from 'classnames';
 import { ModalHeader, ModalBody } from 'reactstrap';
 import ModalContext from './modalContext';
-import { Dialog } from '@material-ui/core';
+import Dialog from '@mui/material/Dialog';
 
-const ModalDelete = (props) => {
+const ModalDetail = () => {
   const { state, isOpen, hideModal } = useContext(ModalContext);
   const { modalProps } = state ?? {};
 
@@ -18,7 +18,7 @@ const ModalDelete = (props) => {
     ...restProps
   } = modalProps ?? {};
 
-  const cssClasses = classNames('modal-delete', {
+  const cssClasses = classNames('modal-detail ', {
     className
   });
 
@@ -38,4 +38,4 @@ const ModalDelete = (props) => {
   );
 };
 
-export default ModalDelete;
+export default ModalDetail;

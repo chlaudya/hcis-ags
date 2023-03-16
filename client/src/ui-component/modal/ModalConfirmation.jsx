@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { X } from 'react-feather';
 import classNames from 'classnames';
-import { Modal, ModalHeader, ModalBody, Button, Spinner } from 'reactstrap';
+import { ModalHeader, ModalBody, Button, Spinner } from 'reactstrap';
 import ModalContext from './modalContext';
+import { Dialog } from '@material-ui/core';
 
 const ModalConfirmation = () => {
   const { state, isOpen, hideModal } = useContext(ModalContext);
@@ -26,7 +27,7 @@ const ModalConfirmation = () => {
   });
 
   return (
-    <Modal isOpen={isOpen} className={cssClasses} size="sm" centered {...restProps}>
+    <Dialog isOpen={isOpen} className={cssClasses} size="sm" centered {...restProps}>
       <ModalHeader
         className="bg-danger px-2 position-relative"
         style={{
@@ -53,7 +54,7 @@ const ModalConfirmation = () => {
           {cancelText}
         </Button>
       </ModalBody>
-    </Modal>
+    </Dialog>
   );
 };
 
