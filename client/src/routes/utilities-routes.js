@@ -30,51 +30,51 @@ const UtilitiesRoutes = {
       element: <HCKaryawan />
     },
     {
-      path: '/human-capital/master-jabatan',
+      path: '/utilities/master-jabatan',
       element: <MasterJabatan />
     },
     {
-      path: '/human-capital/master-jabatan/input',
+      path: '/utilities/master-jabatan/input',
       element: <MasterJabatanForm />
     },
     {
-      path: '/human-capital/master-unit-bisnis',
+      path: '/utilities/master-unit-bisnis',
       element: <MasterUnitBisnis />
     },
     {
-      path: '/human-capital/master-unit-bisnis/input',
+      path: '/utilities/master-unit-bisnis/input',
       element: <MasterUnitBisnisForm />
     },
     {
-      path: '/human-capital/master-tempat-tugas',
+      path: '/utilities/master-tempat-tugas',
       element: <MasterTempatTugas />
     },
     {
-      path: '/human-capital/master-tempat-tugas/input',
+      path: '/utilities/master-tempat-tugas/input',
       element: <MasterTempatTugasForm />
     },
     {
-      path: '/human-capital/master-Iuran',
+      path: '/utilities/master-Iuran',
       element: <MasterIuran />
     },
     {
-      path: '/human-capital/master-iuran/input',
+      path: '/utilities/master-iuran/input',
       element: <MasterIuranForm />
     },
     {
-      path: '/human-capital/master-pajak',
+      path: '/utilities/master-pajak',
       element: <MasterPajak />
     },
     {
-      path: '/human-capital/master-pajak/input',
+      path: '/utilities/master-pajak/input',
       element: <MasterPajakForm />
     },
     {
-      path: '/human-capital/master-bank',
+      path: '/utilities/master-bank',
       element: <MasterBank />
     },
     {
-      path: '/human-capital/master-bank/input',
+      path: '/utilities/master-bank/input',
       element: <MasterBankForm />
     },
     {

@@ -49,14 +49,14 @@ const utilities = {
           id: 'mbank',
           title: 'Bank',
           type: 'item',
-          url: '/human-capital/master-bank',
+          url: '/utilities/master-bank',
           breadcrumbs: false
         },
         {
           id: 'miuran',
           title: 'Iuran',
           type: 'item',
-          url: '/human-capital/master-iuran',
+          url: '/utilities/master-iuran',
           breadcrumbs: false
         },
 
@@ -64,57 +64,28 @@ const utilities = {
           id: 'mjabatan',
           title: 'Jabatan',
           type: 'item',
-          url: '/human-capital/master-jabatan',
+          url: '/utilities/master-jabatan',
           breadcrumbs: false
         },
         {
           id: 'mpajak',
           title: 'Pajak',
           type: 'item',
-          url: '/human-capital/master-pajak',
+          url: '/utilities/master-pajak',
           breadcrumbs: false
         },
         {
           id: 'mtempattugas',
           title: 'Tempat Tugas',
           type: 'item',
-          url: '/human-capital/master-tempat-tugas',
+          url: '/utilities/master-tempat-tugas',
           breadcrumbs: false
         },
         {
           id: 'munitbisnis',
           title: 'Unit Bisnis',
           type: 'item',
-          url: '/human-capital/master-unit-bisnis',
-          breadcrumbs: false
-        }
-      ]
-    },
-    {
-      id: 'usermanajemen',
-      title: 'User Manajemen',
-      type: 'collapse',
-      icon: icons.IconUserCheck,
-      children: [
-        {
-          id: 'userdata',
-          title: 'User Data',
-          type: 'item',
-          url: '/utilities/user-manajemen-userdata',
-          breadcrumbs: false
-        },
-        {
-          id: 'groupakses',
-          title: 'Group User',
-          type: 'item',
-          url: '/utilities/user-manajemen-group-akses',
-          breadcrumbs: false
-        },
-        {
-          id: 'hakakses',
-          title: 'Hak Ases User',
-          type: 'item',
-          url: '/utilities/user-manajemen-hak-akses',
+          url: '/utilities/master-unit-bisnis',
           breadcrumbs: false
         }
       ]
