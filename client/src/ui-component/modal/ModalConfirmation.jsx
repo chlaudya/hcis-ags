@@ -27,11 +27,10 @@ const ModalConfirmation = () => {
   });
 
   return (
-    <Dialog isOpen={isOpen} className={cssClasses} size="sm" centered {...restProps}>
+    <Dialog open={isOpen} className={cssClasses} size="sm" centered {...restProps}>
       <ModalHeader
-        className="bg-danger px-2 position-relative"
+        className="bg-danger p-3 position-relative ti-text-color"
         style={{
-          borderRadius: '5px 5px 0 0',
           color: 'white'
         }}
       >
@@ -39,7 +38,7 @@ const ModalConfirmation = () => {
         <X className="position-absolute cursor-pointer" onClick={hideModal} style={{ right: 10 }} />
       </ModalHeader>
       <ModalBody className="p-2">
-        <h6>{modalDescription}</h6>
+        <h6 className="p-3">{modalDescription}</h6>
         <Button color="danger" className="m-2" onClick={handleConfirm}>
           {isSubmitting ? (
             <>
