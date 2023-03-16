@@ -97,6 +97,7 @@
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.14.7",
+        "@reduxjs/toolkit": "^1.9.1",
         "babel-cli": "^6.26.0",
         "babel-loader": "^7.1.4",
         "babel-core": "^7.0.0-bridge.0",
@@ -114,6 +115,9 @@
         "react-app-rewire-alias": "^1.1.7",
         "react-app-rewire-postcss": "^3.0.2",
         "react-app-rewired": "^2.1.5",
+        "redux": "^4.0.5",
+        "redux-debounced": "~0.5.0",
+        "redux-thunk": "~2.3.0",
         "sass": "^1.32.11",
         "webpack-cli": "^4.9.1",
         "webpack-node-externals": "^3.0.0"
