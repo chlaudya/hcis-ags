@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useKeycloak } from '@react-keycloak/web';
 
 // material-ui
@@ -33,7 +33,8 @@ import Transitions from 'src/ui-component/extended/Transitions';
 
 // assets
 import { IconLogout, IconSearch, IconSettings } from '@tabler/icons';
-import User1 from 'assets/images/users/user-round.svg';
+import User1 from 'assets/images/user.png';
+import { getStateUser } from 'store/stateSelector';
 
 // style const
 const useStyles = makeStyles((theme) => ({
@@ -115,6 +116,9 @@ const useStyles = makeStyles((theme) => ({
 // ===========================|| PROFILE MENU ||=========================== //
 
 const ProfileSection = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector(getStateUser);
+
   const classes = useStyles();
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
@@ -209,7 +213,7 @@ const ProfileSection = () => {
                       <Grid item className={classes.flex}>
                         <Typography variant="h4">Hello,</Typography>
                         <Typography component="span" variant="h4" className={classes.name}>
-                          John
+                          {user.name}
                         </Typography>
                       </Grid>
                       <Grid item>

@@ -1,33 +1,58 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { blue, red } from '@material-ui/core/colors';
-import { Delete, Edit } from '@material-ui/icons';
+import { blue, green, red } from '@material-ui/core/colors';
+import { Delete, Edit, FactCheck } from '@material-ui/icons';
 import { Typography, IconButton, Button } from '@material-ui/core';
 
 import FilterKaryawan from './components/FilterKaryawan';
 import DataTable from 'src/ui-component/data-table';
-import { getStateKaryawan } from 'store/stateSelector';
-import { getKaryawanList } from 'store/actions/karyawan';
+import {
+  getStateKaryawan,
+  getStateMasterBank,
+  getStateMasterJabatan,
+  getStateMasterTempatTugas,
+  getStateMasterUnitBisnis
+} from 'store/stateSelector';
+import { getKaryawanList, updateKaryawan } from 'store/actions/karyawan';
+import csrfProtection from 'utils/csrfProtection';
+import { renderDropdownLabel } from 'utils/renderDropdownLabel';
+import { getDropdownJabatan } from 'store/actions/master-jabatan';
+import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
+import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
+import { ModalContext } from 'src/ui-component/modal';
+import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
+import FieldDetail from './components/FieldDetailKaryawan';
+import { getDropdownBank } from 'store/actions/master-bank';
 
-const Karyawan = () => {
+const KaryawanPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { karyawanList, loading } = useSelector(getStateKaryawan);
+  const { showModal, hideModal } = useContext(ModalContext);
+  const { karyawanList, loading, isSubmitting } = useSelector(getStateKaryawan);
+  const { dropdownJabatan } = useSelector(getStateMasterJabatan);
+  const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
+  const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
+  const { dropdownBank } = useSelector(getStateMasterBank);
+
   const [params, setParams] = useState({
     page: 1,
-    size: 10,
-    dropdown: false
+    size: 10
   });
 
   useEffect(() => {
+    csrfProtection.setHeaderCsrfToken();
     dispatch(getKaryawanList(params));
+    dispatch(getDropdownJabatan());
+    dispatch(getDropdownUnitBisnis());
+    dispatch(getDropdownTempatTugas());
+    dispatch(getDropdownBank());
   }, []);
 
-  const redirectToEdit = (karyawanId, NIK, NIP) => {
-    navigate('/human-capital/karyawan/input-karyawan', { state: { karyawanId, NIK, NIP } });
+  const redirectToEdit = (karyawanId) => {
+    navigate(`/human-capital/karyawan/input-karyawan/${karyawanId}`);
   };
 
   const onChangePage = (page) => {
@@ -40,37 +65,79 @@ const Karyawan = () => {
     dispatch(getKaryawanList({ ...params, page: page, size: row }));
   };
 
+  const openModalDetail = (id) => {
+    showModal(MODAL_TYPES.MODAL_DETAIL, {
+      modalTitle: 'Detail Karyawan',
+      children: (
+        <FieldDetail
+          id={id}
+          dropdownJabatan={dropdownJabatan}
+          dropdownTempatTugas={dropdownTempatTugas}
+          dropdownUnitBisnis={dropdownUnitBisnis}
+          dropdownBank={dropdownBank}
+        />
+      )
+    });
+  };
+
+  const onConfirmDelete = (id) => {
+    const karyawan = karyawanList?.data.find((data) => data.karyawan_id === id);
+    const reqBody = {
+      ...karyawan,
+      is_active: false
+    };
+    dispatch(updateKaryawan({ reqBody, hideModal, isDelete: true }));
+  };
+
+  const openModalConfirmation = (id) => {
+    showModal(MODAL_TYPES.MODAL_CONFIRMATION, {
+      modalTitle: 'Hapus Data Karyawan',
+      modalDescription: 'Anda yakin ingin menghapus data Karyawan ini?',
+      confirmText: 'Yes',
+      cancelText: 'No',
+      handleConfirm: () => onConfirmDelete(id),
+      isSubmitting: isSubmitting
+    });
+  };
+
   const KARYAWAN_COLUMN = [
+    {
+      name: 'No',
+      width: '50px',
+      center: true,
+      selector: (_row, index) => `${index + 1}.`
+    },
     {
       name: 'NIP',
       width: '100px',
       center: true,
-      selector: (row, index) => row.karyawanNip
+      selector: (row, index) => row.karyawan_nip
     },
     {
       name: 'Nama',
       center: true,
-      selector: (row) => row.karyawanName
+      width: '150px',
+      selector: (row) => row.karyawan_name
     },
     {
       name: 'Tempat Tugas',
       center: true,
-      selector: (row) => row.lokasiTempatTugas
+      selector: (row) => row.nama_proyek
     },
     {
       name: 'Unit Bisnis',
       center: true,
-      selector: (row) => row.unitName
+      selector: (row) => row.unit_name
     },
     {
       name: 'Jabatan',
       center: true,
-      selector: (row) => row.jabatan
+      selector: (row) => row.jabatan_name
     },
     {
       name: 'Aktif',
       center: true,
-      selector: (row) => (row.isActive === 1 ? 'Aktif' : 'Tidak aktif')
+      selector: (row) => (row.is_active === true ? 'Aktif' : 'Tidak aktif')
     },
     {
       name: 'Aksi',
@@ -80,14 +147,21 @@ const Karyawan = () => {
           <IconButton
             color="secondary"
             aria-label="add an alarm"
-            onClick={() => redirectToEdit(row.karyawanId, row.noNIK, row.karyawanNip)}
+            onClick={() => redirectToEdit(row.karyawan_id)}
           >
             <Edit style={{ color: blue[900] }} />
           </IconButton>
           <IconButton
+            color="secondary"
+            aria-label="add an alarm"
+            onClick={() => openModalDetail(row.karyawan_id)}
+          >
+            <FactCheck style={{ color: green[700] }} />
+          </IconButton>
+          <IconButton
             color="warning"
             aria-label="add an alarm"
-            onClick={(event) => this.handleModalDelete(event)}
+            onClick={() => openModalConfirmation(row.karyawan_id)}
           >
             <Delete style={{ color: red[900] }} />
           </IconButton>
@@ -105,7 +179,7 @@ const Karyawan = () => {
           <Button variant="contained">Input Karyawan</Button>
         </Link>
 
-        <div style={{ height: 500, width: '100%' }}>
+        <div style={{ height: 500, width: '100%', marginTop: '15px' }}>
           <DataTable
             columns={KARYAWAN_COLUMN}
             data={karyawanList?.data}
@@ -120,4 +194,4 @@ const Karyawan = () => {
   );
 };
 
-export default Karyawan;
+export default KaryawanPage;

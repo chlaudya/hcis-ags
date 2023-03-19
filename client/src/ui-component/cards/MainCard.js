@@ -28,6 +28,7 @@ const MainCard = React.forwardRef(
       title,
       iconAction: IconAction,
       onClickIcon,
+      contentStyle,
       ...others
     },
     ref
@@ -47,6 +48,7 @@ const MainCard = React.forwardRef(
           ...sx
         }}
         className="fs-6"
+        style={contentStyle}
       >
         {/* card header and action */}
         {!darkTitle && !IconAction && title && (

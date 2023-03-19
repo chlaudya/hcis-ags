@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Search } from '@material-ui/icons';
 import { Button, Col, Row } from 'reactstrap';
-import { SearchFilter } from 'src/ui-component/tableFilters';
+import { SearchFilter, DropdownFilter } from 'src/ui-component/tableFilters';
 import { getKaryawanBySearch, getKaryawanList } from 'store/actions/karyawan';
+import { getStateMasterUnitBisnis } from 'store/stateSelector';
+import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 
 const FilterKaryawan = ({ params }) => {
   const dispatch = useDispatch();
+  const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchNip, setSearchNip] = useState();
   const [searchUnitBisnis, setSearchUnitBisnis] = useState();
+
+  useEffect(() => {
+    dispatch(getDropdownUnitBisnis());
+  }, []);
 
   const onSearchNip = (value) => {
     setSearchNip(value);
@@ -19,10 +26,12 @@ const FilterKaryawan = ({ params }) => {
   };
 
   const onClickSearch = () => {
-    dispatch(getKaryawanBySearch(params, { karyawanNip: searchNip, unitName: searchUnitBisnis }));
+    dispatch(getKaryawanList({ ...params, nip: searchNip, unit_id: searchUnitBisnis }));
   };
 
   const onClickReset = () => {
+    setSearchNip('');
+    setSearchUnitBisnis('');
     dispatch(getKaryawanList(params));
   };
 
@@ -37,10 +46,12 @@ const FilterKaryawan = ({ params }) => {
         />
       </Col>
       <Col md="4">
-        <SearchFilter
-          placeholder="Unit Bisnis"
-          id="TxtSearchValue"
+        <DropdownFilter
+          placeholder="Select Unit Bisnis"
+          id="DrpSearchValue"
+          name="DropdownTypeAgent"
           value={searchUnitBisnis}
+          options={dropdownUnitBisnis}
           onChange={onSearchUnitBisnis}
         />
       </Col>

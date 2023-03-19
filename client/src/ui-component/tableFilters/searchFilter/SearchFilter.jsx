@@ -2,15 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Input, Label } from 'reactstrap';
 import './search-filter.scss';
 
-const SearchFilter = ({
-  className,
-  id,
-  label,
-  placeholder,
-  value,
-  onChange,
-  ...restProps
-}) => {
+const SearchFilter = ({ className, id, label, placeholder, value, onChange, ...restProps }) => {
   const [search, setSearch] = useState(value);
 
   useEffect(() => {
@@ -35,7 +27,7 @@ const SearchFilter = ({
   return (
     <div className={className}>
       {!!label && (
-        <Label for={id} className='text-bold-600'>
+        <Label for={id} className="fw-bold">
           {label}
         </Label>
       )}
@@ -46,7 +38,7 @@ const SearchFilter = ({
         value={search}
         onChange={onInputChange}
         onKeyPress={onKeyPress}
-        className='search-filter'
+        className="search-filter"
       />
     </div>
   );

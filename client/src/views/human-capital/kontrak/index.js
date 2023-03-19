@@ -1,144 +1,215 @@
-import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
-import { Typography, IconButton } from '@material-ui/core';
-import { blue, red } from '@material-ui/core/colors';
-import { Delete, Edit } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { blue, green, red } from '@material-ui/core/colors';
+import { Delete, Edit, FactCheck } from '@material-ui/icons';
+import { Typography, IconButton, Button } from '@material-ui/core';
 
-import KontrakModal from './modalAdd';
+import FilterKontrak from './components/FilterKontrak';
+import DataTable from 'src/ui-component/data-table';
+import {
+  getStateKontrak,
+  getStateMasterBank,
+  getStateMasterJabatan,
+  getStateMasterTempatTugas,
+  getStateMasterUnitBisnis
+} from 'store/stateSelector';
+import csrfProtection from 'utils/csrfProtection';
+import { renderDropdownLabel } from 'utils/renderDropdownLabel';
+import { getDropdownJabatan } from 'store/actions/master-jabatan';
+import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
+import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
+import { ModalContext } from 'src/ui-component/modal';
+import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
+import FieldDetail from './components/FieldDetailKontrak';
+import { getDropdownBank } from 'store/actions/master-bank';
+import { getKontrakList, updateKontrak } from 'store/actions/kontrak';
+import { renderDate } from 'utils/renderDate';
 
-const columns = [
-  { field: 'id', headerName: 'NIP', width: 110 },
-  { field: 'namakaryawan', headerName: 'Nama Karyawan', width: 300 },
-  { field: 'lokasi', headerName: 'Lokasi Tugas', width: 300 },
-  { field: 'posisi', headerName: 'Posisi', width: 150 },
-  { field: 'period', headerName: 'Periode', width: 150 },
-  { field: 'mulai', headerName: 'Mulai Kontrak', width: 180 },
-  {
-    field: 'berakhir',
-    headerName: 'Berakhir',
-    width: 180
-  },
-  {
-    field: 'action',
-    headerName: 'Action',
-    width: 130,
-    renderCell: (cellValues) => {
-      return (
+const KontrakPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { showModal, hideModal } = useContext(ModalContext);
+  const { kontrakList, loading, isSubmitting } = useSelector(getStateKontrak);
+  const { dropdownJabatan } = useSelector(getStateMasterJabatan);
+  const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
+  const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
+  const { dropdownBank } = useSelector(getStateMasterBank);
+
+  const [params, setParams] = useState({
+    page: 1,
+    size: 10
+  });
+
+  useEffect(() => {
+    csrfProtection.setHeaderCsrfToken();
+    dispatch(getKontrakList(params));
+    dispatch(getDropdownJabatan());
+    dispatch(getDropdownUnitBisnis());
+    dispatch(getDropdownTempatTugas());
+    dispatch(getDropdownBank());
+  }, []);
+
+  const redirectToEdit = (kontrakId) => {
+    navigate(`/human-capital/kontrak/input-kontrak/${kontrakId}`);
+  };
+
+  const onChangePage = (page) => {
+    setParams({ ...params, page: page });
+    dispatch(getKontrakList({ ...params, page: page, size: kontrakList?.size }));
+  };
+
+  const onChangeRowsPerPage = (row, page) => {
+    setParams({ ...params, size: row });
+    dispatch(getKontrakList({ ...params, page: page, size: row }));
+  };
+
+  const openModalDetail = (id) => {
+    showModal(MODAL_TYPES.MODAL_DETAIL, {
+      modalTitle: 'Detail Kontrak',
+      children: (
+        <FieldDetail
+          id={id}
+          dropdownJabatan={dropdownJabatan}
+          dropdownTempatTugas={dropdownTempatTugas}
+          dropdownUnitBisnis={dropdownUnitBisnis}
+          dropdownBank={dropdownBank}
+        />
+      )
+    });
+  };
+
+  const onConfirmDelete = (id) => {
+    const kontrak = kontrakList?.data.find((data) => data.kontrak_id === id);
+    const reqBody = {
+      ...kontrak,
+      is_active: false
+    };
+    dispatch(updateKontrak({ reqBody, hideModal, isDelete: true }));
+  };
+
+  const openModalConfirmation = (id) => {
+    showModal(MODAL_TYPES.MODAL_CONFIRMATION, {
+      modalTitle: 'Hapus Data Kontrak',
+      modalDescription: 'Anda yakin ingin menghapus data Kontrak ini?',
+      confirmText: 'Yes',
+      cancelText: 'No',
+      handleConfirm: () => onConfirmDelete(id),
+      isSubmitting: isSubmitting
+    });
+  };
+
+  const KONTRAK_COLUMN = [
+    {
+      name: 'No',
+      width: '50px',
+      center: true,
+      selector: (_row, index) => `${index + 1}.`
+    },
+    {
+      name: 'NIP',
+      width: '100px',
+      center: true,
+      selector: (row, index) => row.karyawan_nip
+    },
+    {
+      name: 'Nama',
+      center: true,
+      width: '150px',
+      selector: (row) => row.karyawan_name
+    },
+    {
+      name: 'Tempat Tugas',
+      center: true,
+      width: '120px',
+      selector: (row) =>
+        renderDropdownLabel({ list: dropdownTempatTugas, selectedValue: row.tempat_tugas_id })
+    },
+    {
+      name: 'Unit Bisnis',
+      center: true,
+      selector: (row) =>
+        renderDropdownLabel({ list: dropdownUnitBisnis, selectedValue: row.unit_id })
+    },
+    {
+      name: 'Jabatan',
+      center: true,
+      selector: (row) =>
+        renderDropdownLabel({ list: dropdownJabatan, selectedValue: row.jabatan_id })
+    },
+    {
+      name: 'Periode Kontrak',
+      center: true,
+      width: '120px',
+      selector: (row) => row.period_kontrak
+    },
+    {
+      name: 'Tgl. Masuk Kerja',
+      center: true,
+      width: '150px',
+      selector: (row) => renderDate(row.tgl_masuk_kerja)
+    },
+    {
+      name: 'Tgl. Habis Kontrak',
+      width: '150px',
+      center: true,
+      selector: (row) => renderDate(row.tgl_habis_kontrak)
+    },
+    {
+      name: 'Aksi',
+      center: true,
+      cell: (row, index) => (
         <>
           <IconButton
             color="secondary"
             aria-label="add an alarm"
-            onClick={(event) => this.handleModalDelete(event, cellValues)}
+            onClick={() => redirectToEdit(row.kontrak_id)}
           >
             <Edit style={{ color: blue[900] }} />
           </IconButton>
           <IconButton
+            color="secondary"
+            aria-label="add an alarm"
+            onClick={() => openModalDetail(row.kontrak_id)}
+          >
+            <FactCheck style={{ color: green[700] }} />
+          </IconButton>
+          <IconButton
             color="warning"
             aria-label="add an alarm"
-            onClick={(event) => this.handleModalDelete(event, cellValues)}
+            onClick={() => openModalConfirmation(row.kontrak_id)}
           >
             <Delete style={{ color: red[900] }} />
           </IconButton>
         </>
-      );
+      )
     }
-  }
-];
+  ];
 
-const rows = [
-  {
-    id: '001',
-    namakaryawan: 'Snow',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '002',
-    namakaryawan: 'Lannister',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '003',
-    namakaryawan: 'Lannister',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '004',
-    namakaryawan: 'Stark',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '005',
-    namakaryawan: 'Targaryen',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '006',
-    namakaryawan: 'Melisandre',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '007',
-    namakaryawan: 'Clifford',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '008',
-    namakaryawan: 'Frances',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  },
-  {
-    id: '009',
-    namakaryawan: 'Roxie',
-    lokasi: 'Bandung',
-    posisi: 'Engineer',
-    period: '2020',
-    mulai: '10-12-2020',
-    berakhir: '30-12-2024'
-  }
-];
+  return (
+    <MainCard title="Data Kontrak">
+      <Typography variant="body2">
+        <FilterKontrak params={params} />
 
-const Kontrak = () => (
-  <MainCard title="Data Kontrak">
-    <Typography variant="body2">
-      <KontrakModal />
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
-      </div>
-    </Typography>
-  </MainCard>
-);
+        <Link to="/human-capital/kontrak/input-kontrak" style={{ textDecoration: 'none' }}>
+          <Button variant="contained">Input Kontrak</Button>
+        </Link>
 
-export default Kontrak;
+        <div style={{ height: 500, width: '100%', marginTop: '15px' }}>
+          <DataTable
+            columns={KONTRAK_COLUMN}
+            data={kontrakList?.data}
+            progressPending={loading}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            paginationTotalRows={kontrakList?.totalRecord}
+          />
+        </div>
+      </Typography>
+    </MainCard>
+  );
+};
+
+export default KontrakPage;

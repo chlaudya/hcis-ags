@@ -11,6 +11,10 @@ const middlewareRoute = require('./server/middleware/middlewareRoute');
 const packagejson = require('./package.json');
 const keycloakMiddleware = require('./server/middleware/keycloakMiddleware');
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 const csrfProtection = csrf({
   cookie: true
 });

@@ -1,7 +1,8 @@
 const initialState = {
   masterBankList: [],
   loading: false,
-  isSubmitting: false
+  isSubmitting: false,
+  dropdownBank: []
 };
 
 export const masterBankReducer = (state = initialState, action) => {
@@ -18,6 +19,10 @@ export const masterBankReducer = (state = initialState, action) => {
     SET_LOADING_SUBMIT_BUTTON: {
       ...state,
       isSubmitting: action.payload
+    },
+    GET_DROPDOWN_BANK: {
+      ...state,
+      dropdownBank: action.payload
     }
   };
 

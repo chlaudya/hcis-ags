@@ -9,18 +9,22 @@ import { masterIuranReducer } from './master-iuran/masterIuranReducer';
 import { masterPajakReducer } from './master-pajak/masterPajakReducer';
 import { masterTempatTugasReducer } from './master-tempat-tugas/masterTempatTugasReducer';
 import { masterUnitBisnisReducer } from './master-unit-bisnis/masterUnitBisnisReducer';
+import { kontrakReducer } from './kontrak/kontrakReducer';
+import { reportReducer } from './report/reportReducer';
 
 const rootReducer = combineReducers({
   csurf,
   auth: auth,
   karyawan: karyawanReducer,
+  kontrak: kontrakReducer,
   customization: customizationReducer,
   masterBank: masterBankReducer,
   masterJabatan: masterJabatanReducer,
   masterIuran: masterIuranReducer,
   masterPajak: masterPajakReducer,
   masterTempatTugas: masterTempatTugasReducer,
-  masterUnitBisnis: masterUnitBisnisReducer
+  masterUnitBisnis: masterUnitBisnisReducer,
+  report: reportReducer
 });
 
 export default rootReducer;

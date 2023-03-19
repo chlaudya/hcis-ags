@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Input, Label, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
@@ -8,49 +8,74 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
-import { getStateKaryawan } from 'store/stateSelector';
-import { getKaryawanDetail, updateKaryawan } from 'store/actions/karyawan';
+import { getStateKaryawan, getStateMasterBank, getStateUser } from 'store/stateSelector';
+import { addKaryawan, getKaryawanDetail, updateKaryawan } from 'store/actions/karyawan';
 import { karyawanValidationSchema } from './karyawan.validation';
 import { EDUCATION, GENDER, IS_ACTIVE, MARITAL_STATUS, RELIGION } from 'constants/general.constant';
 import { INITIAL_VALUES_KARYAWAN } from './karyawan.const';
+import { getDropdownBank } from 'store/actions/master-bank';
+import { fileToBase64 } from 'utils/convertFileToBase64';
+import csrfProtection from 'utils/csrfProtection';
 
 const FormFieldKaryawan = () => {
   const dispatch = useDispatch();
-  const { state } = useLocation();
+  const { id } = useParams();
   const navigate = useNavigate();
   const { karyawanDetail, isSubmitting } = useSelector(getStateKaryawan);
+  const { user } = useSelector(getStateUser);
+  const { dropdownBank } = useSelector(getStateMasterBank);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KARYAWAN);
   const [fileCV, setFileCV] = useState();
 
   useEffect(() => {
-    if (state) {
-      dispatch(getKaryawanDetail({ ...state }));
-    }
-  }, [state]);
+    csrfProtection.setHeaderCsrfToken();
+    dispatch(getDropdownBank());
+  }, []);
 
   useEffect(() => {
-    setInitialValues(karyawanDetail);
+    if (id) {
+      dispatch(getKaryawanDetail(id));
+      setInitialValues(karyawanDetail);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      setInitialValues(karyawanDetail);
+    }
   }, [karyawanDetail]);
 
   const redirectToKaryawan = () => {
     navigate('/human-capital/karyawan');
   };
 
-  const handleFileSelected = (event) => {
-    console.log('files:', event.target.files[0]);
-    setFileCV(event.target.files[0]);
+  const handleFileSelected = async (event) => {
+    const file = await fileToBase64(event.target.files[0]);
+    setFileCV(file);
   };
 
   const handleSubmit = (values) => {
-    if (state) {
-      dispatch(
-        updateKaryawan(
-          { ...values, filePath: fileCV, karyawanId: state.karyawanId },
-          redirectToKaryawan
-        )
-      );
+    const reqBodyWithCv = {
+      ...values,
+      lampiran_cv: fileCV,
+      karyawan_id: id,
+      usr_update: user.preferred_username
+    };
+
+    const reqBodyNoCv = {
+      ...values,
+      karyawan_id: id,
+      usr_update: user.preferred_username
+    };
+
+    if (id) {
+      if (fileCV) {
+        dispatch(updateKaryawan({ reqBody: reqBodyWithCv, redirect: redirectToKaryawan }));
+      } else {
+        dispatch(updateKaryawan({ reqBody: reqBodyNoCv, redirect: redirectToKaryawan }));
+      }
     } else {
-      dispatch(updateKaryawan({ ...values, filePath: fileCV }, redirectToKaryawan));
+      dispatch(addKaryawan({ ...values, lampiran_cv: fileCV }, redirectToKaryawan));
     }
   };
 
@@ -65,7 +90,7 @@ const FormFieldKaryawan = () => {
         return (
           <Form>
             <MainCard
-              title={state ? 'Edit Data Karyawan' : 'Input Data Karyawan'}
+              title={id ? 'Edit Data Karyawan' : 'Input Data Karyawan'}
               iconAction={ArrowBackIcon}
               onClickIcon={redirectToKaryawan}
             >
@@ -74,28 +99,28 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtNip"
-                    name="karyawanNip"
+                    name="karyawan_nip"
                     label="NIP"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtNama"
-                    name="karyawanName"
+                    name="karyawan_name"
                     label="Nama"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtTempat"
-                    name="tempatTinggal"
+                    name="tempat_tinggal"
                     label="Tempat Lahir"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtTanggalLahir"
-                    name="tanggalLahir"
+                    name="tanggal_lahir"
                     label="Tanggal Lahir"
                     tag="input"
                     type="date"
@@ -112,14 +137,14 @@ const FormFieldKaryawan = () => {
                     className="mb-2"
                     id="TxtJenisKelamin"
                     name="gender"
-                    label="Jenis Kelamnin"
+                    label="Jenis Kelamin"
                     tag="select"
                     options={GENDER}
                   />
                   <FormField
                     className="mb-2"
                     id="TxtStatus"
-                    name="statusNikah"
+                    name="status_nikah"
                     label="Status"
                     tag="select"
                     options={MARITAL_STATUS}
@@ -127,30 +152,32 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtAlamat"
-                    name="alamatRumah"
+                    name="alamat_rumah"
                     label="Alamat Rumah"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtBank"
-                    name="bankName"
+                    name="bank_id"
                     label="Bank"
-                    tag="input"
+                    tag="select"
+                    options={dropdownBank}
                   />
                   <FormField
                     className="mb-2"
                     id="TxtRekg"
-                    name="noRekening"
+                    name="no_rekening"
                     label="No. Rekening"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtAktif"
-                    name="isActive"
+                    name="is_active"
                     label="Aktif"
                     tag="select"
+                    isDisabled={!id}
                     options={IS_ACTIVE}
                   />
                 </Col>
@@ -166,7 +193,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtHp"
-                    name="noHandphone"
+                    name="no_handphone"
                     label="No.Handphone"
                     tag="input"
                     // type="number"
@@ -174,7 +201,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtNik"
-                    name="noNIK"
+                    name="nonik"
                     label="No. KTP"
                     tag="input"
                     // type="number"
@@ -182,7 +209,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtNoKK"
-                    name="noKK"
+                    name="nokk"
                     label="No. KK"
                     tag="input"
                     // type="number"
@@ -190,7 +217,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtNpwp"
-                    name="noNPWP"
+                    name="nonpwp"
                     label="No. NPWP"
                     tag="input"
                     // type="number"
@@ -198,7 +225,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtPendidikan"
-                    name="pendidikanTerakhir"
+                    name="pendidikan_terakhir"
                     label="Pendidikan"
                     tag="select"
                     options={EDUCATION}
@@ -213,14 +240,14 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtAsalSekolah"
-                    name="asalSekolah"
+                    name="asal_sekolah"
                     label="Asal Sekolah"
                     tag="input"
                   />
                   <FormField
                     className="mb-2"
                     id="TxtBpjsTenaga"
-                    name="noBPJSTenagaKerja"
+                    name="no_bpjs_tenaga_kerja"
                     label="No. Ketenagakerjaan"
                     tag="input"
                     // type="number"
@@ -228,7 +255,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtBpjsKes"
-                    name="noBPJSKesehatan"
+                    name="no_bpjs_kesehatan"
                     label="No. Kesehatan"
                     tag="input"
                     // type="number"
@@ -236,7 +263,7 @@ const FormFieldKaryawan = () => {
                   <Label htmlFor="FileCv">Lampiran CV</Label>
                   <Input
                     className="mb-2"
-                    name="filePath"
+                    name="lampiran_cv"
                     id="FileCv"
                     type="file"
                     accept=".pdf"

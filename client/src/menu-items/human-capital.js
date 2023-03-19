@@ -8,7 +8,8 @@ import {
   IconUsers,
   IconCoinBitcoin,
   IconBrandPaypal,
-  IconAdjustments
+  IconAdjustments,
+  IconReport
 } from '@tabler/icons';
 
 // constant
@@ -21,7 +22,8 @@ const icons = {
   IconUsers,
   IconCoinBitcoin,
   IconBrandPaypal,
-  IconAdjustments
+  IconAdjustments,
+  IconReport
 };
 
 // ===========================|| EXTRA PAGES MENU ITEMS ||=========================== //
@@ -60,13 +62,6 @@ const pages = {
       icon: icons.IconBrandPaypal,
       children: [
         {
-          id: 'tagihangaji',
-          title: 'Tagihan Gaji',
-          type: 'item',
-          url: '/human-capital/payroll-tagihangaji',
-          breadcrumbs: false
-        },
-        {
           id: 'generate-slip',
           title: 'Generate Slip Gaji',
           type: 'item',
@@ -79,13 +74,13 @@ const pages = {
       id: 'report',
       title: 'Report',
       type: 'collapse',
-      icon: icons.IconCoinBitcoin,
+      icon: icons.IconReport,
       children: [
         {
           id: 'tagihanGaji',
           title: 'Tagihan Gaji',
           type: 'item',
-          url: '/human-capital/koperasi/inquiry',
+          url: '/human-capital/tagihan-gaji',
           breadcrumbs: false
         }
         // {

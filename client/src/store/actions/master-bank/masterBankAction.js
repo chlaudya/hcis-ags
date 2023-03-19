@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 import {
   GET_MASTER_BANK,
   SET_LOADING_MASTER_BANK_LIST,
-  SET_LOADING_SUBMIT_BUTTON
+  SET_LOADING_SUBMIT_BUTTON,
+  GET_DROPDOWN_BANK
 } from 'store/actions';
 import { MASTER_API } from 'constants/apiUrl.constant';
 
@@ -83,6 +84,35 @@ export const updateMasterBank = ({ reqBody, hideModal, isDelete }) => {
       .finally(() => {
         dispatch({
           type: SET_LOADING_SUBMIT_BUTTON,
+          payload: false
+        });
+      });
+  };
+};
+
+export const getDropdownBank = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_LOADING_MASTER_BANK_LIST,
+      payload: true
+    });
+    axios
+      .get(`${MASTER_API}/bank`)
+      .then((response) => {
+        if (response.data) {
+          const dropdownBank = response.data.data.data.map((item) => {
+            return { label: item.bank_name, value: item.bank_id };
+          });
+          dispatch({
+            type: GET_DROPDOWN_BANK,
+            payload: dropdownBank
+          });
+        }
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        dispatch({
+          type: SET_LOADING_MASTER_BANK_LIST,
           payload: false
         });
       });

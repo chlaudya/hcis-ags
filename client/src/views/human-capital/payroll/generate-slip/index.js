@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { blue, red } from '@material-ui/core/colors';
 import { Delete, Edit } from '@material-ui/icons';
+import Maintenance from 'views/others/Maintenance';
 
 const columns = [
   { field: 'periode', headerName: 'Periode Gaji', width: 180 },
@@ -153,7 +154,7 @@ const TipeTunjangan2 = [
 
 const Kontrak = () => (
   <MainCard title="Generate Slip Gaji">
-    <Typography variant="body2">
+    {/* <Typography variant="body2">
       <Grid container spacing={1}>
         <Grid item xs={6}>
           <Stack spacing={1} sx={{ width: 500 }}>
@@ -189,7 +190,8 @@ const Kontrak = () => (
       <div style={{ height: 480, width: '100%' }}>
         <DataGrid rows={rows} columns={columns} pageSize={6} rowsPerPageOptions={[5]} />
       </div>
-    </Typography>
+    </Typography> */}
+    <Maintenance />
   </MainCard>
 );
 

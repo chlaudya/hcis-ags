@@ -20,3 +20,7 @@ export const setThousandSeparatorNominal = (value) => {
   const thousandSeparatorNominal = inputThousandSeparator(value);
   return thousandSeparatorNominal;
 };
+
+export const roundedThousandSeparator = (number) => {
+  return inputThousandSeparator(Math.round(number));
+};

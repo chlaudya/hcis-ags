@@ -8,6 +8,10 @@ const HCKaryawan = Loadable(lazy(() => import('views/human-capital/karyawan')));
 const HCFormKaryawan = Loadable(lazy(() => import('views/human-capital/karyawan/karyawan-form')));
 
 const HCKontrak = Loadable(lazy(() => import('views/human-capital/kontrak')));
+const HCFormKontrak = Loadable(lazy(() => import('views/human-capital/kontrak/kontrak-form')));
+
+const HCReportTagihanGaji = Loadable(lazy(() => import('views/human-capital/report/tagihan-gaji')));
+
 const HCTagihanGaji = Loadable(lazy(() => import('views/human-capital/payroll/tagihan-gaji')));
 const HCGenSlipGaji = Loadable(lazy(() => import('views/human-capital/payroll/generate-slip')));
 
@@ -20,6 +24,10 @@ const HumanCapitalRoutes = {
       element: <HCKaryawan />
     },
     {
+      path: '/human-capital/karyawan/input-karyawan/:id',
+      element: <HCFormKaryawan />
+    },
+    {
       path: '/human-capital/karyawan/input-karyawan',
       element: <HCFormKaryawan />
     },
@@ -29,8 +37,17 @@ const HumanCapitalRoutes = {
       element: <HCKontrak />
     },
     {
-      path: '/human-capital/koperasi/inquiry',
-      element: <HCKaryawan />
+      path: '/human-capital/kontrak/input-kontrak',
+      element: <HCFormKontrak />
+    },
+    {
+      path: '/human-capital/kontrak/input-kontrak/:id',
+      element: <HCFormKontrak />
+    },
+    //ini masih dummy
+    {
+      path: '/human-capital/tagihan-gaji',
+      element: <HCReportTagihanGaji />
     },
     {
       path: '/human-capital/koperasi/pengajuan',
