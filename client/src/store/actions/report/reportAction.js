@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { GET_REPORT_TAGIHAN_GAJI, SET_LOADING_REPORT_TAGIHAN_GAJI } from 'store/actions';
 import { REPORT_API } from 'constants/apiUrl.constant';
 
@@ -24,7 +24,7 @@ export const getReportTagihanGaji = (params) => {
         }
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.header?.errors[0]?.message || err?.message);
+        console.log(err);
         dispatch({
           type: GET_REPORT_TAGIHAN_GAJI,
           payload: []
