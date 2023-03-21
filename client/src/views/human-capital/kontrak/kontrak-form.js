@@ -94,16 +94,22 @@ const FormFieldKontrak = () => {
     setFieldValue('uang_telekomunikasi', setThousandSeparatorNominal(value));
   };
 
+  const handleChangeUangMakan = (value, setFieldValue) => {
+    setFieldValue('uang_makan', setThousandSeparatorNominal(value));
+  };
+
   const handleSubmit = (values) => {
     const formattedGaji = Number(removeThousandSeparator(values.gaji));
     const formattedUangTelekomunikasi = Number(removeThousandSeparator(values.uang_telekomunikasi));
+    const formattedUangMakan = Number(removeThousandSeparator(values.uang_makan));
 
     const reqBodyEdit = {
       ...values,
       kontrak_id: id,
       usr_update: user.preferred_username,
       gaji: formattedGaji,
-      uang_telekomunikasi: formattedUangTelekomunikasi
+      uang_telekomunikasi: formattedUangTelekomunikasi,
+      uang_makan: formattedUangMakan
     };
 
     if (id) {
@@ -111,7 +117,12 @@ const FormFieldKontrak = () => {
     } else {
       dispatch(
         addKontrak(
-          { ...values, gaji: formattedGaji, uang_telekomunikasi: formattedUangTelekomunikasi },
+          {
+            ...values,
+            gaji: formattedGaji,
+            uang_telekomunikasi: formattedUangTelekomunikasi,
+            uang_makan: formattedUangMakan
+          },
           redirectToKontrak
         )
       );
@@ -129,7 +140,7 @@ const FormFieldKontrak = () => {
         return (
           <Form>
             <MainCard
-              title={state ? 'Edit Kontrak' : 'Input Kontrak'}
+              title={id ? 'Edit Kontrak' : 'Input Kontrak'}
               iconAction={ArrowBackIcon}
               onClickIcon={redirectToKontrak}
             >
@@ -186,9 +197,25 @@ const FormFieldKontrak = () => {
                   />
                   <FormField
                     className="mb-2"
+                    id="TxtTipeTunjangan"
+                    name="tipe_tunjangan"
+                    label="Tipe Tunjangan"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
                     id="TxtUangTelekomunikasi"
                     name="uang_telekomunikasi"
                     label="Uang Telekomunikasi"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) => handleChangeUangTelekomunikasi(event, setFieldValue)}
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtUangMakan"
+                    name="uang_makan"
+                    label="Uang Makan"
                     tag="input"
                     type="tel"
                     onChangeInput={(event) => handleChangeUangTelekomunikasi(event, setFieldValue)}
@@ -222,13 +249,6 @@ const FormFieldKontrak = () => {
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtTipeTunjangan"
-                    name="tipe_tunjangan"
-                    label="Tipe Tunjangan"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
                     id="TxtTanggalMasuk"
                     name="tgl_masuk_kerja"
                     label="Tanggal Masuk Kerja"
@@ -249,6 +269,21 @@ const FormFieldKontrak = () => {
                     name="kontrak_kode"
                     label="No. Kontrak"
                     tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtRequestNo"
+                    name="request_no"
+                    label="Request No."
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtTglRequest"
+                    name="request_date"
+                    label="Tanggal Request"
+                    tag="input"
+                    type="date"
                   />
                 </Col>
               </Row>

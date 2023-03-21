@@ -21,13 +21,15 @@ const MasterPajakForm = Loadable(lazy(() => import('views/master/pajak/pajak-for
 const MasterBank = Loadable(lazy(() => import('views/master/bank')));
 const MasterBankForm = Loadable(lazy(() => import('views/master/bank/bank-form')));
 
+const Template = Loadable(lazy(() => import('views/utilities/template/template')));
+
 const UtilitiesRoutes = {
   path: '/',
   element: <MainLayout />,
   children: [
     {
       path: '/utilities/templates',
-      element: <HCKaryawan />
+      element: <Template />
     },
     {
       path: '/utilities/master-jabatan',

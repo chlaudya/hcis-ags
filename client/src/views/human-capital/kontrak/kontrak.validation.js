@@ -14,5 +14,8 @@ export const kontrakValidationSchema = Yup.object().shape({
   tgl_masuk_kerja: Yup.string().required('wajib diisi!'),
   tipe_tunjangan: Yup.string().required('wajib diisi!'),
   uang_telekomunikasi: Yup.string().required('wajib diisi!'),
-  unit_id: Yup.string().required('wajib diisi!')
+  unit_id: Yup.string().required('wajib diisi!'),
+  request_no: Yup.string().required('wajib diisi!'),
+  request_date: Yup.string().required('wajib diisi!'),
+  uang_makan: Yup.string().required('wajib diisi!')
 });

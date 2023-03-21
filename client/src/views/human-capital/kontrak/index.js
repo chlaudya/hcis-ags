@@ -4,14 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { blue, green, red } from '@material-ui/core/colors';
-import { Delete, Edit, FactCheck } from '@material-ui/icons';
+import { Delete, Download, Edit } from '@material-ui/icons';
 import { Typography, IconButton, Button } from '@material-ui/core';
 
 import FilterKontrak from './components/FilterKontrak';
 import DataTable from 'src/ui-component/data-table';
 import {
   getStateKontrak,
-  getStateMasterBank,
   getStateMasterJabatan,
   getStateMasterTempatTugas,
   getStateMasterUnitBisnis
@@ -23,7 +22,6 @@ import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
 import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
-import FieldDetail from './components/FieldDetailKontrak';
 import { getDropdownBank } from 'store/actions/master-bank';
 import { getKontrakList, updateKontrak } from 'store/actions/kontrak';
 import { renderDate } from 'utils/renderDate';
@@ -36,7 +34,6 @@ const KontrakPage = () => {
   const { dropdownJabatan } = useSelector(getStateMasterJabatan);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
-  const { dropdownBank } = useSelector(getStateMasterBank);
 
   const [params, setParams] = useState({
     page: 1,
@@ -66,19 +63,8 @@ const KontrakPage = () => {
     dispatch(getKontrakList({ ...params, page: page, size: row }));
   };
 
-  const openModalDetail = (id) => {
-    showModal(MODAL_TYPES.MODAL_DETAIL, {
-      modalTitle: 'Detail Kontrak',
-      children: (
-        <FieldDetail
-          id={id}
-          dropdownJabatan={dropdownJabatan}
-          dropdownTempatTugas={dropdownTempatTugas}
-          dropdownUnitBisnis={dropdownUnitBisnis}
-          dropdownBank={dropdownBank}
-        />
-      )
-    });
+  const openPdf = (kontrakId) => {
+    window.open(`${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${kontrakId}`);
   };
 
   const onConfirmDelete = (id) => {
@@ -172,9 +158,9 @@ const KontrakPage = () => {
           <IconButton
             color="secondary"
             aria-label="add an alarm"
-            onClick={() => openModalDetail(row.kontrak_id)}
+            onClick={() => openPdf(row.kontrak_id)}
           >
-            <FactCheck style={{ color: green[700] }} />
+            <Download style={{ color: green[700] }} />
           </IconButton>
           <IconButton
             color="warning"

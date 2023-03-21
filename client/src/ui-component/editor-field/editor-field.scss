@@ -1,0 +1,11 @@
+.EditorField {
+  &-editor {
+    border: 1px solid gray;
+    min-height: 50vh;
+    padding: 0.5rem 2rem;
+  }
+  &-editorHtml {
+    width: 100%;
+    padding: 0.5rem 2rem;
+  }
+}
