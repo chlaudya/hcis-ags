@@ -11,7 +11,6 @@ export const karyawanValidationSchema = Yup.object().shape({
   alamat_rumah: Yup.string().required('wajib diisi!'),
   bank_id: Yup.string().required('wajib diisi!'),
   no_rekening: Yup.string().required('wajib diisi!'),
-  isActive: Yup.string().required('wajib diisi!'),
   email: Yup.string().required('wajib diisi!'),
   no_handphone: Yup.string().required('wajib diisi!'),
   nonik: Yup.string().required('wajib diisi!'),
@@ -23,5 +22,14 @@ export const karyawanValidationSchema = Yup.object().shape({
   no_bpjs_tenaga_kerja: Yup.string().required('wajib diisi!'),
   no_bpjs_kesehatan: Yup.string().required('wajib diisi!'),
   lampiran_cv: Yup.string().required('wajib diisi!'),
-  is_active: Yup.boolean().required('wajib diisi!')
+  is_active: Yup.boolean().required('wajib diisi!'),
+  golongan_darah: Yup.string().required('wajib diisi!'),
+  nama_ayah_kandung: Yup.string().required('wajib diisi!'),
+  nama_ibu_kandung: Yup.string().required('wajib diisi!'),
+  keluarga_yang_dihubungi: Yup.string().required('wajib diisi!'),
+  nama_keluarga_yang_dihubungi: Yup.string().required('wajib diisi!'),
+  alamat_domisili: Yup.string().required('wajib diisi!'),
+  no_hp_keluarga: Yup.string().required('wajib diisi!'),
+  rekening_atas_nama: Yup.string().required('wajib diisi!'),
+  riwayat_pekerjaan: Yup.string().required('wajib diisi!')
 });

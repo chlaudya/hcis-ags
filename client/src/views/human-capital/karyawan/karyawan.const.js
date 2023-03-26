@@ -20,5 +20,14 @@ export const INITIAL_VALUES_KARYAWAN = {
   no_bpjs_tenaga_kerja: '',
   no_bpjs_kesehatan: '',
   lampiran_cv: '',
-  is_active: true
+  is_active: true,
+  golongan_darah: '',
+  nama_ayah_kandung: '',
+  nama_ibu_kandung: '',
+  keluarga_yang_dihubungi: '',
+  nama_keluarga_yang_dihubungi: '',
+  alamat_domisili: '',
+  no_hp_keluarga: '',
+  rekening_atas_nama: '',
+  riwayat_pekerjaan: ''
 };

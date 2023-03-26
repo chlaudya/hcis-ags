@@ -90,17 +90,12 @@ const FormFieldKontrak = () => {
     setFieldValue('gaji', setThousandSeparatorNominal(value));
   };
 
-  const handleChangeUangTelekomunikasi = (value, setFieldValue) => {
-    setFieldValue('uang_telekomunikasi', setThousandSeparatorNominal(value));
-  };
-
   const handleChangeUangMakan = (value, setFieldValue) => {
     setFieldValue('uang_makan', setThousandSeparatorNominal(value));
   };
 
   const handleSubmit = (values) => {
     const formattedGaji = Number(removeThousandSeparator(values.gaji));
-    const formattedUangTelekomunikasi = Number(removeThousandSeparator(values.uang_telekomunikasi));
     const formattedUangMakan = Number(removeThousandSeparator(values.uang_makan));
 
     const reqBodyEdit = {
@@ -108,7 +103,6 @@ const FormFieldKontrak = () => {
       kontrak_id: id,
       usr_update: user.preferred_username,
       gaji: formattedGaji,
-      uang_telekomunikasi: formattedUangTelekomunikasi,
       uang_makan: formattedUangMakan
     };
 
@@ -120,7 +114,6 @@ const FormFieldKontrak = () => {
           {
             ...values,
             gaji: formattedGaji,
-            uang_telekomunikasi: formattedUangTelekomunikasi,
             uang_makan: formattedUangMakan
           },
           redirectToKontrak
@@ -199,17 +192,8 @@ const FormFieldKontrak = () => {
                     className="mb-2"
                     id="TxtTipeTunjangan"
                     name="tipe_tunjangan"
-                    label="Tipe Tunjangan"
+                    label="Tunjangan"
                     tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtUangTelekomunikasi"
-                    name="uang_telekomunikasi"
-                    label="Uang Telekomunikasi"
-                    tag="input"
-                    type="tel"
-                    onChangeInput={(event) => handleChangeUangTelekomunikasi(event, setFieldValue)}
                   />
                   <FormField
                     className="mb-2"
@@ -218,7 +202,7 @@ const FormFieldKontrak = () => {
                     label="Uang Makan"
                     tag="input"
                     type="tel"
-                    onChangeInput={(event) => handleChangeUangTelekomunikasi(event, setFieldValue)}
+                    onChangeInput={(event) => handleChangeUangMakan(event, setFieldValue)}
                   />
                 </Col>
                 <Col>

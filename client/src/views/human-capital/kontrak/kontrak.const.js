@@ -5,7 +5,6 @@ export const INITIAL_VALUES_KONTRAK = {
   tempat_tugas_id: '',
   jabatan_id: '',
   gaji: '',
-  uang_telekomunikasi: '',
   karyawan_name: '',
   tempat_tinggal: '',
   tanggal_lahir: '',

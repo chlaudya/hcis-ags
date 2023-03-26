@@ -36,6 +36,13 @@ export const GENDER = [
   { value: 'p', label: 'Perempuan' }
 ];
 
+export const BLOOD_TYPE = [
+  { value: 'O', label: 'O' },
+  { value: 'A', label: 'A' },
+  { value: 'B', label: 'B' },
+  { value: 'AB', label: 'AB' }
+];
+
 export const TUNJANGAN = [
   { value: true, label: 'Ada Tunjangan' },
   { value: false, label: 'Tidak Ada Tunjangan' }

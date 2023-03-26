@@ -11,7 +11,14 @@ import MainCard from 'src/ui-component/cards/MainCard';
 import { getStateKaryawan, getStateMasterBank, getStateUser } from 'store/stateSelector';
 import { addKaryawan, getKaryawanDetail, updateKaryawan } from 'store/actions/karyawan';
 import { karyawanValidationSchema } from './karyawan.validation';
-import { EDUCATION, GENDER, IS_ACTIVE, MARITAL_STATUS, RELIGION } from 'constants/general.constant';
+import {
+  BLOOD_TYPE,
+  EDUCATION,
+  GENDER,
+  IS_ACTIVE,
+  MARITAL_STATUS,
+  RELIGION
+} from 'constants/general.constant';
 import { INITIAL_VALUES_KARYAWAN } from './karyawan.const';
 import { getDropdownBank } from 'store/actions/master-bank';
 import { fileToBase64 } from 'utils/convertFileToBase64';
@@ -49,9 +56,10 @@ const FormFieldKaryawan = () => {
     navigate('/human-capital/karyawan');
   };
 
-  const handleFileSelected = async (event) => {
+  const handleFileSelected = async (event, setFieldValue) => {
     const file = await fileToBase64(event.target.files[0]);
     setFileCV(file);
+    setFieldValue('lampiran_cv', file);
   };
 
   const handleSubmit = (values) => {
@@ -85,8 +93,9 @@ const FormFieldKaryawan = () => {
       enableReinitialize={true}
       initialValues={initialValues}
       validationSchema={karyawanValidationSchema}
+      onSubmit={handleSubmit}
     >
-      {({ values, isValid }) => {
+      {({ errors, touched, setFieldValue }) => {
         return (
           <Form>
             <MainCard
@@ -143,17 +152,118 @@ const FormFieldKaryawan = () => {
                   />
                   <FormField
                     className="mb-2"
+                    id="TxtGolonganDarah"
+                    name="golongan_darah"
+                    label="Golongan Darah"
+                    tag="select"
+                    options={BLOOD_TYPE}
+                  />
+                  <FormField
+                    className="mb-2"
                     id="TxtStatus"
                     name="status_nikah"
                     label="Status"
                     tag="select"
                     options={MARITAL_STATUS}
                   />
+
+                  <FormField
+                    className="mb-2"
+                    id="TxtNamaAyah"
+                    name="nama_ayah_kandung"
+                    label="Nama Ayah Kandung"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtNamaIbu"
+                    name="nama_ibu_kandung"
+                    label="Nama Ibu Kandung"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtKeluargaDihubungi"
+                    name="keluarga_yang_dihubungi"
+                    label="Keluarga Yang Bisa Dihubungi"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtNamaKeluargaDihubungi"
+                    name="nama_keluarga_yang_dihubungi"
+                    label="Nama Keluarga Yang Bisa Dihubungi"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtNoHpKeluarga"
+                    name="no_hp_keluarga"
+                    label="No. Handphone Keluarga"
+                    tag="input"
+                    type="tel"
+                  />
                   <FormField
                     className="mb-2"
                     id="TxtAlamat"
                     name="alamat_rumah"
                     label="Alamat Rumah"
+                    tag="input"
+                    type="textarea"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtAlamatDomisili"
+                    name="alamat_domisili"
+                    label="Alamat Domisili"
+                    tag="input"
+                    type="textarea"
+                  />
+                </Col>
+                <Col>
+                  <FormField
+                    className="mb-2"
+                    id="TxtEmail"
+                    name="email"
+                    label="Email"
+                    tag="input"
+                    type="email"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtHp"
+                    name="no_handphone"
+                    label="No.Handphone"
+                    tag="input"
+                    type="tel"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtNik"
+                    name="nonik"
+                    label="No. KTP"
+                    tag="input"
+                  />
+                  <FormField className="mb-2" id="TxtNoKK" name="nokk" label="No. KK" tag="input" />
+                  <FormField
+                    className="mb-2"
+                    id="TxtNpwp"
+                    name="nonpwp"
+                    label="No. NPWP"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtBpjsTenaga"
+                    name="no_bpjs_tenaga_kerja"
+                    label="No. Ketenagakerjaan"
+                    tag="input"
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtBpjsKes"
+                    name="no_bpjs_kesehatan"
+                    label="No. Kesehatan"
                     tag="input"
                   />
                   <FormField
@@ -173,57 +283,41 @@ const FormFieldKaryawan = () => {
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtAktif"
-                    name="is_active"
-                    label="Aktif"
-                    tag="select"
-                    isDisabled={!id}
-                    options={IS_ACTIVE}
-                  />
-                </Col>
-                <Col>
-                  <FormField
-                    className="mb-2"
-                    id="TxtEmail"
-                    name="email"
-                    label="Email"
+                    id="TxtRekgAtasNama"
+                    name="rekening_atas_nama"
+                    label="Rekening Atas Nama"
                     tag="input"
-                    type="email"
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtHp"
-                    name="no_handphone"
-                    label="No.Handphone"
+                    id="TxtRiwayatPekerjaan"
+                    name="riwayat_pekerjaan"
+                    label="Riwayat Pekerjaan"
                     tag="input"
-                    // type="number"
                   />
-                  <FormField
+
+                  <Label
+                    htmlFor="FileCv"
+                    className={errors.lampiran_cv && touched.lampiran_cv ? `text-danger` : null}
+                  >
+                    Lampiran CV
+                  </Label>
+                  <Input
                     className="mb-2"
-                    id="TxtNik"
-                    name="nonik"
-                    label="No. KTP"
-                    tag="input"
-                    // type="number"
+                    style={{
+                      borderColor: errors.lampiran_cv && touched.lampiran_cv ? '#ec0000' : '#ddd'
+                    }}
+                    name="lampiran_cv"
+                    id="FileCv"
+                    type="file"
+                    accept=".pdf"
+                    onChange={(event) => handleFileSelected(event, setFieldValue)}
                   />
+                  {errors.lampiran_cv && touched.lampiran_cv ? (
+                    <div className="text-bold-600 text-danger">{errors.lampiran_cv}</div>
+                  ) : null}
                   <FormField
-                    className="mb-2"
-                    id="TxtNoKK"
-                    name="nokk"
-                    label="No. KK"
-                    tag="input"
-                    // type="number"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtNpwp"
-                    name="nonpwp"
-                    label="No. NPWP"
-                    tag="input"
-                    // type="number"
-                  />
-                  <FormField
-                    className="mb-2"
+                    className="mb-2 mt-3"
                     id="TxtPendidikan"
                     name="pendidikan_terakhir"
                     label="Pendidikan"
@@ -246,39 +340,17 @@ const FormFieldKaryawan = () => {
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtBpjsTenaga"
-                    name="no_bpjs_tenaga_kerja"
-                    label="No. Ketenagakerjaan"
-                    tag="input"
-                    // type="number"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtBpjsKes"
-                    name="no_bpjs_kesehatan"
-                    label="No. Kesehatan"
-                    tag="input"
-                    // type="number"
-                  />
-                  <Label htmlFor="FileCv">Lampiran CV</Label>
-                  <Input
-                    className="mb-2"
-                    name="lampiran_cv"
-                    id="FileCv"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileSelected}
+                    id="TxtAktif"
+                    name="is_active"
+                    label="Aktif"
+                    tag="select"
+                    isDisabled={!id}
+                    options={IS_ACTIVE}
                   />
                 </Col>
               </Row>
 
-              <Button
-                color="primary"
-                className="m-2 pe-4 ps-4"
-                type="submit"
-                disabled={isValid}
-                onClick={() => handleSubmit(values)}
-              >
+              <Button color="primary" className="m-2 pe-4 ps-4" type="submit">
                 {isSubmitting ? (
                   <>
                     <Spinner size="sm" />

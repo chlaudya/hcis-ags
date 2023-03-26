@@ -28,8 +28,12 @@ const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTu
     printJS({
       printable: 'DetailKaryawan',
       type: 'html',
+      scanStyles: false,
+      targetStyles: "['*']",
+      style:
+        'table{margin-top:50px; width:100%;} th{ border: 1px solid #d9d9d9 !important;} td{ border: 1px solid #d9d9d9 !important;}',
       header:
-        '<img style="width:100px; position:absolute" src="https://lh5.googleusercontent.com/p/AF1QipMOa6vMFl7q-HIuHUxJ777KbL1PVr4kTt8lHHZX=w600-h321-p-k-no">My custom header</img>'
+        '<img style="width:80px; position:absolute; top:0; left:0; margin-right:120px;" src="https://lh5.googleusercontent.com/p/AF1QipMOa6vMFl7q-HIuHUxJ777KbL1PVr4kTt8lHHZX=w600-h321-p-k-no"></img>'
     });
 
     // printJS({
