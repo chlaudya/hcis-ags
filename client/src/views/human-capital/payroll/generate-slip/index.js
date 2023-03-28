@@ -101,7 +101,7 @@ const GenerateSlipGaji = () => {
       name: 'Period',
       center: true,
       width: '120px',
-      selector: (row) => row.peiode
+      selector: (row) => row.periode
     },
     {
       name: 'Download PDF',
