@@ -17,6 +17,7 @@ import {
 import csrfProtection from 'utils/csrfProtection';
 import FormFieldUnitBisnis from './unit-bisnis-form';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const UnitBisnisPage = () => {
   const dispatch = useDispatch();
@@ -102,7 +103,8 @@ const UnitBisnisPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(masterUnitBisnisList?.page, masterUnitBisnisList?.size, index)}.`
     },
     {
       name: 'Unit Name',
@@ -145,16 +147,14 @@ const UnitBisnisPage = () => {
           Input Unit Bisnis
         </Button>
 
-        <div style={{ height: 500, width: '100%' }}>
-          <DataTable
-            columns={COLUMN}
-            data={masterUnitBisnisList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterUnitBisnisList?.totalRecord}
-          />
-        </div>
+        <DataTable
+          columns={COLUMN}
+          data={masterUnitBisnisList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={masterUnitBisnisList?.total_record}
+        />
       </Typography>
     </MainCard>
   );

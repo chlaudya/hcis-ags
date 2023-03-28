@@ -19,6 +19,7 @@ import csrfProtection from 'utils/csrfProtection';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import FormFieldMasterJabatan from './jabatan-form';
 import { inputThousandSeparator, removeThousandSeparator } from 'utils/thousandSeparator';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const JabatanPage = () => {
   const dispatch = useDispatch();
@@ -109,7 +110,8 @@ const JabatanPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => index + 1
+      selector: (_row, index) =>
+        `${paginationNumber(masterJabatanList?.page, masterJabatanList?.size, index)}.`
     },
     {
       name: 'Jabatan Name',
@@ -156,17 +158,15 @@ const JabatanPage = () => {
         <Button variant="contained" className="mb-3" onClick={openModalAdd}>
           Input Master Jabatan
         </Button>
-
-        <div style={{ height: 500, width: '100%' }}>
-          <DataTable
-            columns={COLUMN}
-            data={masterJabatanList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterJabatanList?.totalRecord}
-          />
-        </div>
+        <DataTable
+          columns={COLUMN}
+          data={masterJabatanList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={masterJabatanList?.total_record}
+        />
+        s{' '}
       </Typography>
     </MainCard>
   );

@@ -15,6 +15,7 @@ import csrfProtection from 'utils/csrfProtection';
 import { getStateMasterIuran, getStateUser } from 'store/stateSelector';
 import { addMasterIuran, getMasterIuran, updateMasterIuran } from 'store/actions/master-iuran';
 import { inputThousandSeparator, removeThousandSeparator } from 'utils/thousandSeparator';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const IuranPage = () => {
   const dispatch = useDispatch();
@@ -105,7 +106,8 @@ const IuranPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(masterIuranList?.page, masterIuranList?.size, index)}.`
     },
     {
       name: 'Tipe Iuran',
@@ -153,16 +155,14 @@ const IuranPage = () => {
           Input Iuran
         </Button>
 
-        <div style={{ height: 500, width: '100%' }}>
-          <DataTable
-            columns={COLUMN}
-            data={masterIuranList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterIuranList?.totalRecord}
-          />
-        </div>
+        <DataTable
+          columns={COLUMN}
+          data={masterIuranList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={masterIuranList?.total_record}
+        />
       </Typography>
     </MainCard>
   );

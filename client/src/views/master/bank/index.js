@@ -14,6 +14,7 @@ import FormFieldBank from './bank-form';
 import { addMasterBank, getMasterBank, updateMasterBank } from 'store/actions/master-bank';
 import { getStateUser, getStateMasterBank } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const BankPage = () => {
   const dispatch = useDispatch();
@@ -99,7 +100,8 @@ const BankPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(masterBankList?.page, masterBankList?.size, index)}.`
     },
     {
       name: 'Bank Name',
@@ -139,22 +141,18 @@ const BankPage = () => {
   return (
     <MainCard title="Master Bank">
       <Typography variant="body2">
-        {/* <Link to="/human-capital/master-bank/input" style={{ textDecoration: 'none' }}> */}
         <Button variant="contained" className="mb-3" onClick={openModalAdd}>
           Input Bank
         </Button>
-        {/* </Link> */}
 
-        <div style={{ height: 500, width: '100%' }}>
-          <DataTable
-            columns={COLUMN}
-            data={masterBankList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterBankList?.totalRecord}
-          />
-        </div>
+        <DataTable
+          columns={COLUMN}
+          data={masterBankList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={masterBankList?.total_record}
+        />
       </Typography>
     </MainCard>
   );

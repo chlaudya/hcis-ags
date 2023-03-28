@@ -181,7 +181,6 @@ const KaryawanPage = () => {
           <Button variant="contained">Input Karyawan</Button>
         </Link>
 
-        {/* <div style={{ height: 500, width: '100%', marginTop: '15px' }}> */}
         <DataTable
           columns={KARYAWAN_COLUMN}
           data={karyawanList?.data}
@@ -190,7 +189,6 @@ const KaryawanPage = () => {
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={karyawanList?.total_record}
         />
-        {/* </div> */}
       </Typography>
     </MainCard>
   );

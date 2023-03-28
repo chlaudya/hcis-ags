@@ -10,6 +10,7 @@ import { getStateReport } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
 import { getReportTagihanGaji } from 'store/actions/report/reportAction';
 import { inputThousandSeparator, roundedThousandSeparator } from 'utils/thousandSeparator';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const TagihanGajiPage = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,8 @@ const TagihanGajiPage = () => {
       name: 'No',
       width: '50px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(reportTagihanGaji?.page, reportTagihanGaji?.size, index)}.`
     },
     {
       name: 'NIP',
@@ -107,7 +109,7 @@ const TagihanGajiPage = () => {
           progressPending={loading}
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
-          paginationTotalRows={reportTagihanGaji?.totalRecord}
+          paginationTotalRows={reportTagihanGaji?.total_record}
         />
       </Typography>
     </MainCard>

@@ -26,6 +26,7 @@ import { getDropdownJabatan } from 'store/actions/master-jabatan';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { renderDropdownLabel } from 'utils/renderDropdownLabel';
 import { inputThousandSeparator, removeThousandSeparator } from 'utils/thousandSeparator';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const TempatTugasPage = () => {
   const dispatch = useDispatch();
@@ -141,7 +142,8 @@ const TempatTugasPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(masterTempatTugasList?.page, masterTempatTugasList?.size, index)}.`
     },
     {
       name: 'Jabatan ID',
@@ -212,16 +214,14 @@ const TempatTugasPage = () => {
           Input Tempat Tugas
         </Button>
 
-        <div style={{ height: 500, width: '100%' }}>
-          <DataTable
-            columns={COLUMN}
-            data={masterTempatTugasList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterTempatTugasList?.totalRecord}
-          />
-        </div>
+        <DataTable
+          columns={COLUMN}
+          data={masterTempatTugasList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={masterTempatTugasList?.total_record}
+        />
       </Typography>
     </MainCard>
   );

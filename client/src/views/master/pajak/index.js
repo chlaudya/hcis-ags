@@ -14,6 +14,7 @@ import { ModalContext } from 'src/ui-component/modal';
 import csrfProtection from 'utils/csrfProtection';
 import { addMasterPajak, getMasterPajak, updateMasterPajak } from 'store/actions/master-pajak';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const PajakPage = () => {
   const dispatch = useDispatch();
@@ -100,7 +101,8 @@ const PajakPage = () => {
       name: 'No',
       width: '100px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(masterPajakList?.page, masterPajakList?.size, index)}.`
     },
     {
       name: 'Tipe Pajak',
@@ -149,16 +151,14 @@ const PajakPage = () => {
           Input Pajak
         </Button>
 
-        <div style={{ height: 500, width: '100%' }}>
-          <DataTable
-            columns={COLUMN}
-            data={masterPajakList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={masterPajakList?.totalRecord}
-          />
-        </div>
+        <DataTable
+          columns={COLUMN}
+          data={masterPajakList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={masterPajakList?.total_record}
+        />
       </Typography>
     </MainCard>
   );

@@ -184,7 +184,6 @@ const KontrakPage = () => {
           <Button variant="contained">Input Kontrak</Button>
         </Link>
 
-        {/* <div style={{ height: 500, width: '100%', marginTop: '15px' }}> */}
         <DataTable
           columns={KONTRAK_COLUMN}
           data={kontrakList?.data}
@@ -193,7 +192,6 @@ const KontrakPage = () => {
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={kontrakList?.total_record}
         />
-        {/* </div> */}
       </Typography>
     </MainCard>
   );
