@@ -2,16 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Search } from '@material-ui/icons';
-import { Button, Col, Row } from 'reactstrap';
+import { Button, Col, Input, Label, Row } from 'reactstrap';
 import { SearchFilter, DropdownFilter } from 'src/ui-component/tableFilters';
 import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
-import { getKontrakList } from 'store/actions/kontrak';
+import { getGenerateSlipGaji } from 'store/actions/slip-gaji';
+import ReactDatePicker from 'react-datepicker';
+import { formattedPeriod } from 'utils/renderDate';
 
-const FilterKontrak = ({ params }) => {
+const FilterSlipGaji = ({ params }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchNip, setSearchNip] = useState('');
+  const [searchPeriod, setSearchPeriod] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
   const [searchParams, setSearchParams] = useState({ ...params });
 
@@ -35,39 +38,70 @@ const FilterKontrak = ({ params }) => {
     });
   };
 
+  const onSearchPeriod = (value) => {
+    setSearchPeriod(value);
+    setSearchParams({
+      ...searchParams,
+      periode: formattedPeriod(value)
+    });
+  };
+
   const onClickSearch = () => {
-    dispatch(getKontrakList(searchParams));
+    dispatch(getGenerateSlipGaji(searchParams));
   };
 
   const onClickReset = () => {
     setSearchNip('');
+    setSearchPeriod('');
     setSearchUnitBisnis('');
     setSearchParams({ ...params });
-    dispatch(getKontrakList(params));
+    dispatch(getGenerateSlipGaji(params));
   };
 
+  const InputDate = ({ onChange, value, id, onClick }) => (
+    <Input id={id} placeholder="Select" onChange={onChange} value={value} onClick={onClick} />
+  );
+
   return (
-    <Row xs="1" sm="2" md="4" className="justify-content-between pt-1 mb-4">
-      <Col md="4">
+    <Row xs="1" sm="2" md="4" className="justify-content-between pt-1 mb-5">
+      <Col md="3">
+        <Label for="TxtDatePeriod" className="fw-bold">
+          Period :
+        </Label>
+        <ReactDatePicker
+          customInput={<InputDate />}
+          className="input"
+          id="TxtDatePeriod"
+          selected={searchPeriod}
+          onChange={onSearchPeriod}
+          dateFormat="MM/yyyy"
+          maxDate={new Date()}
+          showMonthYearPicker
+          showIcon
+        />
+      </Col>
+      <Col md="3">
         <SearchFilter
+          label="NIP :"
           placeholder="NIP"
           id="TxtSearchValue"
           value={searchNip}
           onChange={onSearchNip}
         />
       </Col>
-      <Col md="4">
+      <Col md="3">
         <DropdownFilter
+          label="Unit Bisnis :"
           placeholder="Select Unit Bisnis"
-          id="DrpSearchValue"
+          id="DrpUnitBisnis"
           name="DropdownTypeAgent"
           value={searchUnitBisnis}
           options={dropdownUnitBisnis}
           onChange={onSearchUnitBisnis}
         />
       </Col>
-      <Col md="4" className="align-self-center">
-        <Button color="primary" className="me-2" onClick={onClickSearch}>
+      <Col md="3" className="align-self-end">
+        <Button color="primary" className="me-1" onClick={onClickSearch}>
           <Search /> Search
         </Button>
         <Button outline color="primary" className="p-2-2" onClick={onClickReset}>
@@ -78,4 +112,4 @@ const FilterKontrak = ({ params }) => {
   );
 };
 
-export default FilterKontrak;
+export default FilterSlipGaji;

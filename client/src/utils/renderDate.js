@@ -11,3 +11,9 @@ export const getMonthYearDate = (date) => {
   moment.locale('id');
   return moment(date).format('l');
 };
+
+export const formattedPeriod = (date) => {
+  const period = getMonthYearDate(date);
+  const formattedPeriod = period.split('/');
+  return `${formattedPeriod[1]}/${formattedPeriod[2]}`;
+};

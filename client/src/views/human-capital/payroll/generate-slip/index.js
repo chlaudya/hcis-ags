@@ -1,198 +1,141 @@
-import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
-import {
-  Typography,
-  IconButton,
-  Button,
-  TextField,
-  Autocomplete,
-  Grid,
-  Stack
-} from '@material-ui/core';
-import { blue, red } from '@material-ui/core/colors';
-import { Delete, Edit } from '@material-ui/icons';
-import Maintenance from 'views/others/Maintenance';
+import { useDispatch, useSelector } from 'react-redux';
+import { blue, green, red } from '@material-ui/core/colors';
+import { Delete, Download, Edit } from '@material-ui/icons';
+import { Typography, IconButton, Button } from '@material-ui/core';
 
-const columns = [
-  { field: 'periode', headerName: 'Periode Gaji', width: 180 },
-  { field: 'id', headerName: 'NIP', width: 110 },
-  { field: 'namakaryawan', headerName: 'Nama Karyawan', width: 300 },
-  { field: 'lokasi', headerName: 'Tugas/Jabatan', width: 200 },
-  { field: 'posisi', headerName: 'Tempat Tugas', width: 300 },
-  { field: 'period', headerName: 'Gaji', width: 150 },
-  { field: 'mulai', headerName: 'Tunjangan', width: 180 },
-  {
-    field: 'berakhir',
-    headerName: 'Gaji Dibayar',
-    width: 180
-  },
-  {
-    field: 'action',
-    headerName: 'Action',
-    width: 130,
-    renderCell: (cellValues) => {
-      return (
+// import FilterKontrak from './components/FilterKontrak';
+import DataTable from 'src/ui-component/data-table';
+import {
+  getStateKontrak,
+  getStateMasterJabatan,
+  getStateMasterTempatTugas,
+  getStateMasterUnitBisnis,
+  getStateSlipGaji
+} from 'store/stateSelector';
+import csrfProtection from 'utils/csrfProtection';
+import { renderDropdownLabel } from 'utils/renderDropdownLabel';
+import { getDropdownJabatan } from 'store/actions/master-jabatan';
+import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
+import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
+import { ModalContext } from 'src/ui-component/modal';
+import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
+import { getDropdownBank } from 'store/actions/master-bank';
+import { renderDate } from 'utils/renderDate';
+import { paginationNumber } from 'utils/paginationNumber';
+import { getGenerateSlipGaji } from 'store/actions/slip-gaji';
+import FilterSlipGaji from './FilterSlipGaji';
+
+const GenerateSlipGaji = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { showModal, hideModal } = useContext(ModalContext);
+  const { slipGaji, loading } = useSelector(getStateSlipGaji);
+  const { dropdownJabatan } = useSelector(getStateMasterJabatan);
+  const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
+  const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
+
+  const [params, setParams] = useState({
+    page: 1,
+    size: 10
+  });
+
+  useEffect(() => {
+    csrfProtection.setHeaderCsrfToken();
+    dispatch(getGenerateSlipGaji(params));
+  }, []);
+
+  const redirectToEdit = (kontrakId) => {
+    navigate(`/human-capital/kontrak/input-kontrak/${kontrakId}`);
+  };
+
+  const onChangePage = (page) => {
+    setParams({ ...params, page: page });
+    dispatch(getGenerateSlipGaji({ ...params, page: page, size: slipGaji?.size }));
+  };
+
+  const onChangeRowsPerPage = (row, page) => {
+    setParams({ ...params, size: row });
+    dispatch(getGenerateSlipGaji({ ...params, page: page, size: row }));
+  };
+
+  const openPdf = (karyawan_nip) => {
+    window.open(`${process.env.REACT_APP_API_GENERATE}/api/generate/slip_gaji?nip=${karyawan_nip}`);
+  };
+
+  const SLIP_GAJI_COLUMN = [
+    {
+      name: 'No',
+      width: '50px',
+      center: true,
+      selector: (_row, index) => `${paginationNumber(slipGaji?.page, slipGaji?.size, index)}.`
+    },
+    {
+      name: 'NIP',
+      width: '100px',
+      center: true,
+      selector: (row, index) => row.karyawan_nip
+    },
+    {
+      name: 'Nama',
+      center: true,
+      width: '150px',
+      selector: (row) => row.karyawan_name
+    },
+    {
+      name: 'Jabatan',
+      center: true,
+      selector: (row) => row.jabatan_name
+    },
+
+    {
+      name: 'Unit Bisnis',
+      center: true,
+      selector: (row) => row.unit_name
+    },
+
+    {
+      name: 'Period',
+      center: true,
+      width: '120px',
+      selector: (row) => row.peiode
+    },
+    {
+      name: 'Download PDF',
+      center: true,
+      cell: (row, index) => (
         <>
           <IconButton
             color="secondary"
             aria-label="add an alarm"
-            onClick={(event) => this.handleModalDelete(event, cellValues)}
+            onClick={() => openPdf(row.karyawan_nip)}
           >
-            <Edit style={{ color: blue[900] }} />
-          </IconButton>
-          <IconButton
-            color="warning"
-            aria-label="add an alarm"
-            onClick={(event) => this.handleModalDelete(event, cellValues)}
-          >
-            <Delete style={{ color: red[900] }} />
+            <Download style={{ color: green[700] }} />
           </IconButton>
         </>
-      );
+      )
     }
-  }
-];
+  ];
 
-const rows = [
-  {
-    periode: '24-05-2017',
-    id: '001',
-    namakaryawan: 'Snow',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '002',
-    namakaryawan: 'Lannister',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '003',
-    namakaryawan: 'Lannister',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '004',
-    namakaryawan: 'Stark',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '005',
-    namakaryawan: 'Targaryen',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '006',
-    namakaryawan: 'Melisandre',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '007',
-    namakaryawan: 'Clifford',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '008',
-    namakaryawan: 'Frances',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  },
-  {
-    periode: '24-05-2017',
-    id: '009',
-    namakaryawan: 'Roxie',
-    lokasi: 'Engineer',
-    posisi: 'Bandung',
-    period: 'Rp. 2.000.000',
-    mulai: 'Rp. 500.000',
-    berakhir: 'Rp. 2.500.000'
-  }
-];
+  return (
+    <MainCard title="Generate Slip Gaji">
+      <Typography variant="body2">
+        <FilterSlipGaji params={params} />
 
-const TipeTunjangan2 = [
-  { id: '001', value: 'Tunjangan 1' },
-  { id: '002', value: 'Tunjangan 2' }
-];
+        <DataTable
+          columns={SLIP_GAJI_COLUMN}
+          data={slipGaji?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={slipGaji?.total_record}
+        />
+      </Typography>
+    </MainCard>
+  );
+};
 
-const Kontrak = () => (
-  <MainCard title="Generate Slip Gaji">
-    {/* <Typography variant="body2">
-      <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <Stack spacing={1} sx={{ width: 500 }}>
-            <TextField
-              id="endate"
-              label="Periode"
-              size="small"
-              type="date"
-              defaultValue="2017-05-24"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-            />
-            <Autocomplete
-              id="k-tipetunjangan"
-              options={TipeTunjangan2}
-              getOptionLabel={(option) => option.value}
-              size="small"
-              renderInput={(params) => <TextField {...params} label="Unit Bisnis" />}
-            />
-          </Stack>
-        </Grid>
-        <Grid item xs={6}>
-          <Stack spacing={1} direction="row">
-            <Button variant="contained">Generate Slip Gaji</Button>
-            <Button variant="contained" color="warning">
-              View Data
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
-
-      <hr />
-      <div style={{ height: 480, width: '100%' }}>
-        <DataGrid rows={rows} columns={columns} pageSize={6} rowsPerPageOptions={[5]} />
-      </div>
-    </Typography> */}
-    <Maintenance />
-  </MainCard>
-);
-
-export default Kontrak;
+export default GenerateSlipGaji;

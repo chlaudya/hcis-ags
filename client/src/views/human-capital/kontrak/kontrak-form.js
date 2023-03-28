@@ -25,12 +25,15 @@ import { getKaryawanByNip } from 'store/actions/karyawan';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
 import { getDropdownJabatan } from 'store/actions/master-jabatan';
-import { removeThousandSeparator, setThousandSeparatorNominal } from 'utils/thousandSeparator';
+import {
+  inputThousandSeparator,
+  removeThousandSeparator,
+  setThousandSeparatorNominal
+} from 'utils/thousandSeparator';
 
 const FormFieldKontrak = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { state } = useLocation();
   const navigate = useNavigate();
   const { kontrakDetail, isSubmitting } = useSelector(getStateKontrak);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
@@ -50,13 +53,22 @@ const FormFieldKontrak = () => {
   useEffect(() => {
     if (id) {
       dispatch(getKontrakDetail(id));
-      setInitialValues(kontrakDetail);
+      setInitialValues({
+        ...kontrakDetail,
+        gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
+        uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
+      });
+      console.log(typeof kontrakDetail.gaji);
     }
   }, [id]);
 
   useEffect(() => {
     if (id) {
-      setInitialValues(kontrakDetail);
+      setInitialValues({
+        ...kontrakDetail,
+        gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
+        uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
+      });
     }
   }, [kontrakDetail]);
 

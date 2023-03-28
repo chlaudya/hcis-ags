@@ -8,3 +8,4 @@ export const getStateMasterPajak = (state) => state.masterPajak;
 export const getStateMasterTempatTugas = (state) => state.masterTempatTugas;
 export const getStateMasterUnitBisnis = (state) => state.masterUnitBisnis;
 export const getStateReport = (state) => state.report;
+export const getStateSlipGaji = (state) => state.slipGaji;

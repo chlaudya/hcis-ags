@@ -25,6 +25,7 @@ import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import { getDropdownBank } from 'store/actions/master-bank';
 import { getKontrakList, updateKontrak } from 'store/actions/kontrak';
 import { renderDate } from 'utils/renderDate';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const KontrakPage = () => {
   const dispatch = useDispatch();
@@ -92,7 +93,7 @@ const KontrakPage = () => {
       name: 'No',
       width: '50px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) => `${paginationNumber(kontrakList?.page, kontrakList?.size, index)}.`
     },
     {
       name: 'NIP',
@@ -183,16 +184,16 @@ const KontrakPage = () => {
           <Button variant="contained">Input Kontrak</Button>
         </Link>
 
-        <div style={{ height: 500, width: '100%', marginTop: '15px' }}>
-          <DataTable
-            columns={KONTRAK_COLUMN}
-            data={kontrakList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={kontrakList?.totalRecord}
-          />
-        </div>
+        {/* <div style={{ height: 500, width: '100%', marginTop: '15px' }}> */}
+        <DataTable
+          columns={KONTRAK_COLUMN}
+          data={kontrakList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={kontrakList?.total_record}
+        />
+        {/* </div> */}
       </Typography>
     </MainCard>
   );

@@ -11,6 +11,7 @@ import { masterTempatTugasReducer } from './master-tempat-tugas/masterTempatTuga
 import { masterUnitBisnisReducer } from './master-unit-bisnis/masterUnitBisnisReducer';
 import { kontrakReducer } from './kontrak/kontrakReducer';
 import { reportReducer } from './report/reportReducer';
+import { slipGajiReducer } from './slip-gaji/sliipGajiReducer';
 
 const rootReducer = combineReducers({
   csurf,
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
   masterPajak: masterPajakReducer,
   masterTempatTugas: masterTempatTugasReducer,
   masterUnitBisnis: masterUnitBisnisReducer,
-  report: reportReducer
+  report: reportReducer,
+  slipGaji: slipGajiReducer
 });
 
 export default rootReducer;

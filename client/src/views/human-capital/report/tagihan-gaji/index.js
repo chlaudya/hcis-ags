@@ -4,7 +4,7 @@ import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@material-ui/core';
 
-import FilterKaryawan from './FilterTagihanGaji';
+import FilterTagihanGaji from './FilterTagihanGaji';
 import DataTable from 'src/ui-component/data-table';
 import { getStateReport } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
@@ -99,7 +99,7 @@ const TagihanGajiPage = () => {
   return (
     <MainCard title="Tagihan Gaji">
       <Typography variant="body2">
-        <FilterKaryawan params={params} tableRef={tableRef} reportData={reportTagihanGaji} />
+        <FilterTagihanGaji params={params} tableRef={tableRef} reportData={reportTagihanGaji} />
 
         <DataTable
           columns={TAGIHAN_GAJI_COLUMN}

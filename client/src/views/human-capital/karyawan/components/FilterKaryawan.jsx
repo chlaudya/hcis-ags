@@ -10,8 +10,9 @@ import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 const FilterKaryawan = ({ params }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
-  const [searchNip, setSearchNip] = useState();
-  const [searchUnitBisnis, setSearchUnitBisnis] = useState();
+  const [searchNip, setSearchNip] = useState('');
+  const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
+  const [searchParams, setSearchParams] = useState({ ...params });
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());
@@ -19,19 +20,28 @@ const FilterKaryawan = ({ params }) => {
 
   const onSearchNip = (value) => {
     setSearchNip(value);
+    setSearchParams({
+      ...searchParams,
+      nip: value
+    });
   };
 
   const onSearchUnitBisnis = (value) => {
     setSearchUnitBisnis(value);
+    setSearchParams({
+      ...searchParams,
+      unit_id: value
+    });
   };
 
   const onClickSearch = () => {
-    dispatch(getKaryawanList({ ...params, nip: searchNip, unit_id: searchUnitBisnis }));
+    dispatch(getKaryawanList(searchParams));
   };
 
   const onClickReset = () => {
     setSearchNip('');
     setSearchUnitBisnis('');
+    setSearchParams({ ...params });
     dispatch(getKaryawanList(params));
   };
 

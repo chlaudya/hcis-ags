@@ -10,17 +10,18 @@ import { SearchFilter, DropdownFilter } from 'src/ui-component/tableFilters';
 import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { getReportTagihanGaji } from 'store/actions/report/reportAction';
-import { getMonthYearDate, renderDate } from 'utils/renderDate';
+import { formattedPeriod, renderDate } from 'utils/renderDate';
 import TableExcelTagihanGaji from './components/TableExcelTagihanGaji';
-import { inputThousandSeparator, roundedThousandSeparator } from 'utils/thousandSeparator';
+import { roundedThousandSeparator } from 'utils/thousandSeparator';
 
 const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [reportDataGenerate, setReportDataGenerate] = useState([]);
-  const [searchNip, setSearchNip] = useState();
-  const [searchPeriod, setSearchPeriod] = useState();
-  const [searchUnitBisnis, setSearchUnitBisnis] = useState();
+  const [searchNip, setSearchNip] = useState('');
+  const [searchPeriod, setSearchPeriod] = useState('');
+  const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
+  const [searchParams, setSearchParams] = useState({ ...params });
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());
@@ -32,61 +33,66 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
 
   const formattedReportData = () => {
     reportData?.data?.length > 0 &&
-      reportData?.data.forEach((data, index) => {
-        setReportDataGenerate([
-          {
-            ...data,
-            no: index + 1,
-            gaji: roundedThousandSeparator(data.gaji),
-            gaji_dibayar: roundedThousandSeparator(data.gaji_dibayar),
-            manajemen_fee: roundedThousandSeparator(data.manajemen_fee),
-            total: roundedThousandSeparator(data.total),
-            tunjangan: roundedThousandSeparator(data.tunjangan)
-          }
-        ]);
+      reportData?.data?.forEach((data, index) => {
+        const formattedData = {
+          ...data,
+          no: index + 1,
+          gaji: roundedThousandSeparator(data.gaji),
+          gaji_dibayar: roundedThousandSeparator(data.gaji_dibayar),
+          manajemen_fee: roundedThousandSeparator(data.manajemen_fee),
+          total: roundedThousandSeparator(data.total),
+          tunjangan: roundedThousandSeparator(data.tunjangan)
+        };
+        setReportDataGenerate((prevState) => [...prevState, formattedData]);
       });
   };
 
   const onSearchNip = (value) => {
     setSearchNip(value);
+    setSearchParams({
+      ...searchParams,
+      nip: value
+    });
   };
 
   const onSearchUnitBisnis = (value) => {
     setSearchUnitBisnis(value);
+    setSearchParams({
+      ...searchParams,
+      unit_id: value
+    });
   };
 
   const onSearchPeriod = (value) => {
     setSearchPeriod(value);
-  };
-
-  const formattedPeriod = () => {
-    const period = getMonthYearDate(searchPeriod);
-    const formattedPeriod = period.split('/');
-    return `${formattedPeriod[1]}/${formattedPeriod[2]}`;
+    setSearchParams({
+      ...searchParams,
+      periode: formattedPeriod(value)
+    });
   };
 
   const onClickSearch = () => {
-    dispatch(
-      getReportTagihanGaji({
-        ...params,
-        nip: searchNip,
-        unit_id: searchUnitBisnis,
-        periode: formattedPeriod()
-      })
-    );
+    dispatch(getReportTagihanGaji(searchParams));
+  };
+
+  const onClickReset = () => {
+    setSearchNip('');
+    setSearchPeriod('');
+    setSearchUnitBisnis('');
+    setSearchParams({ ...params });
+    dispatch(getReportTagihanGaji(params));
   };
 
   const dateToday = renderDate(new Date());
 
   const InputDate = ({ onChange, value, id, onClick }) => (
-    <Input id={id} placeholder="Select Date" onChange={onChange} value={value} onClick={onClick} />
+    <Input id={id} placeholder="Select" onChange={onChange} value={value} onClick={onClick} />
   );
 
-  console.log(reportData);
   return (
     <>
-      <Row xs="1" sm="2" md="4" className="justify-content-between pt-1 mb-5">
-        <Col md="3">
+      <Row xs="1" sm="2" md="4" className="justify-content-between pt-1 mb-1">
+        <Col md="4">
           <SearchFilter
             label="NIP :"
             placeholder="NIP"
@@ -95,7 +101,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
             onChange={onSearchNip}
           />
         </Col>
-        <Col md="3">
+        <Col md="4">
           <Label for="TxtDatePeriod" className="fw-bold">
             Period :
           </Label>
@@ -111,7 +117,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
             showIcon
           />
         </Col>
-        <Col md="3">
+        <Col md="4">
           <DropdownFilter
             label="Unit Bisnis :"
             placeholder="Select Unit Bisnis"
@@ -122,19 +128,24 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
             onChange={onSearchUnitBisnis}
           />
         </Col>
-        <Col md="3" className="align-self-end">
-          <Button outline color="primary" className="me-1" onClick={onClickSearch}>
+      </Row>
+      <Row className="mt-3 mb-4">
+        <Col className="text-center">
+          <Button outline color="primary" className="me-2" onClick={onClickSearch}>
             <Search /> Search
           </Button>
-          <DownloadTableExcel
-            filename={`tagihan-gaji_${dateToday}`}
-            sheet={`tagihan-gaji-${dateToday}`}
-            currentTableRef={tableRef.current}
-          >
-            <Button color="primary" className="p-2-2" disabled={reportData?.data?.length === 0}>
+          <Button outline color="primary" className="me-2 p-2-2" onClick={onClickReset}>
+            Reset
+          </Button>
+          <Button color="primary" className="me-2 p-2-2" disabled={reportData?.data?.length === 0}>
+            <DownloadTableExcel
+              filename={`tagihan-gaji_${dateToday}`}
+              sheet={`tagihan-gaji-${dateToday}`}
+              currentTableRef={tableRef.current}
+            >
               <Print /> Generate
-            </Button>
-          </DownloadTableExcel>
+            </DownloadTableExcel>
+          </Button>
         </Col>
       </Row>
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}

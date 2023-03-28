@@ -42,13 +42,13 @@ const FormFieldKaryawan = () => {
   useEffect(() => {
     if (id) {
       dispatch(getKaryawanDetail(id));
-      setInitialValues(karyawanDetail);
+      setInitialValues({ ...karyawanDetail, lampiran_cv: karyawanDetail.file_upload_id });
     }
   }, [id]);
 
   useEffect(() => {
     if (id) {
-      setInitialValues(karyawanDetail);
+      setInitialValues({ ...karyawanDetail, lampiran_cv: karyawanDetail.file_upload_id });
     }
   }, [karyawanDetail]);
 
@@ -93,9 +93,8 @@ const FormFieldKaryawan = () => {
       enableReinitialize={true}
       initialValues={initialValues}
       validationSchema={karyawanValidationSchema}
-      onSubmit={handleSubmit}
     >
-      {({ errors, touched, setFieldValue }) => {
+      {({ values, isValid, errors, touched, setFieldValue }) => {
         return (
           <Form>
             <MainCard
@@ -350,7 +349,13 @@ const FormFieldKaryawan = () => {
                 </Col>
               </Row>
 
-              <Button color="primary" className="m-2 pe-4 ps-4" type="submit">
+              <Button
+                color="primary"
+                className="m-2 pe-4 ps-4"
+                type="submit"
+                disabled={!isValid}
+                onClick={() => handleSubmit(values)}
+              >
                 {isSubmitting ? (
                   <>
                     <Spinner size="sm" />

@@ -12,7 +12,6 @@ const HCFormKontrak = Loadable(lazy(() => import('views/human-capital/kontrak/ko
 
 const HCReportTagihanGaji = Loadable(lazy(() => import('views/human-capital/report/tagihan-gaji')));
 
-const HCTagihanGaji = Loadable(lazy(() => import('views/human-capital/payroll/tagihan-gaji')));
 const HCGenSlipGaji = Loadable(lazy(() => import('views/human-capital/payroll/generate-slip')));
 
 const HumanCapitalRoutes = {
@@ -56,10 +55,6 @@ const HumanCapitalRoutes = {
     {
       path: '/human-capital/koperasi/bayar',
       element: <HCKaryawan />
-    },
-    {
-      path: '/human-capital/payroll-tagihangaji',
-      element: <HCTagihanGaji />
     },
     {
       path: '/human-capital/payroll-generate-slip',

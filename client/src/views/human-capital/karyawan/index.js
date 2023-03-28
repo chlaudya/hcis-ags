@@ -26,6 +26,7 @@ import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import FieldDetail from './components/FieldDetailKaryawan';
 import { getDropdownBank } from 'store/actions/master-bank';
+import { paginationNumber } from 'utils/paginationNumber';
 
 const KaryawanPage = () => {
   const dispatch = useDispatch();
@@ -105,7 +106,8 @@ const KaryawanPage = () => {
       name: 'No',
       width: '50px',
       center: true,
-      selector: (_row, index) => `${index + 1}.`
+      selector: (_row, index) =>
+        `${paginationNumber(karyawanList?.page, karyawanList?.size, index)}.`
     },
     {
       name: 'NIP',
@@ -179,16 +181,16 @@ const KaryawanPage = () => {
           <Button variant="contained">Input Karyawan</Button>
         </Link>
 
-        <div style={{ height: 500, width: '100%', marginTop: '15px' }}>
-          <DataTable
-            columns={KARYAWAN_COLUMN}
-            data={karyawanList?.data}
-            progressPending={loading}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationTotalRows={karyawanList?.totalRecord}
-          />
-        </div>
+        {/* <div style={{ height: 500, width: '100%', marginTop: '15px' }}> */}
+        <DataTable
+          columns={KARYAWAN_COLUMN}
+          data={karyawanList?.data}
+          progressPending={loading}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationTotalRows={karyawanList?.total_record}
+        />
+        {/* </div> */}
       </Typography>
     </MainCard>
   );
