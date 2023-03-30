@@ -99,7 +99,7 @@ export const addKaryawan = (reqBody, redirect) => {
   };
 };
 
-export const updateKaryawan = ({ reqBody, redirect, isDelete, hideModal }) => {
+export const updateKaryawan = ({ reqBody, redirect, isDelete, hideModal, isStopContract }) => {
   return async (dispatch) => {
     dispatch({
       type: SET_LOADING_SUBMIT_BUTTON,
@@ -108,9 +108,13 @@ export const updateKaryawan = ({ reqBody, redirect, isDelete, hideModal }) => {
     axios
       .put(`${KARYAWAN_API}`, reqBody)
       .then(() => {
-        toast.success(
-          !isDelete ? 'Data Karyawan berhasil diubah !' : 'Data Karyawan berhasil dihapus!'
-        );
+        if (isStopContract) {
+          toast.success('Kontrak Karyawan berhasil diberhentikan!');
+        } else {
+          toast.success(
+            !isDelete ? 'Data Karyawan berhasil diubah !' : 'Data Karyawan berhasil dihapus!'
+          );
+        }
         if (hideModal) {
           hideModal();
           dispatch(getKaryawanList());

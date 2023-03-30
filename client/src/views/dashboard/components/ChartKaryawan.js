@@ -6,11 +6,11 @@ import { Grid, MenuItem, TextField, Typography, useTheme } from '@material-ui/co
 import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
 // project imports
-import SkeletonTotalGrowthBarChart from 'src/ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 // chart data
-import chartData from './chart-data/total-growth-bar-chart';
+import chartData from './chartSettings';
+import BarChartSkeleton from 'src/ui-component/cards/Skeleton/BarChartSkeleton';
 
 const status = [
   {
@@ -29,9 +29,15 @@ const status = [
 
 // ===========================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||=========================== //
 
-const TotalGrowthBarChart = ({ isLoading }) => {
-  const [value, setValue] = React.useState('today');
+const ChartKaryawan = ({ isLoading, data }) => {
   const theme = useTheme();
+
+  const series = [
+    {
+      name: 'Jumlah Karyawan Akan Habis Kontrak',
+      data: [data?.total30_days, data?.total60_days, data?.total90_days]
+    }
+  ];
 
   const { primary } = theme.palette.text;
   const grey200 = theme.palette.grey[200];
@@ -45,7 +51,19 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   React.useEffect(() => {
     const newChartData = {
       ...chartData.options,
-      colors: [primary200, primaryDark, secondaryMain, secondaryLight],
+      colors: [
+        // this array contains different color code for each data
+        '#33b2df',
+        '#90ee7e',
+        '#d4526e',
+        '#13d8aa',
+        '#A5978B',
+        '#2b908f',
+        '#f9a3a4',
+        '#f48024',
+        '#69d2e7',
+        '#546E7A'
+      ],
       xaxis: {
         labels: {
           style: {
@@ -103,8 +121,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 
   return (
     <>
-      {isLoading ? (
-        <SkeletonTotalGrowthBarChart />
+      {isLoading && !data ? (
+        <BarChartSkeleton />
       ) : (
         <MainCard>
           <Grid container spacing={gridSpacing}>
@@ -113,31 +131,17 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Chart Posisi & Lokasi</Typography>
+                      <Typography variant="h3">Data Karyawan </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h3">1.600 Karyawan</Typography>
+                      <Typography variant="subtitle3">yang akan Habis Kontrak</Typography>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    id="standard-select-currency"
-                    select
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                  >
-                    {status.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Chart {...chartData} />
+              <Chart {...chartData} series={series} />
             </Grid>
           </Grid>
         </MainCard>
@@ -146,8 +150,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   );
 };
 
-TotalGrowthBarChart.propTypes = {
+ChartKaryawan.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default TotalGrowthBarChart;
+export default ChartKaryawan;
