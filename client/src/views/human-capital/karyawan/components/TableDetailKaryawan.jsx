@@ -21,8 +21,6 @@ const TableDetailKaryawan = ({
     border: '1px solid'
   };
 
-  console.log(data);
-
   return (
     <div className="is-hidden" id="TableDetailKaryawan">
       <h3
