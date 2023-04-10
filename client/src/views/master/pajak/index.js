@@ -107,17 +107,20 @@ const PajakPage = () => {
     {
       name: 'Tipe Pajak',
       width: '100px',
+      wrap: true,
       center: true,
       selector: (row) => row.pajak_type
     },
     {
       name: 'Status',
+      wrap: true,
       center: true,
       selector: (row) => row.pajak_status
     },
     {
       name: 'Persentase',
       center: true,
+      wrap: true,
       selector: (row) => `${row.pajak_persen}%`
     },
     {

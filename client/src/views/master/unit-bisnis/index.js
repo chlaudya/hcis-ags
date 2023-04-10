@@ -108,11 +108,13 @@ const UnitBisnisPage = () => {
     },
     {
       name: 'Unit Name',
+      wrap: true,
       center: true,
       selector: (row) => row.unit_name
     },
     {
       name: 'Unit Description',
+      wrap: true,
       center: true,
       selector: (row) => row.unit_description
     },

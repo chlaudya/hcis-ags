@@ -10,8 +10,15 @@ import { renderDropdownLabel } from 'utils/renderDropdownLabel';
 import { Print } from '@material-ui/icons';
 import printJS from 'print-js';
 import { inputThousandSeparator } from 'utils/thousandSeparator';
+import TableDetailKaryawan from './TableDetailKaryawan';
 
-const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTugas }) => {
+const FieldDetail = ({
+  id,
+  dropdownJabatan,
+  dropdownUnitBisnis,
+  dropdownTempatTugas,
+  dropdownBank
+}) => {
   const dispatch = useDispatch();
   const { karyawanDetail: data } = useSelector(getStateKaryawan);
   const [printData, setPrintData] = useState();
@@ -26,7 +33,7 @@ const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTu
 
   const printPdf = () => {
     printJS({
-      printable: 'DetailKaryawan',
+      printable: 'TableDetailKaryawan', //refer to TableDetailKaryawan
       type: 'html',
       scanStyles: false,
       targetStyles: "['*']",
@@ -50,6 +57,13 @@ const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTu
     //   type: 'json'
     // });
   };
+
+  // const printPdf = () => {
+  //   printJS({
+  //     printable: 'DetailKaryawan',
+  //     type: 'html'
+  //   });
+  // };
 
   const renderDefaultValue = (value) => {
     return value ? value : '-';
@@ -76,15 +90,22 @@ const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTu
     });
   };
 
+  const renderBank = () => {
+    return renderDropdownLabel({
+      list: dropdownBank,
+      selectedValue: renderDefaultValue(data?.bank_id)
+    });
+  };
+
   const getPrintData = () => {
     const printData = {
       no: 1,
-      karyawan_nip: data.karyawan_nip,
-      karyawan_name: data.karyawan_name,
+      karyawan_nip: data?.karyawan_nip,
+      karyawan_name: data?.karyawan_name,
       tempat_tugas: renderTempatTugas(),
       unit_bisnis: renderUnitBisnis(),
       jabatan: renderJabatan(),
-      is_active: data.is_active ? 'Aktif' : 'Tidak Aktif'
+      is_active: data?.is_active ? 'Aktif' : 'Tidak Aktif'
     };
 
     return JSON.stringify(printData);
@@ -102,14 +123,13 @@ const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTu
         <Print /> Print
       </Button>
       <MainCard
-        id="DetailKaryawan"
         contentStyle={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center'
         }}
       >
-        <h5 className="text-bg-info text-center">{`Detail - ${data?.karyawan_nip}_${data?.karyawan_name}`}</h5>
+        <h5 className="text-center">{`Detail - ${data?.karyawan_nip}_${data?.karyawan_name}`}</h5>
         <table className="FieldDetailKaryawan" style={{ width: '550px' }}>
           <thead>
             <tr>
@@ -158,6 +178,13 @@ const FieldDetail = ({ id, dropdownJabatan, dropdownUnitBisnis, dropdownTempatTu
             <td>{data?.is_active ? 'Aktif' : 'Tidak Aktif'}</td>
           </tr> */}
         </table>
+        <TableDetailKaryawan
+          data={data}
+          renderJabatan={renderJabatan}
+          renderTempatTugas={renderJabatan}
+          renderUnitBisnis={renderUnitBisnis}
+          renderBank={renderBank}
+        />
       </MainCard>
     </Row>
   );

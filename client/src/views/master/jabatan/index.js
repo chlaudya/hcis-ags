@@ -116,16 +116,19 @@ const JabatanPage = () => {
     {
       name: 'Jabatan Name',
       center: true,
+      wrap: true,
       selector: (row) => row.jabatan_name
     },
     {
       name: 'Jabatan Description',
       center: true,
+      wrap: true,
       selector: (row) => row.jabatan_desc
     },
     {
       name: 'Tunjangan',
       center: true,
+      wrap: true,
       selector: (row) => inputThousandSeparator(row.tunjangan)
     },
     {
@@ -166,7 +169,6 @@ const JabatanPage = () => {
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={masterJabatanList?.total_record}
         />
-        s{' '}
       </Typography>
     </MainCard>
   );

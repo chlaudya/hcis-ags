@@ -12,6 +12,7 @@ const FilterKontrak = ({ params }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchNip, setSearchNip] = useState('');
+  const [searchName, setSearchName] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
   const [searchParams, setSearchParams] = useState({ ...params });
 
@@ -24,6 +25,14 @@ const FilterKontrak = ({ params }) => {
     setSearchParams({
       ...searchParams,
       nip: value
+    });
+  };
+
+  const onSearchName = (value) => {
+    setSearchName(value);
+    setSearchParams({
+      ...searchParams,
+      karyawan_name: value
     });
   };
 
@@ -48,25 +57,33 @@ const FilterKontrak = ({ params }) => {
 
   return (
     <Row xs="1" sm="2" md="4" className="justify-content-between pt-1 mb-4">
-      <Col md="4">
+      <Col md="3">
         <SearchFilter
           placeholder="NIP"
-          id="TxtSearchValue"
+          id="TxtSearchNip"
           value={searchNip}
           onChange={onSearchNip}
         />
       </Col>
-      <Col md="4">
+      <Col md="3">
+        <SearchFilter
+          placeholder="Name"
+          id="TxtSearchName"
+          value={searchName}
+          onChange={onSearchName}
+        />
+      </Col>
+      <Col md="3">
         <DropdownFilter
           placeholder="Select Unit Bisnis"
-          id="DrpSearchValue"
+          id="DrpSearchUnit"
           name="DropdownTypeAgent"
           value={searchUnitBisnis}
           options={dropdownUnitBisnis}
           onChange={onSearchUnitBisnis}
         />
       </Col>
-      <Col md="4" className="align-self-center">
+      <Col md="3" className="align-self-center">
         <Button color="primary" className="me-2" onClick={onClickSearch}>
           <Search /> Search
         </Button>

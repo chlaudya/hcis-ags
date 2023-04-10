@@ -98,18 +98,21 @@ const KontrakPage = () => {
     {
       name: 'NIP',
       width: '100px',
+      wrap: true,
       center: true,
       selector: (row, index) => row.karyawan_nip
     },
     {
       name: 'Nama',
       center: true,
+      wrap: true,
       width: '150px',
       selector: (row) => row.karyawan_name
     },
     {
       name: 'Tempat Tugas',
       center: true,
+      wrap: true,
       width: '120px',
       selector: (row) =>
         renderDropdownLabel({ list: dropdownTempatTugas, selectedValue: row.tempat_tugas_id })
@@ -117,12 +120,14 @@ const KontrakPage = () => {
     {
       name: 'Unit Bisnis',
       center: true,
+      wrap: true,
       selector: (row) =>
         renderDropdownLabel({ list: dropdownUnitBisnis, selectedValue: row.unit_id })
     },
     {
       name: 'Jabatan',
       center: true,
+      wrap: true,
       selector: (row) =>
         renderDropdownLabel({ list: dropdownJabatan, selectedValue: row.jabatan_id })
     },

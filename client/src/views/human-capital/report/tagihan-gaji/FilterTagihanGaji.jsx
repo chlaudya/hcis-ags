@@ -12,7 +12,6 @@ import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { getReportTagihanGaji } from 'store/actions/report/reportAction';
 import { formattedPeriod, renderDate } from 'utils/renderDate';
 import TableExcelTagihanGaji from './components/TableExcelTagihanGaji';
-import { roundedThousandSeparator } from 'utils/thousandSeparator';
 
 const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   const dispatch = useDispatch();
@@ -28,24 +27,8 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   }, []);
 
   useEffect(() => {
-    formattedReportData();
+    setReportDataGenerate(reportData?.data);
   }, [reportData?.data]);
-
-  const formattedReportData = () => {
-    reportData?.data?.length > 0 &&
-      reportData?.data?.forEach((data, index) => {
-        const formattedData = {
-          ...data,
-          no: index + 1,
-          gaji: roundedThousandSeparator(data.gaji),
-          gaji_dibayar: roundedThousandSeparator(data.gaji_dibayar),
-          manajemen_fee: roundedThousandSeparator(data.manajemen_fee),
-          total: roundedThousandSeparator(data.total),
-          tunjangan: roundedThousandSeparator(data.tunjangan)
-        };
-        setReportDataGenerate((prevState) => [...prevState, formattedData]);
-      });
-  };
 
   const onSearchNip = (value) => {
     setSearchNip(value);

@@ -26,6 +26,10 @@ const TagihanGajiPage = () => {
     dispatch(getReportTagihanGaji(params));
   }, []);
 
+  useEffect(() => {
+    onChangePage();
+  }, []);
+
   const onChangePage = (page) => {
     setParams({ ...params, page: page });
     dispatch(getReportTagihanGaji({ ...params, page: page, size: reportTagihanGaji?.size }));
@@ -48,55 +52,71 @@ const TagihanGajiPage = () => {
       name: 'NIP',
       width: '100px',
       center: true,
+      wrap: true,
       selector: (row, index) => row.karyawan_nip
     },
     {
       name: 'Nama Pegawai',
       center: true,
+      wrap: true,
+
       width: '150px',
       selector: (row) => row.karyawan_name
     },
     {
       name: 'Tugas / Jabatan',
       center: true,
+      wrap: true,
+
       width: '150px',
       selector: (row) => row.jabatan_name
     },
     {
       name: 'Tempat Tugas',
       center: true,
+      wrap: true,
       width: '150px',
       selector: (row) => row.nama_proyek
     },
     {
       name: 'Gaji',
+      wrap: true,
       center: true,
       selector: (row) => roundedThousandSeparator(row.gaji)
     },
     {
       name: 'Tunjangan',
       center: true,
+      wrap: true,
       selector: (row) => inputThousandSeparator(row.tunjangan)
     },
     {
       name: 'Gaji Dibayar',
       center: true,
+      wrap: true,
       selector: (row) => roundedThousandSeparator(row.gaji_dibayar)
     },
     {
       name: 'Manajemen Fee',
       center: true,
       width: '150px',
+      wrap: true,
       selector: (row) => roundedThousandSeparator(row.manajemen_fee)
     },
     {
       name: 'Total',
       center: true,
+      wrap: true,
       selector: (row) => roundedThousandSeparator(row.total)
     }
   ];
 
   const tableRef = useRef(null);
+
+  const paginationComponentOptions = {
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'ALL'
+  };
 
   return (
     <MainCard title="Tagihan Gaji">
@@ -110,6 +130,7 @@ const TagihanGajiPage = () => {
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={reportTagihanGaji?.total_record}
+          paginationComponentOptions={paginationComponentOptions}
         />
       </Typography>
     </MainCard>

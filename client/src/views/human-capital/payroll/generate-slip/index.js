@@ -77,23 +77,27 @@ const GenerateSlipGaji = () => {
       name: 'NIP',
       width: '100px',
       center: true,
+      wrap: true,
       selector: (row, index) => row.karyawan_nip
     },
     {
       name: 'Nama',
       center: true,
       width: '150px',
+      wrap: true,
       selector: (row) => row.karyawan_name
     },
     {
       name: 'Jabatan',
       center: true,
+      wrap: true,
       selector: (row) => row.jabatan_name
     },
 
     {
       name: 'Unit Bisnis',
       center: true,
+      wrap: true,
       selector: (row) => row.unit_name
     },
 

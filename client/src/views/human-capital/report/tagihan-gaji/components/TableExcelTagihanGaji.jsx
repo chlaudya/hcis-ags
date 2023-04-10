@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import 'src/assets/scss/table.scss';
 import { renderDate } from 'utils/renderDate';
-import { inputThousandSeparator } from 'utils/thousandSeparator';
+import { inputThousandSeparator, roundedThousandSeparator } from 'utils/thousandSeparator';
 
 const TableExcelTagihanGaji = ({ data, tableRef, period, dataTotalTagihan }) => {
   const styleTableTitle = {
@@ -21,7 +21,7 @@ const TableExcelTagihanGaji = ({ data, tableRef, period, dataTotalTagihan }) => 
   };
 
   const getFormattedPeriod = () => {
-    const date = moment(period).format('LL');
+    const date = moment(period || new Date()).format('LL');
     const formattedPeriod = date.split(' ');
 
     return `${formattedPeriod[1]} ${formattedPeriod[2]}`;
@@ -67,19 +67,19 @@ const TableExcelTagihanGaji = ({ data, tableRef, period, dataTotalTagihan }) => 
           </tr>
         </thead>
         <tbody>
-          {data?.map((item) => {
+          {data?.map((item, index) => {
             return (
               <tr key={item.no} style={styleTableBody}>
-                <td style={styleTableBorder}>{item.no}</td>
+                <td style={styleTableBorder}>{index + 1}</td>
                 <td style={styleTableBorder}>{item.karyawan_nip}</td>
                 <td style={styleTableBorder}>{item.karyawan_name}</td>
                 <td style={styleTableBorder}>{item.jabatan_name}</td>
                 <td style={styleTableBorder}>{item.nama_proyek}</td>
-                <td style={styleTableBorder}>{item.gaji}</td>
-                <td style={styleTableBorder}>{item.tunjangan}</td>
-                <td style={styleTableBorder}>{item.gaji_dibayar}</td>
-                <td style={styleTableBorder}>{item.manajemen_fee}</td>
-                <td style={styleTableBorder}>{item.total}</td>
+                <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji)}</td>
+                <td style={styleTableBorder}>{roundedThousandSeparator(item.tunjangan)}</td>
+                <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji_dibayar)}</td>
+                <td style={styleTableBorder}>{roundedThousandSeparator(item.manajemen_fee)}</td>
+                <td style={styleTableBorder}>{roundedThousandSeparator(item.total)}</td>
               </tr>
             );
           })}

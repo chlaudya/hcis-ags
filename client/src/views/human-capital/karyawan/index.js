@@ -113,27 +113,32 @@ const KaryawanPage = () => {
       name: 'NIP',
       width: '100px',
       center: true,
+      wrap: true,
       selector: (row, index) => row.karyawan_nip
     },
     {
       name: 'Nama',
       center: true,
+      wrap: true,
       width: '150px',
       selector: (row) => row.karyawan_name
     },
     {
       name: 'Tempat Tugas',
       center: true,
+      wrap: true,
       selector: (row) => row.nama_proyek
     },
     {
       name: 'Unit Bisnis',
       center: true,
+      wrap: true,
       selector: (row) => row.unit_name
     },
     {
       name: 'Jabatan',
       center: true,
+      wrap: true,
       selector: (row) => row.jabatan_name
     },
     {
