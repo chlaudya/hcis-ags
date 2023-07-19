@@ -6,11 +6,15 @@ import { Typography } from '@material-ui/core';
 // project imports
 import NavGroup from './NavGroup';
 import menuItem from 'menuItems';
+import { useRolesKeycloak } from 'utils/useRolesKeycloak';
 
 // ===========================|| SIDEBAR MENU LIST ||=========================== //
 
 const MenuList = () => {
-  const navItems = menuItem.items.map((item) => {
+  const isAdminRole = useRolesKeycloak('Admin');
+  const filteredMenu = isAdminRole ? menuItem?.itemsAdmin : menuItem?.itemsUser;
+
+  const navItems = filteredMenu?.map((item) => {
     switch (item.type) {
       case 'group':
         return <NavGroup key={item.id} item={item} />;

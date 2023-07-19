@@ -13,7 +13,6 @@ import clsx from 'clsx';
 import Breadcrumbs from 'src/ui-component/extended/Breadcrumbs';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import Customization from '../Customization';
 import navigation from 'menuItems';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
@@ -125,7 +124,6 @@ const MainLayout = () => {
         <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
         <Outlet />
       </main>
-      <Customization />
     </div>
   );
 };

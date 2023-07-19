@@ -15,6 +15,7 @@ import { gridSpacing } from 'store/constant';
 import AccountTreeTwoToneIcon from '@material-ui/icons/AccountTreeTwoTone';
 import HomeIcon from '@material-ui/icons/Home';
 import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
+import { useRolesKeycloak } from 'utils/useRolesKeycloak';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -105,10 +106,13 @@ const Breadcrumbs = ({
     }
   };
 
+  const isAdminRole = useRolesKeycloak('Admin');
+  const filteredMenu = isAdminRole ? navigation?.itemsAdmin : navigation?.itemsUser;
+
   useEffect(() => {
-    navigation.items.map((item, index) => {
+    filteredMenu?.map((item, index) => {
       if (item.type && item.type === 'group') {
-        getCollapse(item, index);
+        getCollapse(item);
       }
       return false;
     });

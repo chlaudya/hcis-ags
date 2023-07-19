@@ -5,7 +5,8 @@ import utilities from './utilities';
 // ===========================|| MENU ITEMS ||=========================== //
 
 const menuItems = {
-    items: [dashboard, humanCapital, utilities]
+  itemsAdmin: [dashboard, humanCapital, utilities],
+  itemsUser: [humanCapital]
 };
 
 export default menuItems;
