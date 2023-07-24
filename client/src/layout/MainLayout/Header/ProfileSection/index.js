@@ -135,6 +135,7 @@ const ProfileSection = () => {
   const { keycloak } = useKeycloak();
   const handleLogout = () => {
     keycloak.logout();
+    localStorage.clear();
   };
 
   const handleToggle = () => {

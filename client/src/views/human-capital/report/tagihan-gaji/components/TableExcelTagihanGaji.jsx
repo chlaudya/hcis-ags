@@ -1,11 +1,51 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import 'src/assets/scss/table.scss';
+import { getAllReportTagihanGaji } from 'store/actions/report';
+import { getStateReport } from 'store/stateSelector';
 import { renderDate } from 'utils/renderDate';
 import { inputThousandSeparator, roundedThousandSeparator } from 'utils/thousandSeparator';
+import csrfProtection from 'utils/csrfProtection';
+import 'src/assets/scss/table.scss';
 
-const TableExcelTagihanGaji = ({ data, tableRef, period, dataTotalTagihan }) => {
+const TableExcelTagihanGaji = ({
+  dataFiltered,
+  isFiltered,
+  tableRef,
+  period,
+  dataTotalTagihan
+}) => {
+  const dispatch = useDispatch();
+  const { reportAllTagihanGaji } = useSelector(getStateReport);
+  const [listTagihan, setListTagihan] = useState();
+
+  useEffect(() => {
+    csrfProtection.setHeaderCsrfToken();
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      getAllReportTagihanGaji({
+        page: 1,
+        size: dataTotalTagihan?.total_record
+      })
+    );
+    if (!isFiltered) {
+      setListTagihan(reportAllTagihanGaji?.data);
+    }
+  }, [dataTotalTagihan?.total_record, isFiltered]);
+
+  useEffect(() => {
+    if (!isFiltered) {
+      setListTagihan(reportAllTagihanGaji?.data);
+    }
+  }, [reportAllTagihanGaji, isFiltered]);
+
+  useEffect(() => {
+    setListTagihan(dataFiltered);
+  }, [isFiltered, dataFiltered]);
+
   const styleTableTitle = {
     fontSize: '20px',
     fontWeight: 'bold',
@@ -67,22 +107,23 @@ const TableExcelTagihanGaji = ({ data, tableRef, period, dataTotalTagihan }) => 
           </tr>
         </thead>
         <tbody>
-          {data?.map((item, index) => {
-            return (
-              <tr key={item.no} style={styleTableBody}>
-                <td style={styleTableBorder}>{index + 1}</td>
-                <td style={styleTableBorder}>{item.karyawan_nip}</td>
-                <td style={styleTableBorder}>{item.karyawan_name}</td>
-                <td style={styleTableBorder}>{item.jabatan_name}</td>
-                <td style={styleTableBorder}>{item.nama_proyek}</td>
-                <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji)}</td>
-                <td style={styleTableBorder}>{roundedThousandSeparator(item.tunjangan)}</td>
-                <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji_dibayar)}</td>
-                <td style={styleTableBorder}>{roundedThousandSeparator(item.manajemen_fee)}</td>
-                <td style={styleTableBorder}>{roundedThousandSeparator(item.total)}</td>
-              </tr>
-            );
-          })}
+          {listTagihan?.length > 0 &&
+            listTagihan?.map((item, index) => {
+              return (
+                <tr key={item.no} style={styleTableBody}>
+                  <td style={styleTableBorder}>{index + 1}</td>
+                  <td style={styleTableBorder}>{item.karyawan_nip}</td>
+                  <td style={styleTableBorder}>{item.karyawan_name}</td>
+                  <td style={styleTableBorder}>{item.jabatan_name}</td>
+                  <td style={styleTableBorder}>{item.nama_proyek}</td>
+                  <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji)}</td>
+                  <td style={styleTableBorder}>{roundedThousandSeparator(item.tunjangan)}</td>
+                  <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji_dibayar)}</td>
+                  <td style={styleTableBorder}>{roundedThousandSeparator(item.manajemen_fee)}</td>
+                  <td style={styleTableBorder}>{roundedThousandSeparator(item.total)}</td>
+                </tr>
+              );
+            })}
           <tr style={{ ...styleTableBody, fontWeight: 'bold', fontSize: '14px' }}>
             <td style={styleTableBorder} colSpan="5">
               JUMLAH

@@ -37,8 +37,8 @@ const TableKontrakKaryawan = ({ data, loading }) => {
     dispatch(getDashboardData(params));
   }, [isSubmitting]);
 
-  const redirectToInputKontrak = () => {
-    navigate(`/human-capital/kontrak/input-kontrak`);
+  const redirectToInputKontrak = (kontrakId) => {
+    navigate(`/human-capital/kontrak/input-kontrak/${kontrakId}`);
   };
 
   const onChangePage = (page) => {
@@ -126,7 +126,7 @@ const TableKontrakKaryawan = ({ data, loading }) => {
             variant="contained"
             color="secondary"
             endIcon={<Send />}
-            onClick={redirectToInputKontrak}
+            onClick={() => redirectToInputKontrak(row.kontrak_id)}
           >
             Perpanjang
           </Button>

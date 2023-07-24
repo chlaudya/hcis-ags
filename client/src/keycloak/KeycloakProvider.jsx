@@ -33,10 +33,11 @@ const KeycloakProvider = ({ children }) => {
         checkLoginIframe: true,
         silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html'
       }}
-      onEvent={(_event, error) => {
+      onEvent={(onAuthSuccess, error) => {
         if (error) {
           onInitError();
-        } else {
+        }
+        if (onAuthSuccess) {
           navigate('/');
         }
       }}

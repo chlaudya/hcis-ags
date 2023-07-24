@@ -21,6 +21,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   const [searchPeriod, setSearchPeriod] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
   const [searchParams, setSearchParams] = useState({ ...params });
+  const [isFilteredTagihan, setIsFilteredTagihan] = useState(false);
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());
@@ -56,6 +57,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
 
   const onClickSearch = () => {
     dispatch(getReportTagihanGaji(searchParams));
+    setIsFilteredTagihan(true);
   };
 
   const onClickReset = () => {
@@ -64,6 +66,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
     setSearchUnitBisnis('');
     setSearchParams({ ...params });
     dispatch(getReportTagihanGaji(params));
+    setIsFilteredTagihan(false);
   };
 
   const dateToday = renderDate(new Date());
@@ -126,7 +129,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
               sheet={`tagihan-gaji-${dateToday}`}
               currentTableRef={tableRef.current}
             >
-              <Print /> Generate
+              <Print /> Generate Tagihan
             </DownloadTableExcel>
           </Button>
         </Col>
@@ -134,9 +137,10 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
       <TableExcelTagihanGaji
         tableRef={tableRef}
-        data={reportDataGenerate}
+        dataFiltered={reportDataGenerate}
         period={searchPeriod}
         dataTotalTagihan={reportData}
+        isFiltered={isFilteredTagihan}
       />
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
     </>

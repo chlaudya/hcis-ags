@@ -1,5 +1,6 @@
 const initialState = {
   reportTagihanGaji: [],
+  reportAllTagihanGaji: [],
   loading: false
 };
 
@@ -13,6 +14,10 @@ export const reportReducer = (state = initialState, action) => {
     SET_LOADING_REPORT_TAGIHAN_GAJI: {
       ...state,
       loading: action.payload
+    },
+    GET_REPORT_ALL_TAGIHAN_GAJI: {
+      ...state,
+      reportAllTagihanGaji: action.payload
     }
   };
 
