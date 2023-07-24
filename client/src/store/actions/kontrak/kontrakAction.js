@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import {
   GET_KONTRAK_DETAIL,
   GET_KONTRAK_LIST,
+  SET_LOADING_KONTRAK_BY_NIP,
   SET_LOADING_KONTRAK_DETAIL,
   SET_LOADING_KONTRAK_LIST,
   SET_LOADING_SUBMIT_BUTTON
@@ -123,6 +124,38 @@ export const updateKontrak = ({ reqBody, redirect, isDelete, hideModal }) => {
       .finally(() => {
         dispatch({
           type: SET_LOADING_SUBMIT_BUTTON,
+          payload: false
+        });
+      });
+  };
+};
+
+export const getKontrakByNip = (nip) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_LOADING_KONTRAK_BY_NIP,
+      payload: true
+    });
+    axios
+      .get(`${KONTRAK_API}?nip=${nip}`)
+      .then((response) => {
+        if (response.data) {
+          dispatch({
+            type: GET_KONTRAK_DETAIL,
+            payload: response.data.data
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('Data NIP tidak ditemukan!');
+        dispatch({
+          type: GET_KONTRAK_DETAIL,
+          payload: null
+        });
+      })
+      .finally(() => {
+        dispatch({
+          type: SET_LOADING_KONTRAK_BY_NIP,
           payload: false
         });
       });

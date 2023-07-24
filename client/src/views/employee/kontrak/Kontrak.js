@@ -1,47 +1,44 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Col, Row } from 'reactstrap';
 
-import { FormField } from 'src/ui-component/form-field';
+import { Download } from 'react-feather';
 import MainCard from 'src/ui-component/cards/MainCard';
+import { FormField } from 'src/ui-component/form-field';
+import { getKontrakByNip } from 'store/actions/kontrak';
+import { getDropdownJabatan } from 'store/actions/master-jabatan';
+import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
+import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import {
-  getStateKaryawan,
   getStateKontrak,
   getStateMasterJabatan,
   getStateMasterTempatTugas,
   getStateMasterUnitBisnis,
   getStateUser
 } from 'store/stateSelector';
-import { kontrakValidationSchema } from './kontrak.validation';
-import { INITIAL_VALUES_KONTRAK } from './kontrak.const';
-import { getDropdownBank } from 'store/actions/master-bank';
 import csrfProtection from 'utils/csrfProtection';
-import { addKontrak, getKontrakDetail, updateKontrak } from 'store/actions/kontrak';
-import { getKaryawanByNip } from 'store/actions/karyawan';
-import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
-import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
-import { getDropdownJabatan } from 'store/actions/master-jabatan';
-import {
-  inputThousandSeparator,
-  removeThousandSeparator,
-  setThousandSeparatorNominal
-} from 'utils/thousandSeparator';
+import { inputThousandSeparator } from 'utils/thousandSeparator';
+import { INITIAL_VALUES_KONTRAK } from 'views/human-capital/kontrak/kontrak.const';
+import { CircularProgress } from '@material-ui/core';
 
 const FormFieldKontrak = () => {
-  const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { kontrakDetail, isSubmitting } = useSelector(getStateKontrak);
+  const { kontrakDetail, loadingDetail } = useSelector(getStateKontrak);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
   const { dropdownJabatan } = useSelector(getStateMasterJabatan);
-  const { karyawanByNip } = useSelector(getStateKaryawan);
   const { user } = useSelector(getStateUser);
+
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KONTRAK);
+  const username = user?.preferred_username;
+
+  const openPdf = () => {
+    window.open(
+      `${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${initialValues?.kontrak_id}`
+    );
+  };
 
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
@@ -51,103 +48,34 @@ const FormFieldKontrak = () => {
   }, []);
 
   useEffect(() => {
-    if (id) {
-      dispatch(getKontrakDetail(id));
-      setInitialValues({
-        ...kontrakDetail,
-        gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
-        uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
-      });
+    if (username) {
+      dispatch(getKontrakByNip(username));
     }
-  }, [id]);
+  }, [username]);
 
   useEffect(() => {
-    if (id) {
+    if (kontrakDetail?.data?.length > 0) {
       setInitialValues({
-        ...kontrakDetail,
-        gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
-        uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
+        ...kontrakDetail?.data[0],
+        gaji: inputThousandSeparator(kontrakDetail?.data[0]?.gaji || 0),
+        uang_makan: inputThousandSeparator(kontrakDetail?.data[0]?.uang_makan || 0)
       });
     }
   }, [kontrakDetail]);
 
-  useEffect(() => {
-    if (karyawanByNip) {
-      setInitialValues((prevState) => ({
-        ...prevState,
-        ...karyawanByNip
-      }));
-    } else {
-      setInitialValues((prevState) => ({
-        ...prevState,
-        karyawan_nip: '',
-        karyawan_name: '',
-        nonik: '',
-        tempat_tinggal: '',
-        tanggal_lahir: ''
-      }));
-    }
-  }, [karyawanByNip]);
-
-  const redirectToKontrak = () => {
-    navigate('/human-capital/kontrak');
-  };
-
-  const handleChangeNip = (value) => {
-    dispatch(getKaryawanByNip(value));
-  };
-
-  const handleChangeGaji = (value, setFieldValue) => {
-    setFieldValue('gaji', setThousandSeparatorNominal(value));
-  };
-
-  const handleChangeUangMakan = (value, setFieldValue) => {
-    setFieldValue('uang_makan', setThousandSeparatorNominal(value));
-  };
-
-  const handleSubmit = (values) => {
-    const formattedGaji = Number(removeThousandSeparator(values.gaji));
-    const formattedUangMakan = Number(removeThousandSeparator(values.uang_makan));
-
-    const reqBodyEdit = {
-      ...values,
-      kontrak_id: id,
-      usr_update: user.preferred_username,
-      gaji: formattedGaji,
-      uang_makan: formattedUangMakan
-    };
-
-    if (id) {
-      dispatch(updateKontrak({ reqBody: reqBodyEdit, redirect: redirectToKontrak }));
-    } else {
-      dispatch(
-        addKontrak(
-          {
-            ...values,
-            gaji: formattedGaji,
-            uang_makan: formattedUangMakan
-          },
-          redirectToKontrak
-        )
-      );
-    }
-  };
+  if (loadingDetail)
+    return (
+      <MainCard title="My Kontrak">
+        <CircularProgress />;
+      </MainCard>
+    );
 
   return (
-    <Formik
-      validateOnMount={true}
-      enableReinitialize={true}
-      initialValues={initialValues}
-      validationSchema={kontrakValidationSchema}
-    >
-      {({ values, isValid, setFieldValue }) => {
+    <Formik validateOnMount={true} enableReinitialize={true} initialValues={initialValues}>
+      {() => {
         return (
           <Form>
-            <MainCard
-              title={id ? 'Edit Kontrak' : 'Input Kontrak'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToKontrak}
-            >
+            <MainCard title="My Kontrak">
               <Row>
                 <Col>
                   <FormField
@@ -156,7 +84,7 @@ const FormFieldKontrak = () => {
                     name="karyawan_nip"
                     label="NIP"
                     tag="input"
-                    onChangeInput={handleChangeNip}
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -173,6 +101,7 @@ const FormFieldKontrak = () => {
                     label="Unit Bisnis"
                     tag="select"
                     options={dropdownUnitBisnis}
+                    isDisabled
                   />
                   <FormField
                     className="mb-2"
@@ -181,6 +110,7 @@ const FormFieldKontrak = () => {
                     label="Tempat Tugas"
                     tag="select"
                     options={dropdownTempatTugas}
+                    isDisabled
                   />
                   <FormField
                     className="mb-2"
@@ -189,6 +119,7 @@ const FormFieldKontrak = () => {
                     label="Jabatan"
                     tag="select"
                     options={dropdownJabatan}
+                    isDisabled
                   />
                   <FormField
                     className="mb-2"
@@ -197,7 +128,7 @@ const FormFieldKontrak = () => {
                     label="Gaji"
                     tag="input"
                     type="tel"
-                    onChangeInput={(event) => handleChangeGaji(event, setFieldValue)}
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -205,6 +136,7 @@ const FormFieldKontrak = () => {
                     name="tipe_tunjangan"
                     label="Tunjangan"
                     tag="input"
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -213,7 +145,7 @@ const FormFieldKontrak = () => {
                     label="Uang Makan"
                     tag="input"
                     type="tel"
-                    onChangeInput={(event) => handleChangeUangMakan(event, setFieldValue)}
+                    disabled
                   />
                 </Col>
                 <Col>
@@ -249,6 +181,7 @@ const FormFieldKontrak = () => {
                     label="Tanggal Masuk Kerja"
                     tag="input"
                     type="date"
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -257,6 +190,7 @@ const FormFieldKontrak = () => {
                     label="Tanggal Habis Kontrak"
                     tag="input"
                     type="date"
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -264,6 +198,7 @@ const FormFieldKontrak = () => {
                     name="kontrak_kode"
                     label="No. Kontrak"
                     tag="input"
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -271,6 +206,7 @@ const FormFieldKontrak = () => {
                     name="request_no"
                     label="Request No."
                     tag="input"
+                    disabled
                   />
                   <FormField
                     className="mb-2"
@@ -279,25 +215,13 @@ const FormFieldKontrak = () => {
                     label="Tanggal Request"
                     tag="input"
                     type="date"
+                    disabled
                   />
                 </Col>
               </Row>
 
-              <Button
-                color="primary"
-                className="m-2 pe-4 ps-4"
-                type="submit"
-                disabled={!isValid}
-                onClick={() => handleSubmit(values)}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Spinner size="sm" />
-                    <span> Loading</span>
-                  </>
-                ) : (
-                  'Save'
-                )}
+              <Button color="primary" aria-label="add an alarm" onClick={openPdf}>
+                <Download /> Download
               </Button>
             </MainCard>
           </Form>

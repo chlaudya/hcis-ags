@@ -29,6 +29,10 @@ export const kontrakReducer = (state = initialState, action) => {
     SET_LOADING_SUBMIT_BUTTON: {
       ...state,
       isSubmitting: action.payload
+    },
+    SET_LOADING_KONTRAK_BY_NIP: {
+      ...state,
+      loadingDetail: action.payload
     }
   };
 

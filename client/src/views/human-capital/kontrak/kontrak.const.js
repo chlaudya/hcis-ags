@@ -14,5 +14,6 @@ export const INITIAL_VALUES_KONTRAK = {
   kontrak_kode: '',
   request_no: '',
   request_date: '',
-  uang_makan: ''
+  uang_makan: '',
+  kontrak_id: ''
 };

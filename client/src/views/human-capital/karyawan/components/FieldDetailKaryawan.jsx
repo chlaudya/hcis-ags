@@ -9,7 +9,6 @@ import { getStateKaryawan } from 'store/stateSelector';
 import { renderDropdownLabel } from 'utils/renderDropdownLabel';
 import { Print } from '@material-ui/icons';
 import printJS from 'print-js';
-import { inputThousandSeparator } from 'utils/thousandSeparator';
 import TableDetailKaryawan from './TableDetailKaryawan';
 
 const FieldDetail = ({
@@ -21,7 +20,6 @@ const FieldDetail = ({
 }) => {
   const dispatch = useDispatch();
   const { karyawanDetail: data } = useSelector(getStateKaryawan);
-  const [printData, setPrintData] = useState();
 
   useEffect(() => {
     dispatch(getKaryawanDetail(id));
@@ -42,28 +40,7 @@ const FieldDetail = ({
       header:
         '<img style="width:80px; position:absolute; top:0; left:0; margin-right:120px;" src="https://lh5.googleusercontent.com/p/AF1QipMOa6vMFl7q-HIuHUxJ777KbL1PVr4kTt8lHHZX=w600-h321-p-k-no"></img>'
     });
-
-    // printJS({
-    //   printable: data,
-    //   properties: [
-    //     { field: 'no', displayName: 'No.' },
-    //     { field: 'karyawan_nip', displayName: 'NIP' },
-    //     { field: 'karyawan_name', displayName: 'Nama Karyawan' },
-    //     { field: 'tempat_tugas', displayName: 'Tempat Tugas' },
-    //     { field: 'unit_bisnis', displayName: 'Unit Bisnis' },
-    //     { field: 'jabatan', displayName: 'Jabatan' },
-    //     { field: 'is_active', displayName: 'Aktif' }
-    //   ],
-    //   type: 'json'
-    // });
   };
-
-  // const printPdf = () => {
-  //   printJS({
-  //     printable: 'DetailKaryawan',
-  //     type: 'html'
-  //   });
-  // };
 
   const renderDefaultValue = (value) => {
     return value ? value : '-';
@@ -153,30 +130,6 @@ const FieldDetail = ({
               <td>{data?.is_active ? 'Aktif' : 'Tidak Aktif'}</td>
             </tr>
           </tbody>
-          {/* <tr>
-            <td>Karyawan NIP</td>
-            <td>{renderDefaultValue(data?.karyawan_nip)}</td>
-          </tr>
-          <tr>
-            <td>Karyawan Name</td>
-            <td>{renderDefaultValue(data?.karyawan_name)}</td>
-          </tr>
-          <tr>
-            <td>Tempat Tugas</td>
-            <td>{renderTempatTugas()}</td>
-          </tr>
-          <tr>
-            <td>Unit Bisnis</td>
-            <td>{renderUnitBisnis()}</td>
-          </tr>
-          <tr>
-            <td>Jabatan</td>
-            <td>{renderJabatan()}</td>
-          </tr>
-          <tr>
-            <td>Aktif</td>
-            <td>{data?.is_active ? 'Aktif' : 'Tidak Aktif'}</td>
-          </tr> */}
         </table>
         <TableDetailKaryawan
           data={data}
