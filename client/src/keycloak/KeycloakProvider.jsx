@@ -40,6 +40,7 @@ const KeycloakProvider = ({ children }) => {
       }}
       onTokens={(res) => {
         dispatch(loginWithToken(res.token));
+        navigate('/');
       }}
     >
       {children}
