@@ -36,11 +36,12 @@ const KeycloakProvider = ({ children }) => {
       onEvent={(_event, error) => {
         if (error) {
           onInitError();
+        } else {
+          navigate('/');
         }
       }}
       onTokens={(res) => {
         dispatch(loginWithToken(res.token));
-        navigate('/');
       }}
     >
       {children}
