@@ -1,10 +1,10 @@
 {
   "keycloak": {
-      "Url": "http://98.142.245.38:8080/",
+      "Url": "http://98.142.245.57:8080/",
       "Realms": "hcis-user-management",
       "ClientId": "hcis-user-app-client"
   },
   "hcisApi": {
-      "Url": "http://98.142.245.38:8091/api"
+      "Url": "http://98.142.245.57:8091/api"
  }
 }
