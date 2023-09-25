@@ -13,7 +13,7 @@ import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import { paginationNumber } from 'utils/paginationNumber';
 import { getDashboardData } from 'store/actions/dashboard';
-import { getKaryawanDetail, getKaryawanList, updateKaryawan } from 'store/actions/karyawan';
+import { getKaryawanDetail, getKaryawanList } from 'store/actions/karyawan';
 import { getListKontrakByNip, stopKontrak } from 'store/actions/kontrak';
 import TableListKontrak from 'views/human-capital/kontrak/components/TableListKontrak';
 
