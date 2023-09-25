@@ -11,10 +11,11 @@ import { getStateKaryawan } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
 import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
-import { renderDate } from 'utils/renderDate';
 import { paginationNumber } from 'utils/paginationNumber';
 import { getDashboardData } from 'store/actions/dashboard';
 import { getKaryawanDetail, getKaryawanList, updateKaryawan } from 'store/actions/karyawan';
+import { getListKontrakByNip, stopKontrak } from 'store/actions/kontrak';
+import TableListKontrak from 'views/human-capital/kontrak/components/TableListKontrak';
 
 const TableKontrakKaryawan = ({ data, loading }) => {
   const dispatch = useDispatch();
@@ -38,7 +39,10 @@ const TableKontrakKaryawan = ({ data, loading }) => {
   }, [isSubmitting]);
 
   const redirectToInputKontrak = (kontrakId) => {
-    navigate(`/human-capital/kontrak/input-kontrak/${kontrakId}`);
+    navigate(
+      { pathname: `/human-capital/kontrak/input-kontrak/${kontrakId}` },
+      { state: { extendContract: true } }
+    );
   };
 
   const onChangePage = (page) => {
@@ -52,11 +56,10 @@ const TableKontrakKaryawan = ({ data, loading }) => {
   };
 
   const onConfirmStopContract = async (id) => {
-    const reqBody = {
-      karyawan_id: id,
-      is_active: false
-    };
-    dispatch(updateKaryawan({ reqBody, hideModal, isStopContract: true }));
+    // API new berhenti Kontrak
+    dispatch(stopKontrak(id));
+    hideModal();
+    dispatch(getDashboardData());
   };
 
   const openModalConfirmation = (id) => {
@@ -72,6 +75,16 @@ const TableKontrakKaryawan = ({ data, loading }) => {
     });
   };
 
+  const openModalKontrakList = (nip) => {
+    dispatch(getListKontrakByNip(nip));
+
+    showModal(MODAL_TYPES.MODAL_DETAIL, {
+      modalTitle: 'List Kontrak',
+      size: 'xl',
+      children: <TableListKontrak />
+    });
+  };
+
   const KONTRAK_COLUMN = [
     {
       name: 'No',
@@ -81,13 +94,13 @@ const TableKontrakKaryawan = ({ data, loading }) => {
     },
     {
       name: 'NIP',
-      width: '100px',
       center: true,
-      selector: (row, index) => row.karyawan_nip
+      selector: (row) => (
+        <div onClick={() => openModalKontrakList(row.karyawan_nip)}>{row.karyawan_nip}</div>
+      )
     },
     {
       name: 'No. Kontrak',
-      width: '100px',
       center: true,
       wrap: true,
       selector: (row, index) => row.no_kontrak
@@ -95,26 +108,8 @@ const TableKontrakKaryawan = ({ data, loading }) => {
     {
       name: 'Nama',
       center: true,
-      width: '150px',
       wrap: true,
       selector: (row) => row.karyawan_name
-    },
-    {
-      name: 'Unit Bisnis',
-      wrap: true,
-      center: true,
-      selector: (row) => row.unit_name
-    },
-    {
-      name: 'Tgl. Habis Kontrak',
-      center: true,
-      selector: (row) => renderDate(row.tgl_habis_kontrak)
-    },
-    {
-      name: 'Periode Kontrak',
-      center: true,
-      width: '120px',
-      selector: (row) => row.period_kontrak
     },
     {
       name: 'Aksi',

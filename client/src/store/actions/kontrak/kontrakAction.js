@@ -3,9 +3,11 @@ import { toast } from 'react-toastify';
 import {
   GET_KONTRAK_DETAIL,
   GET_KONTRAK_LIST,
+  GET_KONTRAK_LIST_BY_NIP,
   SET_LOADING_KONTRAK_BY_NIP,
   SET_LOADING_KONTRAK_DETAIL,
   SET_LOADING_KONTRAK_LIST,
+  SET_LOADING_LIST_KONTRAK_BY_NIP,
   SET_LOADING_SUBMIT_BUTTON
 } from 'store/actions';
 import { KONTRAK_API } from 'constants/apiUrl.constant';
@@ -81,8 +83,7 @@ export const addKontrak = (reqBody, redirect) => {
     axios
       .post(`${KONTRAK_API}`, reqBody)
       .then((res) => {
-        console.log(res);
-        toast.success('Data Kontrak berhasil ditambahkan !');
+        toast.success('Data Kontrak berhasil ditambahkan!');
         redirect();
       })
       .catch((err) => {
@@ -156,6 +157,62 @@ export const getKontrakByNip = (nip) => {
       .finally(() => {
         dispatch({
           type: SET_LOADING_KONTRAK_BY_NIP,
+          payload: false
+        });
+      });
+  };
+};
+
+export const getListKontrakByNip = (nip) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_LOADING_LIST_KONTRAK_BY_NIP,
+      payload: true
+    });
+    axios
+      .get(`${KONTRAK_API}/by_nip?nip=${nip}`)
+      .then((response) => {
+        if (response.data) {
+          dispatch({
+            type: GET_KONTRAK_LIST_BY_NIP,
+            payload: response.data.data
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error('Data NIP tidak ditemukan!');
+        dispatch({
+          type: GET_KONTRAK_LIST_BY_NIP,
+          payload: null
+        });
+      })
+      .finally(() => {
+        dispatch({
+          type: SET_LOADING_LIST_KONTRAK_BY_NIP,
+          payload: false
+        });
+      });
+  };
+};
+
+export const stopKontrak = (kontrakId) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_LOADING_KONTRAK_LIST,
+      payload: true
+    });
+    axios
+      .get(`${KONTRAK_API}/stop_kontrak?kontrak_id=${kontrakId}`)
+      .then(() => {
+        toast.success('Kontrak berhasil diberhentikan!');
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.header?.errors[0]?.message || err?.message);
+        console.error(err);
+      })
+      .finally(() => {
+        dispatch({
+          type: SET_LOADING_KONTRAK_LIST,
           payload: false
         });
       });

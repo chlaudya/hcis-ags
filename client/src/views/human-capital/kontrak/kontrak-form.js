@@ -35,6 +35,9 @@ const FormFieldKontrak = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const { extendContract } = state ?? false;
+
   const { kontrakDetail, isSubmitting } = useSelector(getStateKontrak);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
@@ -53,23 +56,23 @@ const FormFieldKontrak = () => {
   useEffect(() => {
     if (id) {
       dispatch(getKontrakDetail(id));
-      setInitialValues({
-        ...kontrakDetail,
-        gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
-        uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
-      });
+      if (extendContract) {
+        setInitialValues({
+          karyawan_nip: kontrakDetail?.karyawan_nip,
+          nonik: kontrakDetail?.nonik,
+          karyawan_name: kontrakDetail?.karyawan_name,
+          tempat_tinggal: kontrakDetail?.tempat_tinggal,
+          tanggal_lahir: kontrakDetail?.tanggal_lahir
+        });
+      } else {
+        setInitialValues({
+          ...kontrakDetail,
+          gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
+          uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
+        });
+      }
     }
-  }, [id]);
-
-  useEffect(() => {
-    if (id) {
-      setInitialValues({
-        ...kontrakDetail,
-        gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
-        uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
-      });
-    }
-  }, [kontrakDetail]);
+  }, [id, kontrakDetail]);
 
   useEffect(() => {
     if (karyawanByNip) {
@@ -117,7 +120,7 @@ const FormFieldKontrak = () => {
       uang_makan: formattedUangMakan
     };
 
-    if (id) {
+    if (id && !extendContract) {
       dispatch(updateKontrak({ reqBody: reqBodyEdit, redirect: redirectToKontrak }));
     } else {
       dispatch(
@@ -133,6 +136,17 @@ const FormFieldKontrak = () => {
     }
   };
 
+  const renderTextButton = () => {
+    switch (true) {
+      case extendContract:
+        return <span>Perpanjang</span>;
+      case !!id:
+        return <span>Update</span>;
+      default:
+        return <span>Save</span>;
+    }
+  };
+
   return (
     <Formik
       validateOnMount={true}
@@ -143,11 +157,7 @@ const FormFieldKontrak = () => {
       {({ values, isValid, setFieldValue }) => {
         return (
           <Form>
-            <MainCard
-              title={id ? 'Edit Kontrak' : 'Input Kontrak'}
-              iconAction={ArrowBackIcon}
-              onClickIcon={redirectToKontrak}
-            >
+            <MainCard title="Kontrak" iconAction={ArrowBackIcon} onClickIcon={redirectToKontrak}>
               <Row>
                 <Col>
                   <FormField
@@ -296,7 +306,7 @@ const FormFieldKontrak = () => {
                     <span> Loading</span>
                   </>
                 ) : (
-                  'Save'
+                  renderTextButton()
                 )}
               </Button>
             </MainCard>

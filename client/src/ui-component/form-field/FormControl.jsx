@@ -15,8 +15,8 @@ const FormControl = (props) => {
   const customStyles = {
     control: (base) => ({
       ...base,
-      borderColor: isFieldDirty ? '#ec0000' : '#ddd',
-    }),
+      borderColor: isFieldDirty ? '#ec0000' : '#ddd'
+    })
   };
 
   return (

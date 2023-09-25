@@ -23,7 +23,7 @@ const ModalDetail = () => {
   });
 
   return (
-    <Dialog open={isOpen} className={cssClasses} size={size} centered {...restProps}>
+    <Dialog open={isOpen} className={cssClasses} maxWidth={size} centered {...restProps}>
       <ModalHeader
         className="bg-primary p-3 position-relative ti-text-color"
         style={{

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { blue, green, red } from '@material-ui/core/colors';
-import { Delete, Download, Edit } from '@material-ui/icons';
+import { Delete, DoDisturb, Download, Edit } from '@material-ui/icons';
 import { Typography, IconButton, Button } from '@material-ui/core';
 
 import FilterKontrak from './components/FilterKontrak';
@@ -23,9 +23,10 @@ import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
 import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import { getDropdownBank } from 'store/actions/master-bank';
-import { getKontrakList, updateKontrak } from 'store/actions/kontrak';
+import { getKontrakList, getListKontrakByNip, stopKontrak } from 'store/actions/kontrak';
 import { renderDate } from 'utils/renderDate';
 import { paginationNumber } from 'utils/paginationNumber';
+import TableListKontrak from './components/TableListKontrak';
 
 const KontrakPage = () => {
   const dispatch = useDispatch();
@@ -68,23 +69,31 @@ const KontrakPage = () => {
     window.open(`${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${kontrakId}`);
   };
 
-  const onConfirmDelete = (id) => {
-    const kontrak = kontrakList?.data.find((data) => data.kontrak_id === id);
-    const reqBody = {
-      ...kontrak,
-      is_active: false
-    };
-    dispatch(updateKontrak({ reqBody, hideModal, isDelete: true }));
+  const onConfirmStopContract = (id) => {
+    // API new berhenti Kontrak
+    dispatch(stopKontrak(id));
+    hideModal();
+    dispatch(getKontrakList());
   };
 
   const openModalConfirmation = (id) => {
     showModal(MODAL_TYPES.MODAL_CONFIRMATION, {
-      modalTitle: 'Hapus Data Kontrak',
-      modalDescription: 'Anda yakin ingin menghapus data Kontrak ini?',
+      modalTitle: 'Berhenti Kontrak ',
+      modalDescription: 'Anda yakin ingin memberhentikan kontrak karyawan ini?',
       confirmText: 'Yes',
       cancelText: 'No',
-      handleConfirm: () => onConfirmDelete(id),
+      handleConfirm: () => onConfirmStopContract(id),
       isSubmitting: isSubmitting
+    });
+  };
+
+  const openModalKontrakList = (nip) => {
+    dispatch(getListKontrakByNip(nip));
+
+    showModal(MODAL_TYPES.MODAL_DETAIL, {
+      modalTitle: 'List Kontrak',
+      size: 'xl',
+      children: <TableListKontrak />
     });
   };
 
@@ -100,7 +109,9 @@ const KontrakPage = () => {
       width: '100px',
       wrap: true,
       center: true,
-      selector: (row, index) => row.karyawan_nip
+      selector: (row) => (
+        <div onClick={() => openModalKontrakList(row.karyawan_nip)}>{row.karyawan_nip}</div>
+      )
     },
     {
       name: 'Nama',
@@ -154,26 +165,14 @@ const KontrakPage = () => {
       center: true,
       cell: (row, index) => (
         <>
-          <IconButton
-            color="secondary"
-            aria-label="add an alarm"
-            onClick={() => redirectToEdit(row.kontrak_id)}
-          >
+          <IconButton color="secondary" onClick={() => redirectToEdit(row.kontrak_id)}>
             <Edit style={{ color: blue[900] }} />
           </IconButton>
-          <IconButton
-            color="secondary"
-            aria-label="add an alarm"
-            onClick={() => openPdf(row.kontrak_id)}
-          >
+          <IconButton color="secondary" onClick={() => openPdf(row.kontrak_id)}>
             <Download style={{ color: green[700] }} />
           </IconButton>
-          <IconButton
-            color="warning"
-            aria-label="add an alarm"
-            onClick={() => openModalConfirmation(row.kontrak_id)}
-          >
-            <Delete style={{ color: red[900] }} />
+          <IconButton color="warning" onClick={() => openModalConfirmation(row.kontrak_id)}>
+            <DoDisturb style={{ color: red[900] }} />
           </IconButton>
         </>
       )

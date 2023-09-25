@@ -1,8 +1,10 @@
 const initialState = {
   kontrakList: [],
+  kontrakListByNip: [],
   kontrakDetail: {},
   loading: false,
   loadingDetail: false,
+  loadingListByNip: false,
   isSubmitting: false
 };
 
@@ -13,12 +15,21 @@ export const kontrakReducer = (state = initialState, action) => {
       kontrakList: action.payload,
       loading: false
     },
+    GET_KONTRAK_LIST_BY_NIP: {
+      ...state,
+      kontrakListByNip: action.payload,
+      loading: false
+    },
     GET_KONTRAK_DETAIL: {
       ...state,
       kontrakDetail: action.payload,
       loadingDetail: false
     },
     SET_LOADING_KONTRAK_LIST: {
+      ...state,
+      loading: action.payload
+    },
+    SET_LOADING_KONTRAK_LIST_BY_NIP: {
       ...state,
       loading: action.payload
     },
@@ -32,7 +43,7 @@ export const kontrakReducer = (state = initialState, action) => {
     },
     SET_LOADING_KONTRAK_BY_NIP: {
       ...state,
-      loadingDetail: action.payload
+      loadingListByNip: action.payload
     }
   };
 
