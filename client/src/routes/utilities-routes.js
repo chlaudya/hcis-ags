@@ -27,10 +27,10 @@ const UtilitiesRoutes = {
   path: '/',
   element: <MainLayout />,
   children: [
-    {
-      path: '/utilities/templates',
-      element: <Template />
-    },
+    // {
+    //   path: '/utilities/templates',
+    //   element: <Template />
+    // },
     {
       path: '/utilities/master-jabatan',
       element: <MasterJabatan />

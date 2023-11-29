@@ -31,14 +31,14 @@ const utilities = {
   title: 'Utilities',
   type: 'group',
   children: [
-    {
-      id: 'template',
-      title: 'Template',
-      type: 'item',
-      url: '/utilities/templates',
-      icon: icons.IconTemplate,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'template',
+    //   title: 'Template',
+    //   type: 'item',
+    //   url: '/utilities/templates',
+    //   icon: icons.IconTemplate,
+    //   breadcrumbs: false
+    // },
     {
       id: 'master',
       title: 'Master',

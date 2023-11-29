@@ -111,7 +111,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    getPrintData();
+    if (karyawanByNip) getPrintData();
   }, [karyawanByNip]);
 
   useEffect(() => {
