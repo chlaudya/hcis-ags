@@ -30,6 +30,7 @@ import {
   removeThousandSeparator,
   setThousandSeparatorNominal
 } from 'utils/thousandSeparator';
+import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
 
 const FormFieldKontrak = () => {
   const { id } = useParams();
@@ -55,30 +56,32 @@ const FormFieldKontrak = () => {
 
   useEffect(() => {
     if (id) {
+      const data = replaceNullWithEmptyString(kontrakDetail);
       dispatch(getKontrakDetail(id));
       if (extendContract) {
         setInitialValues({
-          karyawan_nip: kontrakDetail?.karyawan_nip,
-          nonik: kontrakDetail?.nonik,
-          karyawan_name: kontrakDetail?.karyawan_name,
-          tempat_tinggal: kontrakDetail?.tempat_tinggal,
-          tanggal_lahir: kontrakDetail?.tanggal_lahir
+          karyawan_nip: data?.karyawan_nip,
+          nonik: data?.nonik,
+          karyawan_name: data?.karyawan_name,
+          tempat_tinggal: data?.tempat_tinggal,
+          tanggal_lahir: data?.tanggal_lahir
         });
       } else {
         setInitialValues({
-          ...kontrakDetail,
-          gaji: inputThousandSeparator(kontrakDetail?.gaji || 0),
-          uang_makan: inputThousandSeparator(kontrakDetail?.uang_makan || 0)
+          ...data,
+          gaji: inputThousandSeparator(data?.gaji || 0),
+          uang_makan: inputThousandSeparator(data?.uang_makan || 0)
         });
       }
     }
   }, [id, kontrakDetail]);
 
   useEffect(() => {
+    const data = replaceNullWithEmptyString(karyawanByNip);
     if (karyawanByNip) {
       setInitialValues((prevState) => ({
         ...prevState,
-        ...karyawanByNip
+        ...data
       }));
     } else {
       setInitialValues((prevState) => ({

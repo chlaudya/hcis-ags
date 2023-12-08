@@ -37,6 +37,7 @@ import {
 } from 'constants/general.constant';
 import { INITIAL_VALUES_KARYAWAN } from 'views/human-capital/karyawan/karyawan.const';
 import { CircularProgress } from '@material-ui/core';
+import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -125,13 +126,13 @@ const Profile = () => {
   useEffect(() => {
     if (username) {
       dispatch(getKaryawanByNip(username));
-      setInitialValues(karyawanByNip);
+      setInitialValues(replaceNullWithEmptyString(karyawanByNip));
     }
   }, [username]);
 
   useEffect(() => {
     if (username) {
-      setInitialValues(karyawanByNip);
+      setInitialValues(replaceNullWithEmptyString(karyawanByNip));
     }
   }, [karyawanByNip]);
 

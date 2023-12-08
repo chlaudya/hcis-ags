@@ -22,6 +22,7 @@ import csrfProtection from 'utils/csrfProtection';
 import { inputThousandSeparator } from 'utils/thousandSeparator';
 import { INITIAL_VALUES_KONTRAK } from 'views/human-capital/kontrak/kontrak.const';
 import { CircularProgress } from '@material-ui/core';
+import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
 
 const FormFieldKontrak = () => {
   const dispatch = useDispatch();
@@ -55,10 +56,11 @@ const FormFieldKontrak = () => {
 
   useEffect(() => {
     if (kontrakDetail?.data?.length > 0) {
+      const data = replaceNullWithEmptyString(kontrakDetail.data[0]);
       setInitialValues({
-        ...kontrakDetail?.data[0],
-        gaji: inputThousandSeparator(kontrakDetail?.data[0]?.gaji || 0),
-        uang_makan: inputThousandSeparator(kontrakDetail?.data[0]?.uang_makan || 0)
+        ...data,
+        gaji: inputThousandSeparator(data?.gaji || 0),
+        uang_makan: inputThousandSeparator(data?.uang_makan || 0)
       });
     }
   }, [kontrakDetail]);

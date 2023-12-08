@@ -23,6 +23,7 @@ import { INITIAL_VALUES_KARYAWAN } from './karyawan.const';
 import { getDropdownBank } from 'store/actions/master-bank';
 import { fileToBase64 } from 'utils/convertFileToBase64';
 import csrfProtection from 'utils/csrfProtection';
+import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
 
 const FormFieldKaryawan = () => {
   const dispatch = useDispatch();
@@ -42,15 +43,15 @@ const FormFieldKaryawan = () => {
   useEffect(() => {
     if (id) {
       dispatch(getKaryawanDetail(id));
-      setInitialValues({ ...karyawanDetail, lampiran_cv: karyawanDetail.file_upload_id });
     }
   }, [id]);
 
   useEffect(() => {
-    if (id) {
-      setInitialValues({ ...karyawanDetail, lampiran_cv: karyawanDetail.file_upload_id });
+    if (id && karyawanDetail) {
+      const existingValue = { ...karyawanDetail, lampiran_cv: karyawanDetail.file_upload_id };
+      setInitialValues(replaceNullWithEmptyString(existingValue));
     }
-  }, [karyawanDetail]);
+  }, [karyawanDetail, id]);
 
   const redirectToKaryawan = () => {
     navigate('/human-capital/karyawan');
@@ -110,6 +111,7 @@ const FormFieldKaryawan = () => {
                     name="karyawan_nip"
                     label="NIP"
                     tag="input"
+                    disabled={id && !!values.karyawan_nip}
                   />
                   <FormField
                     className="mb-2"
@@ -242,6 +244,7 @@ const FormFieldKaryawan = () => {
                     name="nonik"
                     label="No. KTP"
                     tag="input"
+                    disabled={id && !!values.nonik}
                   />
                   <FormField className="mb-2" id="TxtNoKK" name="nokk" label="No. KK" tag="input" />
                   <FormField
