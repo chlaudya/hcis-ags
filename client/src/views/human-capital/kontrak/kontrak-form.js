@@ -46,6 +46,7 @@ const FormFieldKontrak = () => {
   const { karyawanByNip } = useSelector(getStateKaryawan);
   const { user } = useSelector(getStateUser);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KONTRAK);
+  const [searchNip, setSearchNip] = useState('');
 
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
@@ -78,7 +79,7 @@ const FormFieldKontrak = () => {
 
   useEffect(() => {
     const data = replaceNullWithEmptyString(karyawanByNip);
-    if (karyawanByNip) {
+    if (searchNip && karyawanByNip) {
       setInitialValues((prevState) => ({
         ...prevState,
         ...data
@@ -101,6 +102,7 @@ const FormFieldKontrak = () => {
 
   const handleChangeNip = (value) => {
     dispatch(getKaryawanByNip(value));
+    setSearchNip(true);
   };
 
   const handleChangeGaji = (value, setFieldValue) => {
