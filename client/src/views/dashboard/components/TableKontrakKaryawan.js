@@ -130,7 +130,7 @@ const TableKontrakKaryawan = ({ data, loading }) => {
             variant="outlined"
             color="error"
             endIcon={<DoDisturb />}
-            onClick={() => openModalConfirmation(row.karyawan_id)}
+            onClick={() => openModalConfirmation(row.kontrak_id)}
           >
             Berhenti
           </Button>
