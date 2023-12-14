@@ -57,32 +57,39 @@ const FormFieldKontrak = () => {
 
   useEffect(() => {
     if (id) {
-      const data = replaceNullWithEmptyString(kontrakDetail);
       dispatch(getKontrakDetail(id));
-      if (extendContract) {
-        setInitialValues({
-          karyawan_nip: data?.karyawan_nip,
-          nonik: data?.nonik,
-          karyawan_name: data?.karyawan_name,
-          tempat_tinggal: data?.tempat_tinggal,
-          tanggal_lahir: data?.tanggal_lahir
-        });
-      } else {
-        setInitialValues({
-          ...data,
-          gaji: inputThousandSeparator(data?.gaji || 0),
-          uang_makan: inputThousandSeparator(data?.uang_makan || 0)
-        });
-      }
     }
-  }, [id, kontrakDetail]);
+  }, [id]);
+
+  useEffect(() => {
+    const data = replaceNullWithEmptyString(kontrakDetail);
+    if (extendContract) {
+      setInitialValues({
+        karyawan_nip: data?.karyawan_nip,
+        nonik: data?.nonik,
+        karyawan_name: data?.karyawan_name,
+        tempat_tinggal: data?.tempat_tinggal,
+        tanggal_lahir: data?.tanggal_lahir
+      });
+    }
+    if (id && !extendContract) {
+      setInitialValues({
+        ...data,
+        gaji: inputThousandSeparator(data?.gaji || 0),
+        uang_makan: inputThousandSeparator(data?.uang_makan || 0)
+      });
+    }
+  }, [kontrakDetail]);
 
   useEffect(() => {
     const data = replaceNullWithEmptyString(karyawanByNip);
     if (searchNip && karyawanByNip) {
-      setInitialValues((prevState) => ({
-        ...prevState,
-        ...data
+      setInitialValues(() => ({
+        karyawan_nip: data?.karyawan_nip,
+        nonik: data?.nonik,
+        karyawan_name: data?.karyawan_name,
+        tempat_tinggal: data?.tempat_tinggal,
+        tanggal_lahir: data?.tanggal_lahir
       }));
     } else {
       setInitialValues((prevState) => ({
