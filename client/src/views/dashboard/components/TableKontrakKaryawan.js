@@ -16,6 +16,7 @@ import { getDashboardData } from 'store/actions/dashboard';
 import { getKaryawanDetail, getKaryawanList } from 'store/actions/karyawan';
 import { getListKontrakByNip, stopKontrak } from 'store/actions/kontrak';
 import TableListKontrak from 'views/human-capital/kontrak/components/TableListKontrak';
+import FormReason from './FormReason';
 
 const TableKontrakKaryawan = ({ data, loading }) => {
   const dispatch = useDispatch();
@@ -56,8 +57,12 @@ const TableKontrakKaryawan = ({ data, loading }) => {
   };
 
   const onConfirmStopContract = async (id) => {
-    // API new berhenti Kontrak
-    dispatch(stopKontrak(id));
+    const reqBody = {
+      kontrak_id: id,
+      alasan: localStorage.getItem('reason')
+    };
+
+    dispatch(stopKontrak(reqBody));
     hideModal();
     dispatch(getDashboardData());
   };
@@ -71,7 +76,8 @@ const TableKontrakKaryawan = ({ data, loading }) => {
       confirmText: 'Yes',
       cancelText: 'No',
       handleConfirm: () => onConfirmStopContract(id),
-      isSubmitting: isSubmitting
+      isSubmitting: isSubmitting,
+      children: <FormReason onChange={(e) => localStorage.setItem('reason', e.value)} />
     });
   };
 
@@ -95,9 +101,7 @@ const TableKontrakKaryawan = ({ data, loading }) => {
     {
       name: 'NIP',
       center: true,
-      selector: (row) => (
-        <div onClick={() => openModalKontrakList(row.karyawan_nip)}>{row.karyawan_nip}</div>
-      )
+      selector: (row) => row.karyawan_nip
     },
     {
       name: 'No. Kontrak',
@@ -149,6 +153,7 @@ const TableKontrakKaryawan = ({ data, loading }) => {
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={data?.total_record}
+          onRowClicked={(row) => openModalKontrakList(row.karyawan_nip)}
         />
       </Typography>
     </MainCard>

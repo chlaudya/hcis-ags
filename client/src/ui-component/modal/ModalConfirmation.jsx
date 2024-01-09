@@ -19,6 +19,7 @@ const ModalConfirmation = () => {
     className,
     handleModalToggle,
     isSubmitting,
+    disabled,
     ...restProps
   } = modalProps ?? {};
 
@@ -39,7 +40,8 @@ const ModalConfirmation = () => {
       </ModalHeader>
       <ModalBody className="p-2">
         <h6 className="p-3">{modalDescription}</h6>
-        <Button color="danger" className="m-2" onClick={handleConfirm}>
+        {children}
+        <Button color="danger" className="m-2" onClick={handleConfirm} disabled={disabled}>
           {isSubmitting ? (
             <>
               <Spinner size="sm" />

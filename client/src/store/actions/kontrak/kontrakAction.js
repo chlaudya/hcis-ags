@@ -195,14 +195,14 @@ export const getListKontrakByNip = (nip) => {
   };
 };
 
-export const stopKontrak = (kontrakId) => {
+export const stopKontrak = (reqBody) => {
   return async (dispatch) => {
     dispatch({
       type: SET_LOADING_KONTRAK_LIST,
       payload: true
     });
     axios
-      .get(`${KONTRAK_API}/stop_kontrak?kontrak_id=${kontrakId}`)
+      .post(`${KONTRAK_API}/stop_kontrak`, reqBody)
       .then(() => {
         toast.success('Kontrak berhasil diberhentikan!');
       })
