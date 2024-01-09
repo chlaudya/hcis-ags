@@ -159,6 +159,17 @@ const FormFieldKontrak = () => {
     }
   };
 
+  const renderTitleKontrak = () => {
+    switch (true) {
+      case extendContract:
+        return 'Perpanjang Kontrak';
+      case !!id:
+        return 'Update Kontrak';
+      default:
+        return 'Input Kontrak';
+    }
+  };
+
   return (
     <Formik
       validateOnMount={true}
@@ -169,7 +180,11 @@ const FormFieldKontrak = () => {
       {({ values, isValid, setFieldValue }) => {
         return (
           <Form>
-            <MainCard title="Kontrak" iconAction={ArrowBackIcon} onClickIcon={redirectToKontrak}>
+            <MainCard
+              title={renderTitleKontrak()}
+              iconAction={ArrowBackIcon}
+              onClickIcon={redirectToKontrak}
+            >
               <Row>
                 <Col>
                   <FormField
