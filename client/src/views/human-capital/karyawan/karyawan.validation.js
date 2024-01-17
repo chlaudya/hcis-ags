@@ -16,9 +16,6 @@ export const karyawanValidationSchema = Yup.object().shape({
   nonik: Yup.string().required('wajib diisi!'),
   nokk: Yup.string().required('wajib diisi!'),
   nonpwp: Yup.string().required('wajib diisi!'),
-  pendidikan_terakhir: Yup.string().required('wajib diisi!'),
-  jurusan: Yup.string().required('wajib diisi!'),
-  asal_sekolah: Yup.string().required('wajib diisi!'),
   no_bpjs_tenaga_kerja: Yup.string().required('wajib diisi!'),
   no_bpjs_kesehatan: Yup.string().required('wajib diisi!'),
   lampiran_cv: Yup.string().required('wajib diisi!'),
@@ -31,5 +28,22 @@ export const karyawanValidationSchema = Yup.object().shape({
   alamat_domisili: Yup.string().required('wajib diisi!'),
   no_hp_keluarga: Yup.string().required('wajib diisi!'),
   rekening_atas_nama: Yup.string().required('wajib diisi!'),
-  riwayat_pekerjaan: Yup.string().required('wajib diisi!')
+  pendidikan_terakhir: Yup.array().min(1, 'wajib diisi!').required('wajib diisi!'),
+  riwayat_pekerjaan: Yup.array().min(1, 'wajib diisi!').required('wajib diisi!')
+});
+
+export const educationHistoryValidationSchema = Yup.object().shape({
+  pendidikan: Yup.string().required('wajib diisi!'),
+  nama_sekolah: Yup.string().required('wajib diisi!'),
+  jurusan: Yup.string().required('wajib diisi!'),
+  asal_sekolah: Yup.string().required('wajib diisi!'),
+  tahun_mulai: Yup.string().required('wajib diisi!'),
+  tahun_berakhir: Yup.string().required('wajib diisi!')
+});
+
+export const employmentHistoryValidationSchema = Yup.object().shape({
+  nama_perusahaan: Yup.string().required('wajib diisi!'),
+  tahun_mulai: Yup.string().required('wajib diisi!'),
+  tahun_berakhir: Yup.string().required('wajib diisi!'),
+  keterangan: Yup.string().required('wajib diisi!')
 });

@@ -1,39 +1,59 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Input, Label, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Plus } from 'react-feather';
+import { v4 as uuidv4 } from 'uuid';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 import { FormField } from 'src/ui-component/form-field';
 import MainCard from 'src/ui-component/cards/MainCard';
+import { ModalContext } from 'src/ui-component/modal';
+
 import { getStateKaryawan, getStateMasterBank, getStateUser } from 'store/stateSelector';
 import { addKaryawan, getKaryawanDetail, updateKaryawan } from 'store/actions/karyawan';
 import { karyawanValidationSchema } from './karyawan.validation';
+
+import { getDropdownBank } from 'store/actions/master-bank';
+import { fileToBase64 } from 'utils/convertFileToBase64';
+import csrfProtection from 'utils/csrfProtection';
+import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
+import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import {
   BLOOD_TYPE,
-  EDUCATION,
   GENDER,
   IS_ACTIVE,
   MARITAL_STATUS,
   RELIGION
 } from 'constants/general.constant';
-import { INITIAL_VALUES_KARYAWAN } from './karyawan.const';
-import { getDropdownBank } from 'store/actions/master-bank';
-import { fileToBase64 } from 'utils/convertFileToBase64';
-import csrfProtection from 'utils/csrfProtection';
-import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
+import {
+  COLUMN_TABLE_EDUCATION_HISTORY,
+  COLUMN_TABLE_EMPLOYMENT_HISTORY,
+  INITIAL_VALUES_KARYAWAN
+} from './karyawan.const';
+import FormEducationHistory from './components/FormEducationHistory';
+import FormEmploymentHistory from './components/FormEmploymentHistory';
+import TableFormik from 'src/ui-component/tableFormik/TableFormik';
 
 const FormFieldKaryawan = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
+  const { showModal, hideModal } = useContext(ModalContext);
+
   const { karyawanDetail, isSubmitting } = useSelector(getStateKaryawan);
   const { user } = useSelector(getStateUser);
   const { dropdownBank } = useSelector(getStateMasterBank);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KARYAWAN);
   const [fileCV, setFileCV] = useState();
+  const [showModalDeleteEducation, setShowModalDeleteEducation] = useState(false);
+  const [showModalDeleteEmployment, setShowModalDeleteEmployment] = useState(false);
+  const [educationList, setEducationList] = useState([]);
+  const [employmentList, setEmploymentList] = useState([]);
+  const [deleteId, setDeleteId] = useState('');
 
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
@@ -50,6 +70,8 @@ const FormFieldKaryawan = () => {
     if (id && karyawanDetail) {
       const existingValue = { ...karyawanDetail, lampiran_cv: karyawanDetail.file_upload_id };
       setInitialValues(replaceNullWithEmptyString(existingValue));
+      setEducationList(karyawanDetail.pendidikan_terakhir);
+      setEmploymentList(karyawanDetail.riwayat_pekerjaan);
     }
   }, [karyawanDetail, id]);
 
@@ -63,7 +85,7 @@ const FormFieldKaryawan = () => {
     setFieldValue('lampiran_cv', file);
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = ({ values, isValid }) => {
     const reqBodyWithCv = {
       ...values,
       lampiran_cv: fileCV,
@@ -77,16 +99,100 @@ const FormFieldKaryawan = () => {
       usr_update: user.preferred_username
     };
 
-    if (id) {
-      if (fileCV) {
-        dispatch(updateKaryawan({ reqBody: reqBodyWithCv, redirect: redirectToKaryawan }));
+    if (isValid) {
+      if (id) {
+        if (fileCV) {
+          dispatch(updateKaryawan({ reqBody: reqBodyWithCv, redirect: redirectToKaryawan }));
+        } else {
+          dispatch(updateKaryawan({ reqBody: reqBodyNoCv, redirect: redirectToKaryawan }));
+        }
       } else {
-        dispatch(updateKaryawan({ reqBody: reqBodyNoCv, redirect: redirectToKaryawan }));
+        dispatch(addKaryawan({ ...values, lampiran_cv: fileCV }, redirectToKaryawan));
       }
-    } else {
-      dispatch(addKaryawan({ ...values, lampiran_cv: fileCV }, redirectToKaryawan));
     }
   };
+
+  const onSubmitFormEducationHistory = ({ setFieldValue, values }) => {
+    const detailEducationId = uuidv4();
+    const updatedValue = [
+      ...educationList,
+      {
+        ...values,
+        detail_pendidikan_id: detailEducationId
+      }
+    ];
+
+    setFieldValue('pendidikan_terakhir', updatedValue);
+    setEducationList(updatedValue);
+
+    hideModal();
+  };
+
+  const onSubmitFormEmploymentHistory = ({ setFieldValue, values }) => {
+    const detailEmploymentId = uuidv4();
+    const updatedValue = [
+      ...employmentList,
+      {
+        ...values,
+        detail_riwayat_pekerjaan_id: detailEmploymentId
+      }
+    ];
+
+    setFieldValue('riwayat_pekerjaan', updatedValue);
+    setEmploymentList(updatedValue);
+
+    hideModal();
+  };
+
+  const onDeleteEducationHistory = (setFieldValue) => {
+    const filteredEducationList = educationList?.filter(
+      (item) => item.detail_pendidikan_id !== deleteId
+    );
+    setEducationList(filteredEducationList);
+    setFieldValue('pendidikan_terakhir', filteredEducationList);
+    setShowModalDeleteEducation(false);
+  };
+
+  const onDeleteEmploymentHistory = (setFieldValue) => {
+    const filteredEmploymentList = employmentList?.filter(
+      (item) => item.detail_riwayat_pekerjaan_id !== deleteId
+    );
+    setEmploymentList(filteredEmploymentList);
+    setFieldValue('riwayat_pekerjaan', filteredEmploymentList);
+    setShowModalDeleteEmployment(false);
+  };
+
+  const openModalConfirmationDeleteEducationList = (id) => {
+    setDeleteId(id);
+    setShowModalDeleteEducation(true);
+  };
+
+  const openModalConfirmationDeleteEmploymentList = (id) => {
+    setDeleteId(id);
+    setShowModalDeleteEmployment(true);
+  };
+
+  const openModalAddEducationHistory = (setFieldValue) =>
+    showModal(MODAL_TYPES.MODAL_DETAIL, {
+      modalTitle: 'Add Riwayat Pendidikan',
+      size: 'sm',
+      children: (
+        <FormEducationHistory
+          onSubmit={(values) => onSubmitFormEducationHistory({ setFieldValue, values })}
+        />
+      )
+    });
+
+  const openModalAddEmploymentHistory = (setFieldValue) =>
+    showModal(MODAL_TYPES.MODAL_DETAIL, {
+      modalTitle: 'Add Riwayat Pekerjaan',
+      size: 'sm',
+      children: (
+        <FormEmploymentHistory
+          onSubmit={(values) => onSubmitFormEmploymentHistory({ setFieldValue, values })}
+        />
+      )
+    });
 
   return (
     <Formik
@@ -245,6 +351,7 @@ const FormFieldKaryawan = () => {
                     label="No. KTP"
                     tag="input"
                     disabled={id && !!values.nonik}
+                    type="number"
                   />
                   <FormField className="mb-2" id="TxtNoKK" name="nokk" label="No. KK" tag="input" />
                   <FormField
@@ -253,6 +360,7 @@ const FormFieldKaryawan = () => {
                     name="nonpwp"
                     label="No. NPWP"
                     tag="input"
+                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -260,6 +368,7 @@ const FormFieldKaryawan = () => {
                     name="no_bpjs_tenaga_kerja"
                     label="No. Ketenagakerjaan"
                     tag="input"
+                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -267,6 +376,7 @@ const FormFieldKaryawan = () => {
                     name="no_bpjs_kesehatan"
                     label="No. Kesehatan"
                     tag="input"
+                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -282,6 +392,7 @@ const FormFieldKaryawan = () => {
                     name="no_rekening"
                     label="No. Rekening"
                     tag="input"
+                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -290,17 +401,43 @@ const FormFieldKaryawan = () => {
                     label="Rekening Atas Nama"
                     tag="input"
                   />
-                  <FormField
-                    className="mb-2"
-                    id="TxtRiwayatPekerjaan"
+
+                  <div className="d-flex justify-content-between align-items-center mb-1">
+                    <Label>Riwayat Pekerjaan</Label>
+                    <Button
+                      outline
+                      color="primary"
+                      size="sm"
+                      type="button"
+                      onClick={() => openModalAddEmploymentHistory(setFieldValue)}
+                      style={{
+                        padding: '5px 10px',
+                        minHeight: 27,
+                        minWidth: 61
+                      }}
+                    >
+                      <Plus size={13} /> Add
+                    </Button>
+                  </div>
+
+                  <TableFormik
+                    columns={COLUMN_TABLE_EMPLOYMENT_HISTORY({
+                      withDeleteAction: true,
+                      onDelete: openModalConfirmationDeleteEmploymentList
+                    })}
+                    data={employmentList ?? []}
                     name="riwayat_pekerjaan"
-                    label="Riwayat Pekerjaan"
-                    tag="input"
+                    error={errors.riwayat_pekerjaan && touched.riwayat_pekerjaan}
+                    isEmpty={employmentList?.length === 0}
+                    defaultEmptyText="Empty List"
+                    errorMessage="wajib diisi!"
                   />
 
                   <Label
                     htmlFor="FileCv"
-                    className={errors.lampiran_cv && touched.lampiran_cv ? `text-danger` : null}
+                    className={
+                      errors.lampiran_cv && touched.lampiran_cv ? `text-danger mt-2` : 'mt-2'
+                    }
                   >
                     Lampiran CV
                   </Label>
@@ -318,30 +455,40 @@ const FormFieldKaryawan = () => {
                   {errors.lampiran_cv && touched.lampiran_cv ? (
                     <div className="text-bold-600 text-danger">{errors.lampiran_cv}</div>
                   ) : null}
-                  <FormField
-                    className="mb-2 mt-3"
-                    id="TxtPendidikan"
+
+                  <div className="d-flex justify-content-between align-items-center mb-1 mt-2">
+                    <Label>Riwayat Pendidikan</Label>
+                    <Button
+                      outline
+                      color="primary"
+                      size="sm"
+                      type="button"
+                      onClick={() => openModalAddEducationHistory(setFieldValue)}
+                      style={{
+                        padding: '5px 10px',
+                        minHeight: 27,
+                        minWidth: 61
+                      }}
+                    >
+                      <Plus size={13} /> Add
+                    </Button>
+                  </div>
+
+                  <TableFormik
+                    columns={COLUMN_TABLE_EDUCATION_HISTORY({
+                      withDeleteAction: true,
+                      onDelete: openModalConfirmationDeleteEducationList
+                    })}
+                    data={educationList ?? []}
                     name="pendidikan_terakhir"
-                    label="Pendidikan"
-                    tag="select"
-                    options={EDUCATION}
+                    error={errors.pendidikan_terakhir && touched.pendidikan_terakhir}
+                    isEmpty={educationList?.length === 0}
+                    defaultEmptyText="Empty List"
+                    errorMessage="wajib diisi!"
                   />
+
                   <FormField
-                    className="mb-2"
-                    id="TxtJurusan"
-                    name="jurusan"
-                    label="Jurusan"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtAsalSekolah"
-                    name="asal_sekolah"
-                    label="Asal Sekolah"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
+                    className="mb-2 mt-2"
                     id="TxtAktif"
                     name="is_active"
                     label="Aktif"
@@ -356,8 +503,7 @@ const FormFieldKaryawan = () => {
                 color="primary"
                 className="m-2 pe-4 ps-4"
                 type="submit"
-                disabled={!isValid}
-                onClick={() => handleSubmit(values)}
+                onClick={() => handleSubmit({ values, isValid })}
               >
                 {isSubmitting ? (
                   <>
@@ -369,6 +515,43 @@ const FormFieldKaryawan = () => {
                 )}
               </Button>
             </MainCard>
+            <SweetAlert
+              show={showModalDeleteEducation}
+              showCancel
+              type="warning"
+              title={
+                <>
+                  Are you sure?
+                  <h6 className="mt-1">You will not be able to recover this data!</h6>
+                </>
+              }
+              btnSize="sm"
+              confirmBtnText="Yes, delete it!"
+              confirmBtnBsStyle="danger"
+              cancelBtnBsStyle="outline-danger"
+              closeOnClickOutside={false}
+              onConfirm={() => onDeleteEducationHistory(setFieldValue)}
+              onCancel={() => setShowModalDeleteEducation(false)}
+            />
+
+            <SweetAlert
+              show={showModalDeleteEmployment}
+              showCancel
+              type="warning"
+              title={
+                <>
+                  Are you sure?
+                  <h6 className="mt-1">You will not be able to recover this data!</h6>
+                </>
+              }
+              btnSize="sm"
+              confirmBtnText="Yes, delete it!"
+              confirmBtnBsStyle="danger"
+              cancelBtnBsStyle="outline-danger"
+              closeOnClickOutside={false}
+              onConfirm={() => onDeleteEmploymentHistory(setFieldValue)}
+              onCancel={() => setShowModalDeleteEmployment(false)}
+            />
           </Form>
         );
       }}
