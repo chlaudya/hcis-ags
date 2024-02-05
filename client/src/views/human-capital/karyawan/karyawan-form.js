@@ -45,7 +45,7 @@ const FormFieldKaryawan = () => {
   const { showModal, hideModal } = useContext(ModalContext);
 
   const { karyawanDetail, isSubmitting } = useSelector(getStateKaryawan);
-  const { user } = useSelector(getStateUser);
+  // const { user } = useSelector(getStateUser);
   const { dropdownBank } = useSelector(getStateMasterBank);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KARYAWAN);
   const [fileCV, setFileCV] = useState();
@@ -89,14 +89,12 @@ const FormFieldKaryawan = () => {
     const reqBodyWithCv = {
       ...values,
       lampiran_cv: fileCV,
-      karyawan_id: id,
-      usr_update: user.preferred_username
+      karyawan_id: id
     };
 
     const reqBodyNoCv = {
       ...values,
-      karyawan_id: id,
-      usr_update: user.preferred_username
+      karyawan_id: id
     };
 
     if (isValid) {
@@ -229,7 +227,7 @@ const FormFieldKaryawan = () => {
                   <FormField
                     className="mb-2"
                     id="TxtTempat"
-                    name="tempat_tinggal"
+                    name="tempat_lahir"
                     label="Tempat Lahir"
                     tag="input"
                   />
@@ -351,7 +349,6 @@ const FormFieldKaryawan = () => {
                     label="No. KTP"
                     tag="input"
                     disabled={id && !!values.nonik}
-                    type="number"
                   />
                   <FormField className="mb-2" id="TxtNoKK" name="nokk" label="No. KK" tag="input" />
                   <FormField
@@ -360,7 +357,6 @@ const FormFieldKaryawan = () => {
                     name="nonpwp"
                     label="No. NPWP"
                     tag="input"
-                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -368,7 +364,6 @@ const FormFieldKaryawan = () => {
                     name="no_bpjs_tenaga_kerja"
                     label="No. Ketenagakerjaan"
                     tag="input"
-                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -376,7 +371,6 @@ const FormFieldKaryawan = () => {
                     name="no_bpjs_kesehatan"
                     label="No. Kesehatan"
                     tag="input"
-                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -392,7 +386,6 @@ const FormFieldKaryawan = () => {
                     name="no_rekening"
                     label="No. Rekening"
                     tag="input"
-                    type="number"
                   />
                   <FormField
                     className="mb-2"
@@ -487,7 +480,7 @@ const FormFieldKaryawan = () => {
                     errorMessage="wajib diisi!"
                   />
 
-                  <FormField
+                  {/* <FormField
                     className="mb-2 mt-2"
                     id="TxtAktif"
                     name="is_active"
@@ -495,7 +488,7 @@ const FormFieldKaryawan = () => {
                     tag="select"
                     isDisabled={!id}
                     options={IS_ACTIVE}
-                  />
+                  /> */}
                 </Col>
               </Row>
 

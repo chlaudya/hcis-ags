@@ -13,7 +13,7 @@ import { formattedPeriod } from 'utils/renderDate';
 const FilterSlipGaji = ({ params }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
-  const [searchNip, setSearchNip] = useState('');
+  const [searchName, setSearchName] = useState('');
   const [searchPeriod, setSearchPeriod] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
   const [searchParams, setSearchParams] = useState({ ...params });
@@ -22,11 +22,11 @@ const FilterSlipGaji = ({ params }) => {
     dispatch(getDropdownUnitBisnis());
   }, []);
 
-  const onSearchNip = (value) => {
-    setSearchNip(value);
+  const onSearchName = (value) => {
+    setSearchName(value);
     setSearchParams({
       ...searchParams,
-      nip: value
+      karyawan_name: value
     });
   };
 
@@ -51,7 +51,7 @@ const FilterSlipGaji = ({ params }) => {
   };
 
   const onClickReset = () => {
-    setSearchNip('');
+    setSearchName('');
     setSearchPeriod('');
     setSearchUnitBisnis('');
     setSearchParams({ ...params });
@@ -82,11 +82,11 @@ const FilterSlipGaji = ({ params }) => {
       </Col>
       <Col md="3">
         <SearchFilter
-          label="NIP :"
-          placeholder="NIP"
+          label="Name :"
+          placeholder="Name"
           id="TxtSearchValue"
-          value={searchNip}
-          onChange={onSearchNip}
+          value={searchName}
+          onChange={onSearchName}
         />
       </Col>
       <Col md="3">

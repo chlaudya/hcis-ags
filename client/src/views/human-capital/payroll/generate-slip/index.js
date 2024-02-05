@@ -1,42 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { blue, green, red } from '@material-ui/core/colors';
-import { Delete, Download, Edit } from '@material-ui/icons';
-import { Typography, IconButton, Button } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
+import { Download } from '@material-ui/icons';
+import { Typography, IconButton } from '@material-ui/core';
 
-// import FilterKontrak from './components/FilterKontrak';
 import DataTable from 'src/ui-component/data-table';
-import {
-  getStateKontrak,
-  getStateMasterJabatan,
-  getStateMasterTempatTugas,
-  getStateMasterUnitBisnis,
-  getStateSlipGaji
-} from 'store/stateSelector';
+import { getStateSlipGaji } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
-import { renderDropdownLabel } from 'utils/renderDropdownLabel';
-import { getDropdownJabatan } from 'store/actions/master-jabatan';
-import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
-import { getDropdownTempatTugas } from 'store/actions/master-tempat-tugas';
-import { ModalContext } from 'src/ui-component/modal';
-import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
-import { getDropdownBank } from 'store/actions/master-bank';
-import { renderDate } from 'utils/renderDate';
 import { paginationNumber } from 'utils/paginationNumber';
 import { getGenerateSlipGaji } from 'store/actions/slip-gaji';
 import FilterSlipGaji from './FilterSlipGaji';
 
 const GenerateSlipGaji = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { showModal, hideModal } = useContext(ModalContext);
   const { slipGaji, loading } = useSelector(getStateSlipGaji);
-  const { dropdownJabatan } = useSelector(getStateMasterJabatan);
-  const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
-  const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
 
   const [params, setParams] = useState({
     page: 1,
@@ -47,10 +26,6 @@ const GenerateSlipGaji = () => {
     csrfProtection.setHeaderCsrfToken();
     dispatch(getGenerateSlipGaji(params));
   }, []);
-
-  const redirectToEdit = (kontrakId) => {
-    navigate(`/human-capital/kontrak/input-kontrak/${kontrakId}`);
-  };
 
   const onChangePage = (page) => {
     setParams({ ...params, page: page });

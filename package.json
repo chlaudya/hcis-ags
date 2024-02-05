@@ -79,6 +79,7 @@
     },
     "scripts": {
         "start": "concurrently \"react-app-rewired start\" \" env-cmd -f .env nodemon server\" ",
+        "start-local": "concurrently \"react-app-rewired start\" \" env-cmd -f .env.development nodemon server\" ",
         "build": "concurrently \" react-app-rewired build \" \"webpack --mode production --config ./server/webpack-server-config.js \" --max_old_space_size=4096",
         "production": "set NODE_ENV=production&& node ./release/server.min.js",
         "test": "react-scripts test",

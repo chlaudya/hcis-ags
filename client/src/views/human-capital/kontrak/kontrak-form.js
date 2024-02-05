@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Row, Spinner } from 'reactstrap';
+import { Button, Col, Input, Label, Row, Spinner } from 'reactstrap';
 import { Form, Formik } from 'formik';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -18,7 +18,6 @@ import {
 } from 'store/stateSelector';
 import { kontrakValidationSchema } from './kontrak.validation';
 import { INITIAL_VALUES_KONTRAK } from './kontrak.const';
-import { getDropdownBank } from 'store/actions/master-bank';
 import csrfProtection from 'utils/csrfProtection';
 import { addKontrak, getKontrakDetail, updateKontrak } from 'store/actions/kontrak';
 import { getKaryawanByNip } from 'store/actions/karyawan';
@@ -31,6 +30,9 @@ import {
   setThousandSeparatorNominal
 } from 'utils/thousandSeparator';
 import { replaceNullWithEmptyString } from 'utils/replaceNullWithEmptyString';
+import { fileToBase64 } from 'utils/convertFileToBase64';
+import './kontrak-form.scss';
+import { Trash } from 'react-feather';
 
 const FormFieldKontrak = () => {
   const { id } = useParams();
@@ -47,61 +49,21 @@ const FormFieldKontrak = () => {
   const { user } = useSelector(getStateUser);
   const [initialValues, setInitialValues] = useState(INITIAL_VALUES_KONTRAK);
   const [searchNip, setSearchNip] = useState('');
+  const inputFile = useRef(null);
 
-  useEffect(() => {
-    csrfProtection.setHeaderCsrfToken();
-    dispatch(getDropdownUnitBisnis());
-    dispatch(getDropdownTempatTugas());
-    dispatch(getDropdownJabatan());
-  }, []);
+  const handleSelectedDocContract = async (event, setFieldValue) => {
+    const file = await fileToBase64(event.target.files[0]);
+    setFieldValue('upload_doc_kontrak', file);
+  };
 
-  useEffect(() => {
-    if (id) {
-      dispatch(getKontrakDetail(id));
+  const handleDeleteDocContract = (setFieldValue) => {
+    if (inputFile.current) {
+      inputFile.current.value = '';
+      inputFile.current.type = 'text';
+      inputFile.current.type = 'file';
     }
-  }, [id]);
-
-  useEffect(() => {
-    const data = replaceNullWithEmptyString(kontrakDetail);
-    if (extendContract) {
-      setInitialValues({
-        karyawan_nip: data?.karyawan_nip,
-        nonik: data?.nonik,
-        karyawan_name: data?.karyawan_name,
-        tempat_tinggal: data?.tempat_tinggal,
-        tanggal_lahir: data?.tanggal_lahir
-      });
-    }
-    if (id && !extendContract) {
-      setInitialValues({
-        ...data,
-        gaji: inputThousandSeparator(data?.gaji || 0),
-        uang_makan: inputThousandSeparator(data?.uang_makan || 0)
-      });
-    }
-  }, [kontrakDetail]);
-
-  useEffect(() => {
-    const data = replaceNullWithEmptyString(karyawanByNip);
-    if (searchNip && karyawanByNip) {
-      setInitialValues(() => ({
-        karyawan_nip: data?.karyawan_nip,
-        nonik: data?.nonik,
-        karyawan_name: data?.karyawan_name,
-        tempat_tinggal: data?.tempat_tinggal,
-        tanggal_lahir: data?.tanggal_lahir
-      }));
-    } else {
-      setInitialValues((prevState) => ({
-        ...prevState,
-        karyawan_nip: '',
-        karyawan_name: '',
-        nonik: '',
-        tempat_tinggal: '',
-        tanggal_lahir: ''
-      }));
-    }
-  }, [karyawanByNip]);
+    setFieldValue('upload_doc_kontrak', '');
+  };
 
   const redirectToKontrak = () => {
     navigate('/human-capital/kontrak');
@@ -112,39 +74,65 @@ const FormFieldKontrak = () => {
     setSearchNip(true);
   };
 
-  const handleChangeGaji = (value, setFieldValue) => {
-    setFieldValue('gaji', setThousandSeparatorNominal(value));
-  };
-
-  const handleChangeUangMakan = (value, setFieldValue) => {
-    setFieldValue('uang_makan', setThousandSeparatorNominal(value));
+  const handleNominalField = ({ value, fieldName, setFieldValue }) => {
+    setFieldValue(fieldName, setThousandSeparatorNominal(value));
   };
 
   const handleSubmit = (values) => {
     const formattedGaji = Number(removeThousandSeparator(values.gaji));
     const formattedUangMakan = Number(removeThousandSeparator(values.uang_makan));
+    const formattedTunjangan = Number(removeThousandSeparator(values.tunjangan));
+    const formattedTunjanganKomunikasi = Number(
+      removeThousandSeparator(values.tunjangan_komunikasi)
+    );
+    const formattedTunjanganKhusus = Number(removeThousandSeparator(values.tunjangan_khusus));
+    const formattedTunjanganVariable = Number(removeThousandSeparator(values.tunjangan_variable));
 
     const reqBodyEdit = {
-      ...values,
       kontrak_id: id,
-      usr_update: user.preferred_username,
+      karyawan_nip: values.karyawan_nip || '',
+      kontrak_kode: values.kontrak_kode || '',
+      request_no: values.request_no || '',
+      tgl_masuk_kerja: values.tgl_masuk_kerja || '',
+      tgl_habis_kontrak: values.tgl_habis_kontrak || '',
+      tempat_tugas_id: values.tempat_tugas_id || '',
+      unit_id: values.unit_id || '',
+      jabatan_id: values.jabatan_id || '',
+      request_date: values.request_date || '',
       gaji: formattedGaji,
-      uang_makan: formattedUangMakan
+      uang_makan: formattedUangMakan,
+      tunjangan: formattedTunjangan,
+      tunjangan_komunikasi: formattedTunjanganKomunikasi,
+      tunjangan_khusus: formattedTunjanganKhusus,
+      tunjangan_variable: formattedTunjanganVariable,
+      is_active: true,
+      is_upload: !!values.upload_doc_kontrak || '',
+      upload_doc_kontrak: values.upload_doc_kontrak || '',
+      usr_update: user.preferred_username
+    };
+
+    const reqBodyAdd = {
+      karyawan_nip: values.karyawan_nip || '',
+      kontrak_kode: values.kontrak_kode || '',
+      request_no: values.request_no || '',
+      tgl_masuk_kerja: values.tgl_masuk_kerja || '',
+      tgl_habis_kontrak: values.tgl_habis_kontrak || '',
+      tempat_tugas_id: values.tempat_tugas_id || '',
+      unit_id: values.unit_id || '',
+      jabatan_id: values.jabatan_id || '',
+      request_date: values.request_date || '',
+      gaji: formattedGaji,
+      uang_makan: formattedUangMakan,
+      tunjangan: formattedTunjangan,
+      tunjangan_komunikasi: formattedTunjanganKomunikasi,
+      tunjangan_khusus: formattedTunjanganKhusus,
+      tunjangan_variable: formattedTunjanganVariable
     };
 
     if (id && !extendContract) {
       dispatch(updateKontrak({ reqBody: reqBodyEdit, redirect: redirectToKontrak }));
     } else {
-      dispatch(
-        addKontrak(
-          {
-            ...values,
-            gaji: formattedGaji,
-            uang_makan: formattedUangMakan
-          },
-          redirectToKontrak
-        )
-      );
+      dispatch(addKontrak(reqBodyAdd, redirectToKontrak));
     }
   };
 
@@ -170,6 +158,65 @@ const FormFieldKontrak = () => {
     }
   };
 
+  useEffect(() => {
+    csrfProtection.setHeaderCsrfToken();
+    dispatch(getDropdownUnitBisnis());
+    dispatch(getDropdownTempatTugas());
+    dispatch(getDropdownJabatan());
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getKontrakDetail(id));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const data = replaceNullWithEmptyString(kontrakDetail);
+    if (extendContract) {
+      setInitialValues({
+        karyawan_nip: data?.karyawan_nip,
+        nonik: data?.nonik,
+        karyawan_name: data?.karyawan_name,
+        tempat_lahir: data?.tempat_lahir,
+        tanggal_lahir: data?.tanggal_lahir
+      });
+    }
+    if (id && !extendContract) {
+      setInitialValues({
+        ...data,
+        gaji: inputThousandSeparator(data?.gaji || 0),
+        uang_makan: inputThousandSeparator(data?.uang_makan || 0),
+        tunjangan: inputThousandSeparator(data?.tunjangan || 0),
+        tunjangan_komunikasi: inputThousandSeparator(data?.tunjangan_komunikasi || 0),
+        tunjangan_khusus: inputThousandSeparator(data?.tunjangan_khusus || 0),
+        tunjangan_variable: inputThousandSeparator(data?.tunjangan_variable || 0)
+      });
+    }
+  }, [kontrakDetail]);
+
+  useEffect(() => {
+    const data = replaceNullWithEmptyString(karyawanByNip);
+    if (searchNip && karyawanByNip) {
+      setInitialValues(() => ({
+        karyawan_nip: data?.karyawan_nip,
+        nonik: data?.nonik,
+        karyawan_name: data?.karyawan_name,
+        tempat_lahir: data?.tempat_lahir,
+        tanggal_lahir: data?.tanggal_lahir
+      }));
+    } else {
+      setInitialValues((prevState) => ({
+        ...prevState,
+        karyawan_nip: '',
+        karyawan_name: '',
+        nonik: '',
+        tempat_lahir: '',
+        tanggal_lahir: ''
+      }));
+    }
+  }, [karyawanByNip]);
+
   return (
     <Formik
       validateOnMount={true}
@@ -194,6 +241,7 @@ const FormFieldKontrak = () => {
                     label="NIP"
                     tag="input"
                     onChangeInput={handleChangeNip}
+                    disabled={id}
                   />
                   <FormField
                     className="mb-2"
@@ -205,57 +253,6 @@ const FormFieldKontrak = () => {
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtUnitBisnis"
-                    name="unit_id"
-                    label="Unit Bisnis"
-                    tag="select"
-                    options={dropdownUnitBisnis}
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtTempatTugas"
-                    name="tempat_tugas_id"
-                    label="Tempat Tugas"
-                    tag="select"
-                    options={dropdownTempatTugas}
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtJabatan"
-                    name="jabatan_id"
-                    label="Jabatan"
-                    tag="select"
-                    options={dropdownJabatan}
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtGaji"
-                    name="gaji"
-                    label="Gaji"
-                    tag="input"
-                    type="tel"
-                    onChangeInput={(event) => handleChangeGaji(event, setFieldValue)}
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtTipeTunjangan"
-                    name="tipe_tunjangan"
-                    label="Tunjangan"
-                    tag="input"
-                  />
-                  <FormField
-                    className="mb-2"
-                    id="TxtUangMakan"
-                    name="uang_makan"
-                    label="Uang Makan"
-                    tag="input"
-                    type="tel"
-                    onChangeInput={(event) => handleChangeUangMakan(event, setFieldValue)}
-                  />
-                </Col>
-                <Col>
-                  <FormField
-                    className="mb-2"
                     id="TxtNama"
                     name="karyawan_name"
                     label="Nama"
@@ -264,9 +261,9 @@ const FormFieldKontrak = () => {
                   />
                   <FormField
                     className="mb-2"
-                    id="TxtTempat"
-                    name="tempat_tinggal"
-                    label="Tempat"
+                    id="TxtTempatLahir"
+                    name="tempat_lahir"
+                    label="Tempat Lahir"
                     tag="input"
                     disabled
                   />
@@ -317,6 +314,135 @@ const FormFieldKontrak = () => {
                     tag="input"
                     type="date"
                   />
+                </Col>
+                <Col>
+                  <FormField
+                    className="mb-2"
+                    id="TxtUnitBisnis"
+                    name="unit_id"
+                    label="Unit Bisnis"
+                    tag="select"
+                    options={dropdownUnitBisnis}
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtTempatTugas"
+                    name="tempat_tugas_id"
+                    label="Tempat Tugas"
+                    tag="select"
+                    options={dropdownTempatTugas}
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtJabatan"
+                    name="jabatan_id"
+                    label="Jabatan"
+                    tag="select"
+                    options={dropdownJabatan}
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtGaji"
+                    name="gaji"
+                    label="Gaji"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) =>
+                      handleNominalField({ value: event, setFieldValue, fieldName: 'gaji' })
+                    }
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtUangMakan"
+                    name="uang_makan"
+                    label="Uang Makan"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) =>
+                      handleNominalField({ value: event, setFieldValue, fieldName: 'uang_makan' })
+                    }
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtTunjangan"
+                    name="tunjangan"
+                    label="Tunjangan"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) =>
+                      handleNominalField({ value: event, setFieldValue, fieldName: 'tunjangan' })
+                    }
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtTunjanganKomunikasi"
+                    name="tunjangan_komunikasi"
+                    label="Tunjangan Komunikasi"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) =>
+                      handleNominalField({
+                        value: event,
+                        setFieldValue,
+                        fieldName: 'tunjangan_komunikasi'
+                      })
+                    }
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtTunjanganKhusus"
+                    name="tunjangan_khusus"
+                    label="Tunjangan Khusus"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) =>
+                      handleNominalField({
+                        value: event,
+                        setFieldValue,
+                        fieldName: 'tunjangan_khusus'
+                      })
+                    }
+                  />
+                  <FormField
+                    className="mb-2"
+                    id="TxtTunjanganVariable"
+                    name="tunjangan_variable"
+                    label="Tunjangan Variable"
+                    tag="input"
+                    type="tel"
+                    onChangeInput={(event) =>
+                      handleNominalField({
+                        value: event,
+                        setFieldValue,
+                        fieldName: 'tunjangan_variable'
+                      })
+                    }
+                  />
+
+                  {id && (
+                    <>
+                      <Label htmlFor="DocKontrak">Upload Dokumen Kontrak</Label>
+                      <input
+                        ref={inputFile}
+                        className="input"
+                        type="file"
+                        name="upload_doc_kontrak"
+                        accept=".pdf"
+                        onChange={(event) => {
+                          handleSelectedDocContract(event, setFieldValue);
+                        }}
+                      />
+                      <Button
+                        outline
+                        size="sm"
+                        color="danger"
+                        className="mt-1"
+                        onClick={() => handleDeleteDocContract(setFieldValue)}
+                      >
+                        <Trash size={15} /> Delete File
+                      </Button>
+                    </>
+                  )}
                 </Col>
               </Row>
 

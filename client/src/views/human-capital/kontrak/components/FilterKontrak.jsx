@@ -51,6 +51,7 @@ const FilterKontrak = ({ params }) => {
   const onClickReset = () => {
     setSearchNip('');
     setSearchUnitBisnis('');
+    setSearchName('');
     setSearchParams({ ...params });
     dispatch(getKontrakList(params));
   };

@@ -6,14 +6,17 @@ export const INITIAL_VALUES_KONTRAK = {
   jabatan_id: '',
   gaji: '',
   karyawan_name: '',
-  tempat_tinggal: '',
+  tempat_lahir: '',
   tanggal_lahir: '',
-  tipe_tunjangan: '',
   tgl_masuk_kerja: '',
   tgl_habis_kontrak: '',
   kontrak_kode: '',
   request_no: '',
   request_date: '',
+  kontrak_id: '',
   uang_makan: '',
-  kontrak_id: ''
+  tunjangan: '',
+  tunjangan_komunikasi: '',
+  tunjangan_khusus: '',
+  tunjangan_variable: ''
 };

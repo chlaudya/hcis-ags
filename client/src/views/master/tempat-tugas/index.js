@@ -150,38 +150,26 @@ const TempatTugasPage = () => {
       center: true,
       wrap: true,
       selector: (row) =>
-        renderDropdownLabel({ list: dropdownJabatan, selectedValue: row.jabatan_id })
+        renderDropdownLabel({ list: dropdownJabatan, selectedValue: row?.jabatan_id })
     },
     {
       name: 'Unit ID',
       center: true,
       wrap: true,
       selector: (row) =>
-        renderDropdownLabel({ list: dropdownUnitBisnis, selectedValue: row.unit_id })
+        renderDropdownLabel({ list: dropdownUnitBisnis, selectedValue: row?.unit_id })
     },
     {
       name: 'Lokasi Tempat Tugas',
       center: true,
       wrap: true,
-      selector: (row) => row.lokasi_tempat_tugas
+      selector: (row) => row?.lokasi_tempat_tugas
     },
     {
       name: 'Nama Proyek',
       center: true,
       wrap: true,
-      selector: (row) => row.nama_proyek
-    },
-    {
-      name: 'Nominal Tunjangan',
-      center: true,
-      wrap: true,
-      selector: (row) => inputThousandSeparator(row.nominal_tunjangan)
-    },
-    {
-      name: 'Tunjangan Tetap',
-      center: true,
-      wrap: true,
-      selector: (row) => inputThousandSeparator(row.tunjangan_tetap)
+      selector: (row) => row?.nama_proyek
     },
     {
       name: 'Aksi',
@@ -191,14 +179,14 @@ const TempatTugasPage = () => {
           <IconButton
             color="secondary"
             aria-label="add an alarm"
-            onClick={() => openModalEdit(row.tempat_tugas_id)}
+            onClick={() => openModalEdit(row?.tempat_tugas_id)}
           >
             <Edit style={{ color: blue[900] }} />
           </IconButton>
           <IconButton
             color="warning"
             aria-label="add an alarm"
-            onClick={() => openModalConfirmation(row.tempat_tugas_id)}
+            onClick={() => openModalConfirmation(row?.tempat_tugas_id)}
           >
             <Delete style={{ color: red[900] }} />
           </IconButton>

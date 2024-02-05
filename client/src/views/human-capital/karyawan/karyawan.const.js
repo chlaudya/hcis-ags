@@ -3,7 +3,7 @@ import { Trash2 } from 'react-feather';
 export const INITIAL_VALUES_KARYAWAN = {
   karyawan_nip: '',
   karyawan_name: '',
-  tempat_tinggal: '',
+  tempat_lahir: '',
   tanggal_lahir: '',
   agama: '',
   gender: '',
@@ -20,7 +20,6 @@ export const INITIAL_VALUES_KARYAWAN = {
   no_bpjs_tenaga_kerja: '',
   no_bpjs_kesehatan: '',
   lampiran_cv: '',
-  is_active: true,
   golongan_darah: '',
   nama_ayah_kandung: '',
   nama_ibu_kandung: '',
