@@ -421,26 +421,33 @@ const FormFieldKontrak = () => {
 
                   {id && (
                     <>
-                      <Label htmlFor="DocKontrak">Upload Dokumen Kontrak</Label>
-                      <input
-                        ref={inputFile}
-                        className="input"
-                        type="file"
-                        name="upload_doc_kontrak"
-                        accept=".pdf"
-                        onChange={(event) => {
-                          handleSelectedDocContract(event, setFieldValue);
-                        }}
-                      />
-                      <Button
-                        outline
-                        size="sm"
-                        color="danger"
-                        className="mt-1"
-                        onClick={() => handleDeleteDocContract(setFieldValue)}
-                      >
-                        <Trash size={15} /> Delete File
-                      </Button>
+                      <Row>
+                        <Label htmlFor="DocKontrak">Upload Dokumen Kontrak</Label>
+                      </Row>
+                      <Row>
+                        <input
+                          ref={inputFile}
+                          className="input"
+                          type="file"
+                          name="upload_doc_kontrak"
+                          accept=".pdf"
+                          onChange={(event) => {
+                            handleSelectedDocContract(event, setFieldValue);
+                          }}
+                        />
+                        <Col md="6">
+                          <Button
+                            outline
+                            size="sm"
+                            color="danger"
+                            className="mt-1"
+                            disabled={!values.upload_doc_kontrak}
+                            onClick={() => handleDeleteDocContract(setFieldValue)}
+                          >
+                            <Trash size={15} /> Delete
+                          </Button>
+                        </Col>
+                      </Row>
                     </>
                   )}
                 </Col>

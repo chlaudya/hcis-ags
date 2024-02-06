@@ -7,7 +7,7 @@ import { Send, DoDisturb } from '@material-ui/icons';
 import { Typography, Button, Stack } from '@material-ui/core';
 
 import DataTable from 'src/ui-component/data-table';
-import { getStateKaryawan } from 'store/stateSelector';
+import { getStateKaryawan, getStateKontrak } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
 import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
@@ -23,11 +23,18 @@ const TableKontrakKaryawan = ({ data, loading }) => {
   const navigate = useNavigate();
   const { showModal, hideModal } = useContext(ModalContext);
   const { isSubmitting } = useSelector(getStateKaryawan);
+  const { loadingStopKontrak } = useSelector(getStateKontrak);
 
   const [params, setParams] = useState({
     page: 1,
     size: 10
   });
+
+  useEffect(() => {
+    if (!loadingStopKontrak) {
+      dispatch(getDashboardData());
+    }
+  }, [loadingStopKontrak]);
 
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
@@ -64,7 +71,6 @@ const TableKontrakKaryawan = ({ data, loading }) => {
 
     dispatch(stopKontrak(reqBody));
     hideModal();
-    dispatch(getDashboardData());
   };
 
   const openModalConfirmation = (id) => {

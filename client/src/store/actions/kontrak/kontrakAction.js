@@ -8,6 +8,7 @@ import {
   SET_LOADING_KONTRAK_DETAIL,
   SET_LOADING_KONTRAK_LIST,
   SET_LOADING_LIST_KONTRAK_BY_NIP,
+  SET_LOADING_STOP_KONTRAK,
   SET_LOADING_SUBMIT_BUTTON
 } from 'store/actions';
 import { KONTRAK_API } from 'constants/apiUrl.constant';
@@ -198,7 +199,7 @@ export const getListKontrakByNip = (nip) => {
 export const stopKontrak = (reqBody) => {
   return async (dispatch) => {
     dispatch({
-      type: SET_LOADING_KONTRAK_LIST,
+      type: SET_LOADING_STOP_KONTRAK,
       payload: true
     });
     axios
@@ -212,7 +213,7 @@ export const stopKontrak = (reqBody) => {
       })
       .finally(() => {
         dispatch({
-          type: SET_LOADING_KONTRAK_LIST,
+          type: SET_LOADING_STOP_KONTRAK,
           payload: false
         });
       });

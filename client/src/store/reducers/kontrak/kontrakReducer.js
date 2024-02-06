@@ -5,7 +5,8 @@ const initialState = {
   loading: false,
   loadingDetail: false,
   loadingListByNip: false,
-  isSubmitting: false
+  isSubmitting: false,
+  loadingStopKontrak: false
 };
 
 export const kontrakReducer = (state = initialState, action) => {
@@ -44,6 +45,10 @@ export const kontrakReducer = (state = initialState, action) => {
     SET_LOADING_KONTRAK_BY_NIP: {
       ...state,
       loadingListByNip: action.payload
+    },
+    SET_LOADING_STOP_KONTRAK: {
+      ...state,
+      loadingStopKontrak: action.payload
     }
   };
 

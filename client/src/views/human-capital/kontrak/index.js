@@ -27,12 +27,14 @@ import { getKontrakList, getListKontrakByNip, stopKontrak } from 'store/actions/
 import { renderDate } from 'utils/renderDate';
 import { paginationNumber } from 'utils/paginationNumber';
 import TableListKontrak from './components/TableListKontrak';
+import FormReason from 'src/views/dashboard/components/FormReason';
+import { getKaryawanDetail } from 'store/actions/karyawan';
 
 const KontrakPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showModal, hideModal } = useContext(ModalContext);
-  const { kontrakList, loading, isSubmitting } = useSelector(getStateKontrak);
+  const { kontrakList, loading, isSubmitting, loadingStopKontrak } = useSelector(getStateKontrak);
   const { dropdownJabatan } = useSelector(getStateMasterJabatan);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
@@ -41,6 +43,13 @@ const KontrakPage = () => {
     page: 1,
     size: 10
   });
+
+  console.log('object', kontrakList);
+  useEffect(() => {
+    if (!loadingStopKontrak) {
+      dispatch(getKontrakList());
+    }
+  }, [loadingStopKontrak]);
 
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
@@ -65,25 +74,39 @@ const KontrakPage = () => {
     dispatch(getKontrakList({ ...params, page: page, size: row }));
   };
 
-  const openPdf = (kontrakId) => {
-    window.open(`${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${kontrakId}`);
+  const openPdf = (data) => {
+    // if (data?.is_upload) {
+    //   // window.open(data?.upload_doc_kontrak);
+    //   window.open('data:application/pdf,' + escape(data?.upload_doc_kontrak));
+    //   // window.open('data:application/pdf,' + encodeURI(data?.upload_doc_kontrak));
+    // } else {
+    window.open(
+      `${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${data?.kontrak_id}`
+    );
+    // }
   };
 
-  const onConfirmStopContract = (id) => {
-    // API new berhenti Kontrak
-    dispatch(stopKontrak(id));
+  const onConfirmStopContract = async (id) => {
+    const reqBody = {
+      kontrak_id: id,
+      alasan: localStorage.getItem('reason')
+    };
+
+    dispatch(stopKontrak(reqBody));
     hideModal();
-    dispatch(getKontrakList());
   };
 
   const openModalConfirmation = (id) => {
+    dispatch(getKaryawanDetail(id));
+
     showModal(MODAL_TYPES.MODAL_CONFIRMATION, {
-      modalTitle: 'Berhenti Kontrak ',
+      modalTitle: 'Berhenti Kontrak',
       modalDescription: 'Anda yakin ingin memberhentikan kontrak karyawan ini?',
       confirmText: 'Yes',
       cancelText: 'No',
       handleConfirm: () => onConfirmStopContract(id),
-      isSubmitting: isSubmitting
+      isSubmitting: isSubmitting,
+      children: <FormReason onChange={(e) => localStorage.setItem('reason', e.value)} />
     });
   };
 
@@ -168,7 +191,7 @@ const KontrakPage = () => {
           <IconButton color="secondary" onClick={() => redirectToEdit(row.kontrak_id)}>
             <Edit style={{ color: blue[900] }} />
           </IconButton>
-          <IconButton color="secondary" onClick={() => openPdf(row.kontrak_id)}>
+          <IconButton color="secondary" onClick={() => openPdf(row)}>
             <Download style={{ color: green[700] }} />
           </IconButton>
           <IconButton color="warning" onClick={() => openModalConfirmation(row.kontrak_id)}>

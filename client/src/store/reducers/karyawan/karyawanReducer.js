@@ -5,7 +5,8 @@ const initialState = {
   loading: false,
   loadingDetail: false,
   loadingByNip: false,
-  isSubmitting: false
+  isSubmitting: false,
+  loadingStopKaryawan: false
 };
 
 export const karyawanReducer = (state = initialState, action) => {
@@ -40,6 +41,10 @@ export const karyawanReducer = (state = initialState, action) => {
     SET_LOADING_SUBMIT_BUTTON: {
       ...state,
       isSubmitting: action.payload
+    },
+    SET_LOADING_STOP_KARYAWAN: {
+      ...state,
+      loadingStopKaryawan: action.payload
     }
   };
 

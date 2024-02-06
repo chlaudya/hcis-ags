@@ -16,7 +16,7 @@ import {
   getStateMasterTempatTugas,
   getStateMasterUnitBisnis
 } from 'store/stateSelector';
-import { getKaryawanList, updateKaryawan } from 'store/actions/karyawan';
+import { getKaryawanList, stopKaryawan, updateKaryawan } from 'store/actions/karyawan';
 import csrfProtection from 'utils/csrfProtection';
 import { renderDropdownLabel } from 'utils/renderDropdownLabel';
 import { getDropdownJabatan } from 'store/actions/master-jabatan';
@@ -32,7 +32,8 @@ const KaryawanPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showModal, hideModal } = useContext(ModalContext);
-  const { karyawanList, loading, isSubmitting } = useSelector(getStateKaryawan);
+  const { karyawanList, loading, isSubmitting, loadingStopKaryawan } =
+    useSelector(getStateKaryawan);
   const { dropdownJabatan } = useSelector(getStateMasterJabatan);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
@@ -42,6 +43,12 @@ const KaryawanPage = () => {
     page: 1,
     size: 10
   });
+
+  useEffect(() => {
+    if (loadingStopKaryawan) {
+      dispatch(getKaryawanList());
+    }
+  }, [loadingStopKaryawan]);
 
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
@@ -82,12 +89,11 @@ const KaryawanPage = () => {
   };
 
   const onConfirmDelete = (id) => {
-    const karyawan = karyawanList?.data.find((data) => data.karyawan_id === id);
     const reqBody = {
-      ...karyawan,
-      is_active: false
+      karyawan_id: id
     };
-    dispatch(updateKaryawan({ reqBody, hideModal, isDelete: true }));
+    dispatch(stopKaryawan(reqBody));
+    hideModal();
   };
 
   const openModalConfirmation = (id) => {

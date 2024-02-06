@@ -7,6 +7,7 @@ import {
   SET_LOADING_KARYAWAN_BY_NIP,
   SET_LOADING_KARYAWAN_DETAIL,
   SET_LOADING_KARYAWAN_LIST,
+  SET_LOADING_STOP_KARYAWAN,
   SET_LOADING_SUBMIT_BUTTON
 } from 'store/actions';
 import { KARYAWAN_API } from 'constants/apiUrl.constant';
@@ -161,6 +162,30 @@ export const getKaryawanByNip = (nip) => {
       .finally(() => {
         dispatch({
           type: SET_LOADING_KARYAWAN_BY_NIP,
+          payload: false
+        });
+      });
+  };
+};
+
+export const stopKaryawan = (reqBody) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_LOADING_STOP_KARYAWAN,
+      payload: true
+    });
+    axios
+      .post(`${KARYAWAN_API}/stop_karyawan`, reqBody)
+      .then(() => {
+        toast.success('Karyawan berhasil dinonaktifkan!');
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.header?.errors[0]?.message || err?.message);
+        console.error(err);
+      })
+      .finally(() => {
+        dispatch({
+          type: SET_LOADING_STOP_KARYAWAN,
           payload: false
         });
       });
