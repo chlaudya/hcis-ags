@@ -113,9 +113,9 @@ const FieldDetail = ({
               <th>No</th>
               <th>NIP</th>
               <th>Nama Karyawan</th>
-              <th>Tempat Tugas</th>
+              {/* <th>Tempat Tugas</th>
               <th>Unit Bisnis</th>
-              <th>Jabatan</th>
+              <th>Jabatan</th> */}
               <th>Aktif</th>
             </tr>
           </thead>
@@ -124,9 +124,9 @@ const FieldDetail = ({
               <td>1</td>
               <td>{renderDefaultValue(data?.karyawan_nip)}</td>
               <td>{renderDefaultValue(data?.karyawan_name)}</td>
-              <td>{renderTempatTugas()}</td>
+              {/* <td>{renderTempatTugas()}</td>
               <td>{renderUnitBisnis()}</td>
-              <td>{renderJabatan()}</td>
+              <td>{renderJabatan()}</td> */}
               <td>{data?.is_active ? 'Aktif' : 'Tidak Aktif'}</td>
             </tr>
           </tbody>

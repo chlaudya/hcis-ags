@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import moment from 'moment';
 import 'src/assets/scss/table.scss';
 import { renderDate } from 'utils/renderDate';
-import { inputThousandSeparator } from 'utils/thousandSeparator';
 
 const TableDetailKaryawan = ({
   data,
@@ -36,7 +34,7 @@ const TableDetailKaryawan = ({
             <th style={styleTableBorder}>Nama Karyawan</th>
             <td style={styleTableBorder}>{data?.karyawan_name}</td>
           </tr>
-          <tr style={styleTableBody}>
+          {/* <tr style={styleTableBody}>
             <th style={styleTableBorder}>Tempat Tugas</th>
             <td style={styleTableBorder}>{renderTempatTugas()}</td>
           </tr>
@@ -47,7 +45,7 @@ const TableDetailKaryawan = ({
           <tr style={styleTableBody}>
             <th style={styleTableBorder}>Jabatan</th>
             <td style={styleTableBorder}>{renderJabatan()}</td>
-          </tr>
+          </tr> */}
           <tr style={styleTableBody}>
             <th style={styleTableBorder}>Email</th>
             <td style={styleTableBorder}>{data?.email}</td>
@@ -122,11 +120,43 @@ const TableDetailKaryawan = ({
           </tr>
           <tr style={styleTableBody}>
             <th style={styleTableBorder}>Riwayat Pekerjaan</th>
-            <td style={styleTableBorder}>{data?.riwayat_pekerjaan}</td>
+            <td style={styleTableBorder}>
+              <ul>
+                {data?.riwayat_pekerjaan?.map((job, index) => (
+                  <li key={index}>
+                    <strong>Nama Perusahaan:</strong> {job.nama_perusahaan}
+                    <br />
+                    <strong>Tahun Mulai:</strong> {job.tahun_mulai}
+                    <br />
+                    <strong>Tahun Berakhir:</strong> {job.tahun_berakhir}
+                    <br />
+                    <strong>Keterangan:</strong> {job.keterangan}
+                  </li>
+                ))}
+              </ul>
+            </td>
           </tr>
           <tr style={styleTableBody}>
             <th style={styleTableBorder}>Pendidikan Terakhir</th>
-            <td style={styleTableBorder}>{data?.pendidikan_terakhir}</td>
+            <td>
+              <ul>
+                {data?.pendidikan_terakhir?.map((education, index) => (
+                  <li key={index}>
+                    <strong>Pendidikan:</strong> {education.pendidikan}
+                    <br />
+                    <strong>Nama Sekolah:</strong> {education.nama_sekolah}
+                    <br />
+                    <strong>Jurusan:</strong> {education.jurusan}
+                    <br />
+                    <strong>Asal Sekolah:</strong> {education.asal_sekolah}
+                    <br />
+                    <strong>Tahun Mulai:</strong> {education.tahun_mulai}
+                    <br />
+                    <strong>Tahun Berakhir:</strong> {education.tahun_berakhir}
+                  </li>
+                ))}
+              </ul>
+            </td>
           </tr>
           <tr style={styleTableBody}>
             <th style={styleTableBorder}>Asal Sekolah</th>
