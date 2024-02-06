@@ -75,15 +75,16 @@ const KontrakPage = () => {
   };
 
   const openPdf = (data) => {
-    // if (data?.is_upload) {
-    //   // window.open(data?.upload_doc_kontrak);
-    //   window.open('data:application/pdf,' + escape(data?.upload_doc_kontrak));
-    //   // window.open('data:application/pdf,' + encodeURI(data?.upload_doc_kontrak));
-    // } else {
-    window.open(
-      `${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${data?.kontrak_id}`
-    );
-    // }
+    if (data?.is_upload) {
+      const newWindow = window.open();
+      newWindow.document.write(
+        '<iframe width="100%" height="100%" src="' + data?.upload_doc_kontrak + '"></iframe>'
+      );
+    } else {
+      window.open(
+        `${process.env.REACT_APP_API_GENERATE}/api/generate/pkwt?kontrak_id=${data?.kontrak_id}`
+      );
+    }
   };
 
   const onConfirmStopContract = async (id) => {
