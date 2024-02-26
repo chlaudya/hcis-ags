@@ -20,6 +20,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   const [searchNip, setSearchNip] = useState('');
   const [searchPeriod, setSearchPeriod] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
+  const [unitBisnis, setUnitBisnis] = useState('');
   const [searchParams, setSearchParams] = useState({ ...params });
   const [isFilteredTagihan, setIsFilteredTagihan] = useState(false);
 
@@ -30,6 +31,16 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   useEffect(() => {
     setReportDataGenerate(reportData?.data);
   }, [reportData?.data]);
+
+  useEffect(() => {
+    handleRenderUnitBisnis();
+  }, [searchUnitBisnis]);
+
+  const handleRenderUnitBisnis = () => {
+    const unitBisnis = dropdownUnitBisnis?.find((item) => item.value === searchUnitBisnis);
+
+    if (unitBisnis) setUnitBisnis(unitBisnis?.label);
+  };
 
   const onSearchNip = (value) => {
     setSearchNip(value);
@@ -141,6 +152,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
         period={searchPeriod}
         dataTotalTagihan={reportData}
         isFiltered={isFilteredTagihan}
+        unitBisnis={unitBisnis}
       />
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
     </>

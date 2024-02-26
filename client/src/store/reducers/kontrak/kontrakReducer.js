@@ -6,7 +6,7 @@ const initialState = {
   loadingDetail: false,
   loadingListByNip: false,
   isSubmitting: false,
-  loadingStopKontrak: false
+  loadingStopKontrak: true
 };
 
 export const kontrakReducer = (state = initialState, action) => {

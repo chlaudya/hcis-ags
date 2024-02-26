@@ -91,6 +91,30 @@ const TagihanGajiPage = () => {
       selector: (row) => inputThousandSeparator(row.tunjangan)
     },
     {
+      name: 'Tunjangan Komunikasi',
+      center: true,
+      wrap: true,
+      selector: (row) => inputThousandSeparator(row.tunjangan_komunikasi)
+    },
+    {
+      name: 'Tunjangan Khusus',
+      center: true,
+      wrap: true,
+      selector: (row) => inputThousandSeparator(row.tunjangan_khusus)
+    },
+    {
+      name: 'Tunjangan Variable',
+      center: true,
+      wrap: true,
+      selector: (row) => inputThousandSeparator(row.tunjangan_variable)
+    },
+    {
+      name: 'Uang Makan',
+      center: true,
+      wrap: true,
+      selector: (row) => inputThousandSeparator(row.uang_makan)
+    },
+    {
       name: 'Gaji Dibayar',
       center: true,
       wrap: true,

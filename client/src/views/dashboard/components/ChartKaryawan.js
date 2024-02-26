@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // material-ui
-import { Grid, MenuItem, TextField, Typography, useTheme } from '@material-ui/core';
+import { Grid, Typography, useTheme } from '@material-ui/core';
 // third-party
 import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
@@ -9,27 +9,14 @@ import Chart from 'react-apexcharts';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 // chart data
-import chartData from './chartSettings';
 import BarChartSkeleton from 'src/ui-component/cards/Skeleton/BarChartSkeleton';
-
-const status = [
-  {
-    value: 'today',
-    label: 'Hari Ini'
-  },
-  {
-    value: 'month',
-    label: 'Bulan Ini'
-  },
-  {
-    value: 'year',
-    label: 'Tahun Ini'
-  }
-];
+import { useDispatch } from 'react-redux';
+import { getDashboardData } from 'store/actions/dashboard';
 
 // ===========================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||=========================== //
 
-const ChartKaryawan = ({ isLoading, data }) => {
+const ChartKaryawan = ({ isLoading, data, params, setParams }) => {
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   const series = [
@@ -48,9 +35,102 @@ const ChartKaryawan = ({ isLoading, data }) => {
   const secondaryLight = theme.palette.secondary.light;
   const grey500 = theme.palette.grey[500];
 
+  const chartSettings = {
+    height: 480,
+    type: 'bar',
+    options: {
+      chart: {
+        id: 'bar-chart',
+        stacked: true,
+        toolbar: {
+          show: true
+        },
+        zoom: {
+          enabled: true
+        },
+        events: {
+          dataPointSelection: function (_event, _chartContext, config) {
+            switch (config?.dataPointIndex) {
+              case 0:
+                setParams({ ...params, days: '30' });
+
+                break;
+              case 1:
+                setParams({ ...params, days: '60' });
+                break;
+              case 2:
+                setParams({ ...params, days: '90' });
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        bar: {
+          distributed: true, // this line is mandatory
+          horizontal: false,
+          barHeight: '85%'
+        }
+      },
+      xaxis: {
+        type: 'category',
+        categories: ['30 hari mendatang', '60 hari mendatang', '90 hari mendatang']
+      },
+      yaxis: {
+        labels: {
+          formatter: function (val, index) {
+            return val.toFixed(0);
+          }
+        }
+      },
+      legend: {
+        show: true,
+        fontSize: '14px',
+        fontFamily: `'Roboto', sans-serif`,
+        position: 'bottom',
+        offsetX: 20,
+        labels: {
+          useSeriesColors: false
+        },
+        markers: {
+          width: 16,
+          height: 16,
+          radius: 5
+        },
+        itemMargin: {
+          horizontal: 15,
+          vertical: 8
+        }
+      },
+      fill: {
+        type: 'solid'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      grid: {
+        show: true
+      }
+    }
+  };
+
   React.useEffect(() => {
     const newChartData = {
-      ...chartData.options,
+      ...chartSettings.options,
       colors: [
         // this array contains different color code for each data
         '#33b2df',
@@ -119,6 +199,12 @@ const ChartKaryawan = ({ isLoading, data }) => {
     grey500
   ]);
 
+  useEffect(() => {
+    if (params?.days) {
+      dispatch(getDashboardData(params));
+    }
+  }, [params?.days]);
+
   return (
     <>
       {isLoading && !data ? (
@@ -133,7 +219,7 @@ const ChartKaryawan = ({ isLoading, data }) => {
                     <Grid item>
                       <Typography variant="h3">Data Karyawan </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item flex flexDirection={'row'}>
                       <Typography variant="subtitle3">yang akan Habis Kontrak</Typography>
                     </Grid>
                   </Grid>
@@ -141,7 +227,7 @@ const ChartKaryawan = ({ isLoading, data }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Chart {...chartData} series={series} />
+              <Chart {...chartSettings} series={series} />
             </Grid>
           </Grid>
         </MainCard>

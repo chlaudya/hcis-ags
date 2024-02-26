@@ -5,8 +5,8 @@ import moment from 'moment';
 import { getAllReportTagihanGaji } from 'store/actions/report';
 import { getStateReport } from 'store/stateSelector';
 import { renderDate } from 'utils/renderDate';
-import { inputThousandSeparator, roundedThousandSeparator } from 'utils/thousandSeparator';
 import csrfProtection from 'utils/csrfProtection';
+import terbilang from 'terbilang';
 import 'src/assets/scss/table.scss';
 
 const TableExcelTagihanGaji = ({
@@ -14,7 +14,8 @@ const TableExcelTagihanGaji = ({
   isFiltered,
   tableRef,
   period,
-  dataTotalTagihan
+  dataTotalTagihan,
+  unitBisnis
 }) => {
   const dispatch = useDispatch();
   const { reportAllTagihanGaji } = useSelector(getStateReport);
@@ -82,7 +83,7 @@ const TableExcelTagihanGaji = ({
         </tr>
         <tr className="fw-bold">
           <td colSpan="10" style={styleTableTitle}>
-            OVERSEAS DIVISION
+            {unitBisnis ? unitBisnis : 'OVERSEAS DIVISION'}
           </td>
         </tr>
         <tr className="fw-bold">
@@ -101,6 +102,10 @@ const TableExcelTagihanGaji = ({
             <th style={styleTableBorder}>TEMPAT TUGAS</th>
             <th style={styleTableBorder}>GAJI</th>
             <th style={styleTableBorder}>TUNJANGAN</th>
+            <th style={styleTableBorder}>TUNJANGAN KOMUNIKASI</th>
+            <th style={styleTableBorder}>TUNJANGAN KHUSUS</th>
+            <th style={styleTableBorder}>TUNJANGAN VARIABLE</th>
+            <th style={styleTableBorder}>UANG MAKAN</th>
             <th style={styleTableBorder}>GAJI DIBAYAR</th>
             <th style={styleTableBorder}>MANAJEMEN FEE</th>
             <th style={styleTableBorder}>TOTAL</th>
@@ -112,15 +117,19 @@ const TableExcelTagihanGaji = ({
               return (
                 <tr key={item.no} style={styleTableBody}>
                   <td style={styleTableBorder}>{index + 1}</td>
-                  <td style={styleTableBorder}>{item.karyawan_nip}</td>
-                  <td style={styleTableBorder}>{item.karyawan_name}</td>
-                  <td style={styleTableBorder}>{item.jabatan_name}</td>
-                  <td style={styleTableBorder}>{item.nama_proyek}</td>
-                  <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji)}</td>
-                  <td style={styleTableBorder}>{roundedThousandSeparator(item.tunjangan)}</td>
-                  <td style={styleTableBorder}>{roundedThousandSeparator(item.gaji_dibayar)}</td>
-                  <td style={styleTableBorder}>{roundedThousandSeparator(item.manajemen_fee)}</td>
-                  <td style={styleTableBorder}>{roundedThousandSeparator(item.total)}</td>
+                  <td style={styleTableBorder}>{item?.karyawan_nip}</td>
+                  <td style={styleTableBorder}>{item?.karyawan_name}</td>
+                  <td style={styleTableBorder}>{item?.jabatan_name}</td>
+                  <td style={styleTableBorder}>{item?.nama_proyek}</td>
+                  <td style={styleTableBorder}>{item?.gaji?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.tunjangan?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.tunjangan_komunikasi?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.tunjangan_khusus?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.tunjangan_variable?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.uang_makan?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.gaji_dibayar?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.manajemen_fee?.toLocaleString()}</td>
+                  <td style={styleTableBorder}>{item?.total?.toLocaleString()}</td>
                 </tr>
               );
             })}
@@ -128,20 +137,26 @@ const TableExcelTagihanGaji = ({
             <td style={styleTableBorder} colSpan="5">
               JUMLAH
             </td>
+            <td style={styleTableBorder}>{dataTotalTagihan?.total_gaji?.toLocaleString()}</td>
+            <td style={styleTableBorder}>{dataTotalTagihan?.total_tunjangan?.toLocaleString()}</td>
             <td style={styleTableBorder}>
-              {inputThousandSeparator(Math.round(dataTotalTagihan?.total_gaji))}
+              {dataTotalTagihan?.total_tunjangan_komunikasi?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {inputThousandSeparator(Math.round(dataTotalTagihan?.total_tunjangan))}
+              {dataTotalTagihan?.total_tunjangan_khusus?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {inputThousandSeparator(Math.round(dataTotalTagihan?.total_gaji_dibayar))}
+              {dataTotalTagihan?.total_tunjangan_variabel?.toLocaleString()}
+            </td>
+            <td style={styleTableBorder}>{dataTotalTagihan?.total_uang_makan?.toLocaleString()}</td>
+            <td style={styleTableBorder}>
+              {dataTotalTagihan?.total_gaji_dibayar?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {inputThousandSeparator(Math.round(dataTotalTagihan?.total_manajemen_fee))}
+              {dataTotalTagihan?.total_manajemen_fee?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {inputThousandSeparator(Math.round(dataTotalTagihan?.total_tagihan_gaji))}
+              {dataTotalTagihan?.total_tagihan_gaji?.toLocaleString()}
             </td>
           </tr>
 
@@ -149,6 +164,21 @@ const TableExcelTagihanGaji = ({
           <tr></tr>
 
           <tr style={styleTableBody}>
+            <td colSpan="8" style={{ fontSize: '14px' }}>
+              {`TERBILANG : == ${terbilang(
+                parseInt(dataTotalTagihan?.total_tagihan_gaji)
+              )} rupiah ==`}
+            </td>
+            <td></td>
+          </tr>
+
+          <tr></tr>
+          <tr></tr>
+
+          <tr style={styleTableBody}>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -162,6 +192,9 @@ const TableExcelTagihanGaji = ({
           </tr>
 
           <tr style={styleTableBody}>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -184,12 +217,18 @@ const TableExcelTagihanGaji = ({
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td colSpan="4" style={{ fontWeight: 'bold', fontSize: '12' }}>
               Ir. Munib Lusianto, MM
             </td>
           </tr>
 
           <tr style={styleTableBody}>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

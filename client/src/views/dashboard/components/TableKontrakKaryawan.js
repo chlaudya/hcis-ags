@@ -17,18 +17,14 @@ import { getKaryawanDetail, getKaryawanList } from 'store/actions/karyawan';
 import { getListKontrakByNip, stopKontrak } from 'store/actions/kontrak';
 import TableListKontrak from 'views/human-capital/kontrak/components/TableListKontrak';
 import FormReason from './FormReason';
+import { renderDate } from 'utils/renderDate';
 
-const TableKontrakKaryawan = ({ data, loading }) => {
+const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showModal, hideModal } = useContext(ModalContext);
   const { isSubmitting } = useSelector(getStateKaryawan);
   const { loadingStopKontrak } = useSelector(getStateKontrak);
-
-  const [params, setParams] = useState({
-    page: 1,
-    size: 10
-  });
 
   useEffect(() => {
     if (!loadingStopKontrak) {
@@ -42,9 +38,9 @@ const TableKontrakKaryawan = ({ data, loading }) => {
     dispatch(getKaryawanList(params));
   }, []);
 
-  useEffect(() => {
-    dispatch(getDashboardData(params));
-  }, [isSubmitting]);
+  // useEffect(() => {
+  //   dispatch(getDashboardData(params));
+  // }, [isSubmitting]);
 
   const redirectToInputKontrak = (kontrakId) => {
     navigate(
@@ -113,7 +109,13 @@ const TableKontrakKaryawan = ({ data, loading }) => {
       name: 'No. Kontrak',
       center: true,
       wrap: true,
-      selector: (row, index) => row.no_kontrak
+      selector: (row) => row.no_kontrak
+    },
+    {
+      name: 'Tgl Habis Kontrak',
+      center: true,
+      wrap: true,
+      selector: (row) => renderDate(row.tgl_habis_kontrak)
     },
     {
       name: 'Nama',
@@ -152,6 +154,16 @@ const TableKontrakKaryawan = ({ data, loading }) => {
   return (
     <MainCard title="List Karyawan">
       <Typography variant="body2">
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() => {
+            setParams({ page: 1, size: 10 });
+            dispatch(getDashboardData());
+          }}
+        >
+          Clear Filter
+        </Button>
         <DataTable
           columns={KONTRAK_COLUMN}
           data={data?.data}

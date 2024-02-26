@@ -219,6 +219,7 @@ const KontrakPage = () => {
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={kontrakList?.total_record}
+          //tambah onclick row
         />
       </Typography>
     </MainCard>

@@ -74,6 +74,7 @@
         "reactstrap": "^9.1.5",
         "redux": "^4.0.5",
         "styled-components": "^5.3.11",
+        "terbilang": "^0.0.3",
         "winston": "^3.3.3",
         "yup": "^0.28.1"
     },
