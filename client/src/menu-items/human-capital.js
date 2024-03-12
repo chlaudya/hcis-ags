@@ -82,6 +82,27 @@ const pages = {
           type: 'item',
           url: '/human-capital/tagihan-gaji',
           breadcrumbs: false
+        },
+        {
+          id: 'jamsos',
+          title: 'Jamsos',
+          type: 'item',
+          url: '/human-capital/jamsos',
+          breadcrumbs: false
+        },
+        {
+          id: 'kompensasi',
+          title: 'Kompensasi',
+          type: 'item',
+          url: '/human-capital/kompensasi',
+          breadcrumbs: false
+        },
+        {
+          id: 'sp',
+          title: 'SP',
+          type: 'item',
+          url: '/human-capital/sp',
+          breadcrumbs: false
         }
         // {
         //   id: 'pengajuankoperasi',

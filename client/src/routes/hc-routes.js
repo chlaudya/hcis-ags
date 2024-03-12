@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'src/ui-component/Loadable';
+import Maintenance from 'views/others/Maintenance';
 
 // View Routing
 const HCKaryawan = Loadable(lazy(() => import('views/human-capital/karyawan')));
@@ -61,12 +62,16 @@ const HumanCapitalRoutes = {
       element: <HCGenSlipGaji />
     },
     {
-      path: '/human-capital/payroll-generate-slip-transfer',
-      element: <HCKaryawan />
+      path: '/human-capital/jamsos',
+      element: <Maintenance />
     },
     {
-      path: '/human-capital/payroll-blashting-email-slip',
-      element: <HCKaryawan />
+      path: '/human-capital/sp',
+      element: <Maintenance />
+    },
+    {
+      path: '/human-capital/kompensasi',
+      element: <Maintenance />
     }
   ]
 };
