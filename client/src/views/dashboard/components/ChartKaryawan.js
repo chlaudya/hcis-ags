@@ -228,18 +228,22 @@ const ChartKaryawan = ({ isLoading, data, params, setParams }) => {
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
                       <Typography variant="h5">
-                        Total Karyawan Aktif: <span className="text-primary fw-bold">711</span>
+                        Total Karyawan Aktif:{' '}
+                        <span className="text-primary fw-bold">{data?.total_karyawan_active}</span>
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography variant="h5">
-                        Total Karyawan Baru: <span className="text-primary fw-bold">20</span>{' '}
+                        Total Karyawan Baru:{' '}
+                        <span className="text-primary fw-bold">{data?.total_karyawan_baru}</span>{' '}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography variant="h5">
                         Total Info Karyawan Berhenti:{' '}
-                        <span className="text-primary fw-bold">15</span>{' '}
+                        <span className="text-primary fw-bold">
+                          {data?.total_karyawan_berhenti}
+                        </span>{' '}
                       </Typography>
                     </Grid>
                   </Grid>

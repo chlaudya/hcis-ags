@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ import {
   getStateMasterTempatTugas,
   getStateMasterUnitBisnis
 } from 'store/stateSelector';
-import { getKaryawanList, stopKaryawan, updateKaryawan } from 'store/actions/karyawan';
+import { getAllKaryawanList, getKaryawanList, stopKaryawan } from 'store/actions/karyawan';
 import csrfProtection from 'utils/csrfProtection';
 import { renderDropdownLabel } from 'utils/renderDropdownLabel';
 import { getDropdownJabatan } from 'store/actions/master-jabatan';
@@ -28,37 +28,29 @@ import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import FieldDetail from './components/FieldDetailKaryawan';
 import { getDropdownBank } from 'store/actions/master-bank';
 import { paginationNumber } from 'utils/paginationNumber';
+import TableExcelKaryawan from './components/TableExcelKaryawan';
+import { renderDate } from 'utils/renderDate';
 
 const KaryawanPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showModal, hideModal } = useContext(ModalContext);
-  const { karyawanList, loading, isSubmitting, loadingStopKaryawan } =
+  const { karyawanList, loading, isSubmitting, loadingStopKaryawan, karyawanListAll, loadingAll } =
     useSelector(getStateKaryawan);
   const { dropdownJabatan } = useSelector(getStateMasterJabatan);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const { dropdownTempatTugas } = useSelector(getStateMasterTempatTugas);
   const { dropdownBank } = useSelector(getStateMasterBank);
+  const tableRefKaryawanList = useRef(null);
 
   const [params, setParams] = useState({
     page: 1,
     size: 10
   });
+  const [searchParams, setSearchParams] = useState({ ...params });
+  const [unitBisnis, setUnitBisnis] = useState('');
 
-  useEffect(() => {
-    if (loadingStopKaryawan) {
-      dispatch(getKaryawanList());
-    }
-  }, [loadingStopKaryawan]);
-
-  useEffect(() => {
-    csrfProtection.setHeaderCsrfToken();
-    dispatch(getKaryawanList(params));
-    dispatch(getDropdownJabatan());
-    dispatch(getDropdownUnitBisnis());
-    dispatch(getDropdownTempatTugas());
-    dispatch(getDropdownBank());
-  }, []);
+  const dateToday = renderDate(new Date());
 
   const redirectToEdit = (karyawanId) => {
     navigate(`/human-capital/karyawan/input-karyawan/${karyawanId}`);
@@ -107,6 +99,41 @@ const KaryawanPage = () => {
       isSubmitting: isSubmitting
     });
   };
+
+  const handleRenderUnitBisnis = () => {
+    const unitBisnis = dropdownUnitBisnis?.find((item) => item.value === searchParams?.unit_id);
+
+    if (unitBisnis) setUnitBisnis(unitBisnis?.label);
+  };
+
+  useEffect(() => {
+    handleRenderUnitBisnis();
+  }, [searchParams?.unit_id]);
+
+  useEffect(() => {
+    dispatch(
+      getAllKaryawanList({
+        ...searchParams,
+        page: 1,
+        size: karyawanList?.total_record
+      })
+    );
+  }, [karyawanList?.total_record]);
+
+  useEffect(() => {
+    if (loadingStopKaryawan) {
+      dispatch(getKaryawanList());
+    }
+  }, [loadingStopKaryawan]);
+
+  useEffect(() => {
+    csrfProtection.setHeaderCsrfToken();
+    dispatch(getKaryawanList(params));
+    dispatch(getDropdownJabatan());
+    dispatch(getDropdownUnitBisnis());
+    dispatch(getDropdownTempatTugas());
+    dispatch(getDropdownBank());
+  }, []);
 
   const KARYAWAN_COLUMN = [
     {
@@ -187,7 +214,12 @@ const KaryawanPage = () => {
   return (
     <MainCard title="Data Karyawan">
       <Typography variant="body2">
-        <FilterKaryawan params={params} />
+        <FilterKaryawan
+          params={params}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          loadingData={loading || loadingAll}
+        />
 
         <Grid container>
           <Grid md={8}>
@@ -196,18 +228,14 @@ const KaryawanPage = () => {
             </Link>
           </Grid>
           <Grid md={4} textAlign={'right'}>
-            <Button
-              color="primary"
-              className="me-2 p-2-2"
-              // disabled={loadingAll}
-            >
-              {/* <DownloadTableExcel
-                filename={`daftar-kontrak-${dateToday}`}
-                sheet={`daftar-kontrak-${dateToday}`}
-                currentTableRef={tableRefKontrak.current}
-              > */}
-              <Print /> Generate List Karyawan
-              {/* </DownloadTableExcel>s */}
+            <Button outline color="primary" className="me-2 p-2-2" disabled={loadingAll}>
+              <DownloadTableExcel
+                filename={`daftar-karyawan-${dateToday}`}
+                sheet={`daftar-karyawan-${dateToday}`}
+                currentTableRef={tableRefKaryawanList.current}
+              >
+                <Print /> Generate List Karyawan
+              </DownloadTableExcel>
             </Button>
           </Grid>
         </Grid>
@@ -221,6 +249,13 @@ const KaryawanPage = () => {
           paginationTotalRows={karyawanList?.total_record}
         />
       </Typography>
+      {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
+      <TableExcelKaryawan
+        tableRef={tableRefKaryawanList}
+        period={params.days}
+        data={karyawanListAll?.data}
+        unitBisnis={unitBisnis}
+      />
     </MainCard>
   );
 };

@@ -8,7 +8,7 @@ import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { getKontrakList } from 'store/actions/kontrak';
 
-const FilterKontrak = ({ params, searchParams, setSearchParams }) => {
+const FilterKontrak = ({ params, searchParams, setSearchParams, loadingData }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchNip, setSearchNip] = useState('');
@@ -84,10 +84,16 @@ const FilterKontrak = ({ params, searchParams, setSearchParams }) => {
         />
       </Col>
       <Col md="3" className="align-self-center">
-        <Button color="primary" className="me-2" onClick={onClickSearch}>
+        <Button color="primary" className="me-2" onClick={onClickSearch} disabled={loadingData}>
           <Search /> Search
         </Button>
-        <Button outline color="primary" className="p-2-2" onClick={onClickReset}>
+        <Button
+          outline
+          color="primary"
+          className="p-2-2"
+          onClick={onClickReset}
+          disabled={loadingData}
+        >
           Reset
         </Button>
       </Col>

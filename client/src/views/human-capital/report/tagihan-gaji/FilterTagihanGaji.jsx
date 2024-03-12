@@ -139,10 +139,22 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
       </Row>
       <Row className="mt-3 mb-4">
         <Col className="text-center">
-          <Button outline color="primary" className="me-2" onClick={onClickSearch}>
+          <Button
+            outline
+            color="primary"
+            className="me-2"
+            onClick={onClickSearch}
+            disabled={loadingData || loadingGetAllReportList}
+          >
             <Search /> Search
           </Button>
-          <Button outline color="primary" className="me-2 p-2-2" onClick={onClickReset}>
+          <Button
+            outline
+            color="primary"
+            className="me-2 p-2-2"
+            onClick={onClickReset}
+            disabled={loadingData || loadingGetAllReportList}
+          >
             Reset
           </Button>
           <Button

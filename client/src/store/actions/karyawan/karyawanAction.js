@@ -48,6 +48,42 @@ export const getKaryawanList = (params) => {
   };
 };
 
+export const getAllKaryawanList = (params) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_LOADING_ALL_KARYAWAN_LIST',
+      payload: true
+    });
+    axios
+      .get(`${KARYAWAN_API}`, {
+        params: {
+          ...params
+        }
+      })
+      .then((response) => {
+        if (response.data) {
+          dispatch({
+            type: 'GET_ALL_KARYAWAN_LIST',
+            payload: response.data.data
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch({
+          type: 'GET_ALL_KARYAWAN_LIST',
+          payload: []
+        });
+      })
+      .finally(() => {
+        dispatch({
+          type: 'SET_LOADING_ALL_KARYAWAN_LIST',
+          payload: false
+        });
+      });
+  };
+};
+
 export const getKaryawanDetail = (id) => {
   return async (dispatch) => {
     dispatch({

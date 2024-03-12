@@ -48,7 +48,7 @@ const pages = {
         },
         {
           id: 'kontrak-karyawan',
-          title: 'Daftar Kontrak',
+          title: 'Input Kontrak',
           type: 'item',
           url: '/human-capital/kontrak',
           breadcrumbs: false

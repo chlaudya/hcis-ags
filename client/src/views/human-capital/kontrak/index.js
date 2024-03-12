@@ -243,6 +243,7 @@ const KontrakPage = () => {
           params={params}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
+          loadingData={loading || loadingAll}
         />
         <Grid container>
           <Grid md={8}>
@@ -251,7 +252,7 @@ const KontrakPage = () => {
             </Link>
           </Grid>
           <Grid md={4} textAlign={'right'}>
-            <Button color="primary" className="me-2 p-2-2" disabled={loadingAll}>
+            <Button outline color="primary" className="me-2 p-2-2" disabled={loading || loadingAll}>
               <DownloadTableExcel
                 filename={`daftar-kontrak-${dateToday}`}
                 sheet={`daftar-kontrak-${dateToday}`}

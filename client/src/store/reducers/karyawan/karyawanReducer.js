@@ -1,8 +1,10 @@
 const initialState = {
   karyawanList: [],
+  karyawanListAll: [],
   karyawanDetail: {},
   karyawanByNip: {},
   loading: false,
+  loadingAll: false,
   loadingDetail: false,
   loadingByNip: false,
   isSubmitting: false,
@@ -15,6 +17,11 @@ export const karyawanReducer = (state = initialState, action) => {
       ...state,
       karyawanList: action.payload,
       loading: false
+    },
+    GET_ALL_KARYAWAN_LIST: {
+      ...state,
+      karyawanListAll: action.payload,
+      loadingAll: false
     },
     GET_KARYAWAN_DETAIL: {
       ...state,
@@ -45,6 +52,10 @@ export const karyawanReducer = (state = initialState, action) => {
     SET_LOADING_STOP_KARYAWAN: {
       ...state,
       loadingStopKaryawan: action.payload
+    },
+    SET_LOADING_ALL_KARYAWAN_LIST: {
+      ...state,
+      loadingAll: action.payload
     }
   };
 

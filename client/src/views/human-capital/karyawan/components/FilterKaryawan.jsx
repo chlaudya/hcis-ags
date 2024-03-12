@@ -7,13 +7,12 @@ import { getKaryawanList } from 'store/actions/karyawan';
 import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 
-const FilterKaryawan = ({ params }) => {
+const FilterKaryawan = ({ params, searchParams, setSearchParams, loadingData }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchNip, setSearchNip] = useState('');
   const [searchName, setSearchName] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
-  const [searchParams, setSearchParams] = useState({ ...params });
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());
@@ -84,10 +83,16 @@ const FilterKaryawan = ({ params }) => {
         />
       </Col>
       <Col md="3" className="align-self-center">
-        <Button color="primary" className="me-2" onClick={onClickSearch}>
+        <Button color="primary" className="me-2" onClick={onClickSearch} disabled={loadingData}>
           <Search /> Search
         </Button>
-        <Button outline color="primary" className="p-2-2" onClick={onClickReset}>
+        <Button
+          outline
+          color="primary"
+          className="p-2-2"
+          onClick={onClickReset}
+          disabled={loadingData}
+        >
           Reset
         </Button>
       </Col>
