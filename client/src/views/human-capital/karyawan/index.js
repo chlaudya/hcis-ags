@@ -4,8 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { blue, green, red } from '@material-ui/core/colors';
-import { Delete, Edit, FactCheck } from '@material-ui/icons';
-import { Typography, IconButton, Button } from '@material-ui/core';
+import { Delete, Edit, FactCheck, Print } from '@material-ui/icons';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { Typography, IconButton, Button, Grid } from '@material-ui/core';
 
 import FilterKaryawan from './components/FilterKaryawan';
 import DataTable from 'src/ui-component/data-table';
@@ -188,9 +189,28 @@ const KaryawanPage = () => {
       <Typography variant="body2">
         <FilterKaryawan params={params} />
 
-        <Link to="/human-capital/karyawan/input-karyawan" style={{ textDecoration: 'none' }}>
-          <Button variant="contained">Input Karyawan</Button>
-        </Link>
+        <Grid container>
+          <Grid md={8}>
+            <Link to="/human-capital/karyawan/input-karyawan" style={{ textDecoration: 'none' }}>
+              <Button variant="contained">Input Karyawan</Button>
+            </Link>
+          </Grid>
+          <Grid md={4} textAlign={'right'}>
+            <Button
+              color="primary"
+              className="me-2 p-2-2"
+              // disabled={loadingAll}
+            >
+              {/* <DownloadTableExcel
+                filename={`daftar-kontrak-${dateToday}`}
+                sheet={`daftar-kontrak-${dateToday}`}
+                currentTableRef={tableRefKontrak.current}
+              > */}
+              <Print /> Generate List Karyawan
+              {/* </DownloadTableExcel>s */}
+            </Button>
+          </Grid>
+        </Grid>
 
         <DataTable
           columns={KARYAWAN_COLUMN}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { Send, DoDisturb, Print } from '@material-ui/icons';
-import { Typography, Button, Stack } from '@material-ui/core';
+import { Typography, Button, Stack, Grid } from '@material-ui/core';
 
 import DataTable from 'src/ui-component/data-table';
 import { getStateDashboard, getStateKaryawan, getStateKontrak } from 'store/stateSelector';
@@ -165,25 +165,31 @@ const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
   return (
     <MainCard title="List Karyawan">
       <Typography variant="body2">
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => {
-            setParams({ page: 1, size: 10 });
-            dispatch(getDashboardData());
-          }}
-        >
-          Clear Filter
-        </Button>
-        <Button color="primary" className="me-2 p-2-2" disabled={loadingAllData}>
-          <DownloadTableExcel
-            filename={`data-habis-kontrak_${dateToday}`}
-            sheet={`data-habis-kontrak-${dateToday}`}
-            currentTableRef={tableRefKaryawanDashboard.current}
-          >
-            <Print /> Generate Karyawan List
-          </DownloadTableExcel>
-        </Button>
+        <Grid container>
+          <Grid md={8}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => {
+                setParams({ page: 1, size: 10 });
+                dispatch(getDashboardData());
+              }}
+            >
+              Clear Filter
+            </Button>
+          </Grid>
+          <Grid md={4} textAlign={'right'}>
+            <Button color="primary" className="me-2 p-2-2" disabled={loadingAllData}>
+              <DownloadTableExcel
+                filename={`data-habis-kontrak_${dateToday}`}
+                sheet={`data-habis-kontrak-${dateToday}`}
+                currentTableRef={tableRefKaryawanDashboard.current}
+              >
+                <Print /> Generate Data Habis Kontrak
+              </DownloadTableExcel>
+            </Button>
+          </Grid>
+        </Grid>
         <DataTable
           columns={KONTRAK_COLUMN}
           data={data?.data}
@@ -196,11 +202,11 @@ const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
       </Typography>
 
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
-      {/* <TableExcelKaryawanDashboard
+      <TableExcelKaryawanDashboard
         tableRef={tableRefKaryawanDashboard}
         period={params.days}
         data={dashboardAllData?.data}
-      /> */}
+      />
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
     </MainCard>
   );

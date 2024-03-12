@@ -26,17 +26,17 @@ const TableExcelKaryawanDashboard = ({ data, tableRef, period }) => {
     <div className="is-hidden">
       <table ref={tableRef}>
         <tr className="fw-bold">
-          <td colSpan="5" style={styleTableTitle}>
+          <td colSpan="6" style={styleTableTitle}>
             DATA KARYAWAN AKAN HABIS KONTRAK
           </td>
         </tr>
         <tr className="fw-bold">
-          <td colSpan="5" style={styleTableTitle}>
+          <td colSpan="6" style={styleTableTitle}>
             PT. ARTHA GUTAWA SEJAHTERA
           </td>
         </tr>
         <tr className="fw-bold">
-          <td colSpan="5" style={styleTableTitle}>
+          <td colSpan="6" style={styleTableTitle}>
             PERIODE : {period ? `${period} Hari Mendatang` : 'Semua Periode'}
           </td>
         </tr>
@@ -46,9 +46,10 @@ const TableExcelKaryawanDashboard = ({ data, tableRef, period }) => {
           <tr style={{ ...styleTableBody, fontSize: '14px' }}>
             <th style={styleTableBorder}>NO</th>
             <th style={styleTableBorder}>NIP</th>
-            <th style={styleTableBorder}>NO KONTRAK</th>
-            <th style={styleTableBorder}>TGL HABIS KONTRAK</th>
             <th style={styleTableBorder}>NAMA</th>
+            <th style={styleTableBorder}>NO KONTRAK</th>
+            <th style={styleTableBorder}>PERIODE KONTRAK</th>
+            <th style={styleTableBorder}>TGL HABIS KONTRAK</th>
           </tr>
         </thead>
         <tbody>
@@ -59,8 +60,9 @@ const TableExcelKaryawanDashboard = ({ data, tableRef, period }) => {
                   <td style={styleTableBorder}>{index + 1}</td>
                   <td style={styleTableBorder}>{item?.karyawan_nip}</td>
                   <td style={styleTableBorder}>{item?.karyawan_name}</td>
-                  <td style={styleTableBorder}>{item?.jabatan_name}</td>
-                  <td style={styleTableBorder}>{item?.nama_proyek}</td>
+                  <td style={styleTableBorder}>{item?.no_kontrak}</td>
+                  <td style={styleTableBorder}>{item?.period_kontrak}</td>
+                  <td style={styleTableBorder}>{item?.tgl_habis_kontrak?.toLocaleString()}</td>
                 </tr>
               );
             })}
