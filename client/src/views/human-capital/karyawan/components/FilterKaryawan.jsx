@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Search } from '@material-ui/icons';
 import { Button, Col, Row } from 'reactstrap';
 import { SearchFilter, DropdownFilter } from 'src/ui-component/tableFilters';
-import { getKaryawanBySearch, getKaryawanList } from 'store/actions/karyawan';
+import { getKaryawanList } from 'store/actions/karyawan';
 import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 

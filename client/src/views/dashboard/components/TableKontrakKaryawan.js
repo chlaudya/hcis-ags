@@ -1,23 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainCard from 'src/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { Send, DoDisturb } from '@material-ui/icons';
+import { Send, DoDisturb, Print } from '@material-ui/icons';
 import { Typography, Button, Stack } from '@material-ui/core';
 
 import DataTable from 'src/ui-component/data-table';
-import { getStateKaryawan, getStateKontrak } from 'store/stateSelector';
+import { getStateDashboard, getStateKaryawan, getStateKontrak } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
 import { ModalContext } from 'src/ui-component/modal';
 import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import { paginationNumber } from 'utils/paginationNumber';
-import { getDashboardData } from 'store/actions/dashboard';
+import { getAllDashboardData, getDashboardData } from 'store/actions/dashboard';
 import { getKaryawanDetail, getKaryawanList } from 'store/actions/karyawan';
 import { getListKontrakByNip, stopKontrak } from 'store/actions/kontrak';
 import TableListKontrak from 'views/human-capital/kontrak/components/TableListKontrak';
 import FormReason from './FormReason';
 import { renderDate } from 'utils/renderDate';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import TableExcelKaryawanDashboard from './TableExcelKaryawanDashboard';
 
 const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
   const dispatch = useDispatch();
@@ -25,6 +27,9 @@ const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
   const { showModal, hideModal } = useContext(ModalContext);
   const { isSubmitting } = useSelector(getStateKaryawan);
   const { loadingStopKontrak } = useSelector(getStateKontrak);
+  const tableRefKaryawanDashboard = useRef(null);
+  const dateToday = renderDate(new Date());
+  const { loadingAllData, dashboardAllData } = useSelector(getStateDashboard);
 
   useEffect(() => {
     if (!loadingStopKontrak) {
@@ -38,9 +43,15 @@ const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
     dispatch(getKaryawanList(params));
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(getDashboardData(params));
-  // }, [isSubmitting]);
+  useEffect(() => {
+    dispatch(
+      getAllDashboardData({
+        ...params,
+        page: 1,
+        size: data?.total_record
+      })
+    );
+  }, [data?.total_record, params]);
 
   const redirectToInputKontrak = (kontrakId) => {
     navigate(
@@ -164,6 +175,15 @@ const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
         >
           Clear Filter
         </Button>
+        <Button color="primary" className="me-2 p-2-2" disabled={loadingAllData}>
+          <DownloadTableExcel
+            filename={`data-habis-kontrak_${dateToday}`}
+            sheet={`data-habis-kontrak-${dateToday}`}
+            currentTableRef={tableRefKaryawanDashboard.current}
+          >
+            <Print /> Generate Karyawan List
+          </DownloadTableExcel>
+        </Button>
         <DataTable
           columns={KONTRAK_COLUMN}
           data={data?.data}
@@ -174,6 +194,14 @@ const TableKontrakKaryawan = ({ data, loading, params, setParams }) => {
           onRowClicked={(row) => openModalKontrakList(row.karyawan_nip)}
         />
       </Typography>
+
+      {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
+      {/* <TableExcelKaryawanDashboard
+        tableRef={tableRefKaryawanDashboard}
+        period={params.days}
+        data={dashboardAllData?.data}
+      /> */}
+      {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
     </MainCard>
   );
 };

@@ -3,6 +3,7 @@ import axios from 'axios';
 import {
   GET_REPORT_ALL_TAGIHAN_GAJI,
   GET_REPORT_TAGIHAN_GAJI,
+  SET_LOADING_REPORT_ALL_TAGIHAN_GAJI,
   SET_LOADING_REPORT_TAGIHAN_GAJI
 } from 'store/actions';
 import { REPORT_API } from 'constants/apiUrl.constant';
@@ -45,6 +46,10 @@ export const getReportTagihanGaji = (params) => {
 
 export const getAllReportTagihanGaji = (params) => {
   return async (dispatch) => {
+    dispatch({
+      type: SET_LOADING_REPORT_ALL_TAGIHAN_GAJI,
+      payload: true
+    });
     axios
       .get(`${REPORT_API}/tagihan_gaji`, {
         params: {
@@ -64,6 +69,12 @@ export const getAllReportTagihanGaji = (params) => {
         dispatch({
           type: GET_REPORT_ALL_TAGIHAN_GAJI,
           payload: []
+        });
+      })
+      .finally(() => {
+        dispatch({
+          type: SET_LOADING_REPORT_ALL_TAGIHAN_GAJI,
+          payload: false
         });
       });
   };

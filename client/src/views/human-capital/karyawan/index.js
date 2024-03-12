@@ -199,7 +199,6 @@ const KaryawanPage = () => {
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           paginationTotalRows={karyawanList?.total_record}
-          //tambah onclick row
         />
       </Typography>
     </MainCard>

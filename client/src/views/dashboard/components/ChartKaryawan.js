@@ -214,13 +214,26 @@ const ChartKaryawan = ({ isLoading, data, params, setParams }) => {
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
+                <Grid md={8} item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
                       <Typography variant="h3">Data Karyawan </Typography>
                     </Grid>
                     <Grid item flex flexDirection={'row'}>
                       <Typography variant="subtitle3">yang akan Habis Kontrak</Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid md={4} item>
+                  <Grid container direction="column" spacing={1}>
+                    <Grid item>
+                      <Typography variant="h5">Total Karyawan Aktif: </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5">Total Karyawan Baru: </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5">Total Info Karyawan Berhenti: </Typography>
                     </Grid>
                   </Grid>
                 </Grid>

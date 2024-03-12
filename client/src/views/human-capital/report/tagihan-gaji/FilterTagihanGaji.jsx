@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Print, Search } from '@material-ui/icons';
 import { Button, Col, Row } from 'reactstrap';
@@ -7,30 +7,31 @@ import { DownloadTableExcel } from 'react-export-table-to-excel';
 import DatePicker from 'react-datepicker';
 import { Label, Input } from 'reactstrap';
 import { SearchFilter, DropdownFilter } from 'src/ui-component/tableFilters';
-import { getStateMasterUnitBisnis } from 'store/stateSelector';
+import { getStateMasterUnitBisnis, getStateReport } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
-import { getReportTagihanGaji } from 'store/actions/report/reportAction';
+import { getAllReportTagihanGaji, getReportTagihanGaji } from 'store/actions/report/reportAction';
 import { formattedPeriod, renderDate } from 'utils/renderDate';
 import TableExcelTagihanGaji from './components/TableExcelTagihanGaji';
+import TableExcelRekapGaji from './components/TableExcelRekapGaji';
 
-const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
+const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
   const dispatch = useDispatch();
+  const { reportAllTagihanGaji, loadingGetAll: loadingGetAllReportList } =
+    useSelector(getStateReport);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
-  const [reportDataGenerate, setReportDataGenerate] = useState([]);
+  // const [reportDataGenerate, setReportDataGenerate] = useState([]);
   const [searchNip, setSearchNip] = useState('');
   const [searchPeriod, setSearchPeriod] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
   const [unitBisnis, setUnitBisnis] = useState('');
   const [searchParams, setSearchParams] = useState({ ...params });
   const [isFilteredTagihan, setIsFilteredTagihan] = useState(false);
+  const tableRefTagihan = useRef(null);
+  const tableRefRekap = useRef(null);
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());
   }, []);
-
-  useEffect(() => {
-    setReportDataGenerate(reportData?.data);
-  }, [reportData?.data]);
 
   useEffect(() => {
     handleRenderUnitBisnis();
@@ -68,7 +69,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
 
   const onClickSearch = () => {
     dispatch(getReportTagihanGaji(searchParams));
-    setIsFilteredTagihan(true);
+    setIsFilteredTagihan(!isFilteredTagihan);
   };
 
   const onClickReset = () => {
@@ -77,7 +78,7 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
     setSearchUnitBisnis('');
     setSearchParams({ ...params });
     dispatch(getReportTagihanGaji(params));
-    setIsFilteredTagihan(false);
+    setIsFilteredTagihan(!isFilteredTagihan);
   };
 
   const dateToday = renderDate(new Date());
@@ -85,6 +86,16 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
   const InputDate = ({ onChange, value, id, onClick }) => (
     <Input id={id} placeholder="Select" onChange={onChange} value={value} onClick={onClick} />
   );
+
+  useEffect(() => {
+    dispatch(
+      getAllReportTagihanGaji({
+        ...searchParams,
+        page: 1,
+        size: reportData?.total_record
+      })
+    );
+  }, [reportData?.total_record, searchParams]);
 
   return (
     <>
@@ -134,23 +145,49 @@ const FilterTagihanGaji = ({ params, tableRef, reportData }) => {
           <Button outline color="primary" className="me-2 p-2-2" onClick={onClickReset}>
             Reset
           </Button>
-          <Button color="primary" className="me-2 p-2-2" disabled={reportData?.data?.length === 0}>
+          <Button
+            color="primary"
+            className="me-2 p-2-2"
+            disabled={loadingData || loadingGetAllReportList}
+          >
             <DownloadTableExcel
               filename={`tagihan-gaji_${dateToday}`}
               sheet={`tagihan-gaji-${dateToday}`}
-              currentTableRef={tableRef.current}
+              currentTableRef={tableRefTagihan.current}
             >
               <Print /> Generate Tagihan
+            </DownloadTableExcel>
+          </Button>
+          <Button
+            color="primary"
+            className="me-2 p-2-2"
+            disabled={loadingData || loadingGetAllReportList}
+          >
+            <DownloadTableExcel
+              filename={`rekap-gaji_${dateToday}`}
+              sheet={`rekap-gaji-${dateToday}`}
+              currentTableRef={tableRefRekap.current}
+            >
+              <Print /> Generate Rekap Gaji
             </DownloadTableExcel>
           </Button>
         </Col>
       </Row>
       {/* =================== HIDDEN TABLE FOR EXCEL GENERATE ================== */}
       <TableExcelTagihanGaji
-        tableRef={tableRef}
-        dataFiltered={reportDataGenerate}
+        tableRef={tableRefTagihan}
         period={searchPeriod}
-        dataTotalTagihan={reportData}
+        dataTotalTagihan={reportAllTagihanGaji}
+        dataTagihanGaji={reportAllTagihanGaji}
+        isFiltered={isFilteredTagihan}
+        unitBisnis={unitBisnis}
+      />
+
+      <TableExcelRekapGaji
+        tableRef={tableRefRekap}
+        period={searchPeriod}
+        dataTotalTagihan={reportAllTagihanGaji}
+        dataTagihanGaji={reportAllTagihanGaji}
         isFiltered={isFilteredTagihan}
         unitBisnis={unitBisnis}
       />

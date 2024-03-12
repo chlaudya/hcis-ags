@@ -49,6 +49,42 @@ export const getKontrakList = (params) => {
   };
 };
 
+export const getAllKontrakList = (params) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_LOADING_KONTRAK_LIST_ALL',
+      payload: true
+    });
+    axios
+      .get(`${KONTRAK_API}`, {
+        params: {
+          ...params
+        }
+      })
+      .then((response) => {
+        if (response.data) {
+          dispatch({
+            type: 'GET_KONTRAK_LIST_ALL',
+            payload: response.data.data
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch({
+          type: 'GET_KONTRAK_LIST_ALL',
+          payload: []
+        });
+      })
+      .finally(() => {
+        dispatch({
+          type: 'SET_LOADING_KONTRAK_LIST_ALL',
+          payload: false
+        });
+      });
+  };
+};
+
 export const getKontrakDetail = (id) => {
   return async (dispatch) => {
     dispatch({

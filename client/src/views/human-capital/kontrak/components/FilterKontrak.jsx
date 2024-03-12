@@ -8,13 +8,12 @@ import { getStateMasterUnitBisnis } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import { getKontrakList } from 'store/actions/kontrak';
 
-const FilterKontrak = ({ params }) => {
+const FilterKontrak = ({ params, searchParams, setSearchParams }) => {
   const dispatch = useDispatch();
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchNip, setSearchNip] = useState('');
   const [searchName, setSearchName] = useState('');
   const [searchUnitBisnis, setSearchUnitBisnis] = useState('');
-  const [searchParams, setSearchParams] = useState({ ...params });
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());

@@ -41,14 +41,14 @@ const pages = {
       children: [
         {
           id: 'karyawan',
-          title: 'Input Karyawan',
+          title: 'Daftar Karyawan',
           type: 'item',
           url: '/human-capital/karyawan',
           breadcrumbs: false
         },
         {
           id: 'kontrak-karyawan',
-          title: 'Input Kontrak',
+          title: 'Daftar Kontrak',
           type: 'item',
           url: '/human-capital/kontrak',
           breadcrumbs: false

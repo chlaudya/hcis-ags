@@ -13,7 +13,7 @@ import { getDropdownBank } from 'store/actions/master-bank';
 import { getKontrakList } from 'store/actions/kontrak';
 import { renderDate } from 'utils/renderDate';
 import { paginationNumber } from 'utils/paginationNumber';
-import TableExcelListKontrak from '../../../dashboard/components/TableExcelListKontrak';
+import TableExcelListKontrak from './TableExcelListKontrak';
 import { Button } from 'reactstrap';
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 

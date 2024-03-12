@@ -1,6 +1,8 @@
 const initialState = {
-  dashboardData: {},
-  loading: false
+  dashboardData: [],
+  dashboardAllData: [],
+  loading: false,
+  loadingAllData: false
 };
 
 export const dashboardReducer = (state = initialState, action) => {
@@ -13,6 +15,15 @@ export const dashboardReducer = (state = initialState, action) => {
     SET_LOADING_DASHBOARD_DATA: {
       ...state,
       loading: action.payload
+    },
+    GET_DASHBOARD_ALL_DATA: {
+      ...state,
+      dashboardAllData: action.payload,
+      loadingAllData: false
+    },
+    SET_LOADING_DASHBOARD_ALL_DATA: {
+      ...state,
+      loadingAllData: action.payload
     }
   };
 

@@ -1,51 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
 import moment from 'moment';
-import { getAllReportTagihanGaji } from 'store/actions/report';
-import { getStateReport } from 'store/stateSelector';
 import { renderDate } from 'utils/renderDate';
 import csrfProtection from 'utils/csrfProtection';
 import terbilang from 'terbilang';
 import 'src/assets/scss/table.scss';
 
-const TableExcelTagihanGaji = ({
-  dataFiltered,
-  isFiltered,
-  tableRef,
-  period,
-  dataTotalTagihan,
-  unitBisnis
-}) => {
-  const dispatch = useDispatch();
-  const { reportAllTagihanGaji } = useSelector(getStateReport);
-  const [listTagihan, setListTagihan] = useState();
-
+const TableExcelTagihanGaji = ({ dataTagihanGaji, tableRef, period, unitBisnis }) => {
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
   }, []);
-
-  useEffect(() => {
-    dispatch(
-      getAllReportTagihanGaji({
-        page: 1,
-        size: dataTotalTagihan?.total_record
-      })
-    );
-    if (!isFiltered) {
-      setListTagihan(reportAllTagihanGaji?.data);
-    }
-  }, [dataTotalTagihan?.total_record, isFiltered]);
-
-  useEffect(() => {
-    if (!isFiltered) {
-      setListTagihan(reportAllTagihanGaji?.data);
-    }
-  }, [reportAllTagihanGaji, isFiltered]);
-
-  useEffect(() => {
-    setListTagihan(dataFiltered);
-  }, [isFiltered, dataFiltered]);
 
   const styleTableTitle = {
     fontSize: '20px',
@@ -112,8 +76,8 @@ const TableExcelTagihanGaji = ({
           </tr>
         </thead>
         <tbody>
-          {listTagihan?.length > 0 &&
-            listTagihan?.map((item, index) => {
+          {dataTagihanGaji?.data?.length > 0 &&
+            dataTagihanGaji?.data?.map((item, index) => {
               return (
                 <tr key={item.no} style={styleTableBody}>
                   <td style={styleTableBorder}>{index + 1}</td>
@@ -137,26 +101,26 @@ const TableExcelTagihanGaji = ({
             <td style={styleTableBorder} colSpan="5">
               JUMLAH
             </td>
-            <td style={styleTableBorder}>{dataTotalTagihan?.total_gaji?.toLocaleString()}</td>
-            <td style={styleTableBorder}>{dataTotalTagihan?.total_tunjangan?.toLocaleString()}</td>
+            <td style={styleTableBorder}>{dataTagihanGaji?.total_gaji?.toLocaleString()}</td>
+            <td style={styleTableBorder}>{dataTagihanGaji?.total_tunjangan?.toLocaleString()}</td>
             <td style={styleTableBorder}>
-              {dataTotalTagihan?.total_tunjangan_komunikasi?.toLocaleString()}
+              {dataTagihanGaji?.total_tunjangan_komunikasi?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {dataTotalTagihan?.total_tunjangan_khusus?.toLocaleString()}
+              {dataTagihanGaji?.total_tunjangan_khusus?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {dataTotalTagihan?.total_tunjangan_variabel?.toLocaleString()}
+              {dataTagihanGaji?.total_tunjangan_variabel?.toLocaleString()}
             </td>
-            <td style={styleTableBorder}>{dataTotalTagihan?.total_uang_makan?.toLocaleString()}</td>
+            <td style={styleTableBorder}>{dataTagihanGaji?.total_uang_makan?.toLocaleString()}</td>
             <td style={styleTableBorder}>
-              {dataTotalTagihan?.total_gaji_dibayar?.toLocaleString()}
-            </td>
-            <td style={styleTableBorder}>
-              {dataTotalTagihan?.total_manajemen_fee?.toLocaleString()}
+              {dataTagihanGaji?.total_gaji_dibayar?.toLocaleString()}
             </td>
             <td style={styleTableBorder}>
-              {dataTotalTagihan?.total_tagihan_gaji?.toLocaleString()}
+              {dataTagihanGaji?.total_manajemen_fee?.toLocaleString()}
+            </td>
+            <td style={styleTableBorder}>
+              {dataTagihanGaji?.total_tagihan_gaji?.toLocaleString()}
             </td>
           </tr>
 
@@ -166,7 +130,7 @@ const TableExcelTagihanGaji = ({
           <tr style={styleTableBody}>
             <td colSpan="8" style={{ fontSize: '14px' }}>
               {`TERBILANG : == ${terbilang(
-                parseInt(dataTotalTagihan?.total_tagihan_gaji)
+                parseInt(dataTagihanGaji?.total_tagihan_gaji)
               )} rupiah ==`}
             </td>
             <td></td>

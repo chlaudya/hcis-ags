@@ -35,3 +35,39 @@ export const getDashboardData = (params) => {
       });
   };
 };
+
+export const getAllDashboardData = (params) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_LOADING_DASHBOARD_ALL_DATA',
+      payload: true
+    });
+    axios
+      .get(`${DASHBOARD_API}`, {
+        params: {
+          ...params
+        }
+      })
+      .then((response) => {
+        if (response.data) {
+          dispatch({
+            type: 'GET_DASHBOARD_ALL_DATA',
+            payload: response.data.data
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({
+          type: 'GET_DASHBOARD_ALL_DATA',
+          payload: []
+        });
+      })
+      .finally(() => {
+        dispatch({
+          type: 'SET_LOADING_DASHBOARD_ALL_DATA',
+          payload: false
+        });
+      });
+  };
+};

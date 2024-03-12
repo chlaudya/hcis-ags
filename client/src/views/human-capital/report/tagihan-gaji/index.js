@@ -14,7 +14,7 @@ import { paginationNumber } from 'utils/paginationNumber';
 
 const TagihanGajiPage = () => {
   const dispatch = useDispatch();
-  const { reportTagihanGaji, loading } = useSelector(getStateReport);
+  const { reportTagihanGaji, loading, reportAllTagihanGaji } = useSelector(getStateReport);
 
   const [params, setParams] = useState({
     page: 1,
@@ -24,10 +24,6 @@ const TagihanGajiPage = () => {
   useEffect(() => {
     csrfProtection.setHeaderCsrfToken();
     dispatch(getReportTagihanGaji(params));
-  }, []);
-
-  useEffect(() => {
-    onChangePage();
   }, []);
 
   const onChangePage = (page) => {
@@ -145,7 +141,13 @@ const TagihanGajiPage = () => {
   return (
     <MainCard title="Tagihan Gaji">
       <Typography variant="body2">
-        <FilterTagihanGaji params={params} tableRef={tableRef} reportData={reportTagihanGaji} />
+        <FilterTagihanGaji
+          params={params}
+          tableRef={tableRef}
+          reportData={reportTagihanGaji}
+          loadingData={loading}
+          reportAllTagihanGaji={reportAllTagihanGaji}
+        />
 
         <DataTable
           columns={TAGIHAN_GAJI_COLUMN}
