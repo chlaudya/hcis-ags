@@ -167,7 +167,7 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
               sheet={`tagihan-gaji-${dateToday}`}
               currentTableRef={tableRefTagihan.current}
             >
-              <Print /> Generate Tagihan
+              <Print /> Tagihan
             </DownloadTableExcel>
           </Button>
           <Button
@@ -180,7 +180,7 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
               sheet={`rekap-gaji-${dateToday}`}
               currentTableRef={tableRefRekap.current}
             >
-              <Print /> Generate Rekap Gaji
+              <Print /> Rekap Gaji
             </DownloadTableExcel>
           </Button>
         </Col>

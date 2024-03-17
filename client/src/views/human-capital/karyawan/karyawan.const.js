@@ -28,7 +28,9 @@ export const INITIAL_VALUES_KARYAWAN = {
   alamat_domisili: '',
   no_hp_keluarga: '',
   rekening_atas_nama: '',
-  riwayat_pekerjaan: []
+  riwayat_pekerjaan: [],
+  surat_peringatan: 0,
+  tanggal_surat_peringatan: ''
 };
 
 export const COLUMN_TABLE_EMPLOYMENT_HISTORY = ({ withDeleteAction, onDelete }) => {

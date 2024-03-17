@@ -469,6 +469,10 @@ const FormFieldKontrak = () => {
                   renderTextButton()
                 )}
               </Button>
+
+              <Button color="primary" outline onClick={redirectToKontrak}>
+                Cancel
+              </Button>
             </MainCard>
           </Form>
         );

@@ -25,8 +25,8 @@ import { MODAL_TYPES } from 'src/ui-component/modal/modalConstant';
 import {
   BLOOD_TYPE,
   GENDER,
-  IS_ACTIVE,
   MARITAL_STATUS,
+  NUMBER_SP,
   RELIGION
 } from 'constants/general.constant';
 import {
@@ -37,6 +37,7 @@ import {
 import FormEducationHistory from './components/FormEducationHistory';
 import FormEmploymentHistory from './components/FormEmploymentHistory';
 import TableFormik from 'src/ui-component/tableFormik/TableFormik';
+import moment from 'moment';
 
 const FormFieldKaryawan = () => {
   const dispatch = useDispatch();
@@ -89,12 +90,14 @@ const FormFieldKaryawan = () => {
     const reqBodyWithCv = {
       ...values,
       lampiran_cv: fileCV,
-      karyawan_id: id
+      karyawan_id: id,
+      tanggal_surat_peringatan: moment(new Date()).format('YYYY-MM-DD')
     };
 
     const reqBodyNoCv = {
       ...values,
-      karyawan_id: id
+      karyawan_id: id,
+      tanggal_surat_peringatan: moment(new Date()).format('YYYY-MM-DD')
     };
 
     if (isValid) {
@@ -480,15 +483,16 @@ const FormFieldKaryawan = () => {
                     errorMessage="wajib diisi!"
                   />
 
-                  {/* <FormField
-                    className="mb-2 mt-2"
-                    id="TxtAktif"
-                    name="is_active"
-                    label="Aktif"
-                    tag="select"
-                    isDisabled={!id}
-                    options={IS_ACTIVE}
-                  /> */}
+                  {id && (
+                    <FormField
+                      className="mt-2"
+                      id="DrpSP"
+                      name="surat_peringatan"
+                      label="Jumlah SP"
+                      tag="select"
+                      options={NUMBER_SP}
+                    />
+                  )}
                 </Col>
               </Row>
 
@@ -506,6 +510,10 @@ const FormFieldKaryawan = () => {
                 ) : (
                   'Save'
                 )}
+              </Button>
+
+              <Button color="primary" outline onClick={redirectToKaryawan}>
+                Cancel
               </Button>
             </MainCard>
             <SweetAlert

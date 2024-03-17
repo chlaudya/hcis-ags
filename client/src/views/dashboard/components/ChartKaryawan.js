@@ -12,6 +12,7 @@ import { gridSpacing } from 'store/constant';
 import BarChartSkeleton from 'src/ui-component/cards/Skeleton/BarChartSkeleton';
 import { useDispatch } from 'react-redux';
 import { getDashboardData } from 'store/actions/dashboard';
+import { Alert } from 'reactstrap';
 
 // ===========================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||=========================== //
 
@@ -214,7 +215,7 @@ const ChartKaryawan = ({ isLoading, data, params, setParams }) => {
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
-                <Grid md={8} item>
+                <Grid md={3} item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
                       <Typography variant="h3">Data Karyawan </Typography>
@@ -224,29 +225,24 @@ const ChartKaryawan = ({ isLoading, data, params, setParams }) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid md={4} item>
-                  <Grid container direction="column" spacing={1}>
-                    <Grid item>
-                      <Typography variant="h5">
-                        Total Karyawan Aktif:{' '}
-                        <span className="text-primary fw-bold">{data?.total_karyawan_active}</span>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h5">
-                        Total Karyawan Baru:{' '}
-                        <span className="text-primary fw-bold">{data?.total_karyawan_baru}</span>{' '}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h5">
-                        Total Info Karyawan Berhenti:{' '}
-                        <span className="text-primary fw-bold">
-                          {data?.total_karyawan_berhenti}
-                        </span>{' '}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                <Grid md={3} item padding={1}>
+                  <Alert color="primary">
+                    {' '}
+                    Total Karyawan Aktif:{' '}
+                    <span className="text-primary fw-bold">{data?.total_karyawan_active}</span>
+                  </Alert>
+                </Grid>
+                <Grid md={3} item padding={1}>
+                  <Alert>
+                    Total Karyawan Baru:{' '}
+                    <span className="text-primary fw-bold">{data?.total_karyawan_baru}</span>{' '}
+                  </Alert>
+                </Grid>
+                <Grid md={3} item padding={1}>
+                  <Alert color="warning">
+                    Total Karyawan Berhenti:{' '}
+                    <span className="text-primary fw-bold">{data?.total_karyawan_berhenti}</span>{' '}
+                  </Alert>
                 </Grid>
               </Grid>
             </Grid>
