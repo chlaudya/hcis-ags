@@ -52,7 +52,7 @@ const TableExcelRekapGaji = ({ dataTagihanGaji, tableRef, period, unitBisnis }) 
         </tr>
         <tr className="fw-bold">
           <td colSpan="5" style={styleTableTitle}>
-            BULAN : {getFormattedPeriod()}
+            {period ? getFormattedPeriod() : 'Semua Bulan'}
           </td>
         </tr>
         <tr></tr>

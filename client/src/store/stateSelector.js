@@ -7,6 +7,7 @@ export const getStateMasterIuran = (state) => state.masterIuran;
 export const getStateMasterPajak = (state) => state.masterPajak;
 export const getStateMasterTempatTugas = (state) => state.masterTempatTugas;
 export const getStateMasterUnitBisnis = (state) => state.masterUnitBisnis;
-export const getStateReport = (state) => state.report;
+export const getStateReportTagihanGaji = (state) => state.reportTagihanGaji;
+export const getStateReportSuratPeringatan = (state) => state.reportSuratPeringatan;
 export const getStateSlipGaji = (state) => state.slipGaji;
 export const getStateDashboard = (state) => state.dashboard;

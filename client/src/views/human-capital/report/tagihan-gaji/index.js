@@ -6,15 +6,16 @@ import { Typography } from '@material-ui/core';
 
 import FilterTagihanGaji from './FilterTagihanGaji';
 import DataTable from 'src/ui-component/data-table';
-import { getStateReport } from 'store/stateSelector';
+import { getStateReportTagihanGaji } from 'store/stateSelector';
 import csrfProtection from 'utils/csrfProtection';
-import { getReportTagihanGaji } from 'store/actions/report/reportAction';
+import { getReportTagihanGaji } from 'store/actions/report-tagihan-gaji/reportTagihanGajiAction';
 import { inputThousandSeparator, roundedThousandSeparator } from 'utils/thousandSeparator';
 import { paginationNumber } from 'utils/paginationNumber';
 
 const TagihanGajiPage = () => {
   const dispatch = useDispatch();
-  const { reportTagihanGaji, loading, reportAllTagihanGaji } = useSelector(getStateReport);
+  const { reportTagihanGaji, loading, reportAllTagihanGaji } =
+    useSelector(getStateReportTagihanGaji);
 
   const [params, setParams] = useState({
     page: 1,

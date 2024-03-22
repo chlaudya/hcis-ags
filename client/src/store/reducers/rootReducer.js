@@ -10,9 +10,10 @@ import { masterPajakReducer } from './master-pajak/masterPajakReducer';
 import { masterTempatTugasReducer } from './master-tempat-tugas/masterTempatTugasReducer';
 import { masterUnitBisnisReducer } from './master-unit-bisnis/masterUnitBisnisReducer';
 import { kontrakReducer } from './kontrak/kontrakReducer';
-import { reportReducer } from './report/reportReducer';
+import { reportTagihanGajiReducer } from './report-tagihan-gaji/reportReducer';
 import { slipGajiReducer } from './slip-gaji/sliipGajiReducer';
 import { dashboardReducer } from './dashboard/dashboardReducer';
+import { reportSuratPeringatanReducer } from './report-surat-peringatan/reportSPReducer';
 
 const rootReducer = combineReducers({
   csurf,
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   masterPajak: masterPajakReducer,
   masterTempatTugas: masterTempatTugasReducer,
   masterUnitBisnis: masterUnitBisnisReducer,
-  report: reportReducer,
+  reportTagihanGaji: reportTagihanGajiReducer,
+  reportSuratPeringatan: reportSuratPeringatanReducer,
   slipGaji: slipGajiReducer,
   dashboard: dashboardReducer
 });

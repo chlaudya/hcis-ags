@@ -91,13 +91,13 @@ const FormFieldKaryawan = () => {
       ...values,
       lampiran_cv: fileCV,
       karyawan_id: id,
-      tanggal_surat_peringatan: moment(new Date()).format('YYYY-MM-DD')
+      tanggal_surat_peringatan: moment(values.tanggal_surat_peringatan).format('YYYY-MM-DD')
     };
 
     const reqBodyNoCv = {
       ...values,
       karyawan_id: id,
-      tanggal_surat_peringatan: moment(new Date()).format('YYYY-MM-DD')
+      tanggal_surat_peringatan: moment(values.tanggal_surat_peringatan).format('YYYY-MM-DD')
     };
 
     if (isValid) {
@@ -484,14 +484,24 @@ const FormFieldKaryawan = () => {
                   />
 
                   {id && (
-                    <FormField
-                      className="mt-2"
-                      id="DrpSP"
-                      name="surat_peringatan"
-                      label="Jumlah SP"
-                      tag="select"
-                      options={NUMBER_SP}
-                    />
+                    <>
+                      <FormField
+                        className="mt-2"
+                        id="DrpSP"
+                        name="surat_peringatan"
+                        label="SP Ke"
+                        tag="select"
+                        options={NUMBER_SP}
+                      />
+                      <FormField
+                        className="mb-2"
+                        id="TxtTanggalSP"
+                        name="tanggal_surat_peringatan"
+                        label="Tanggal SP"
+                        tag="input"
+                        type="date"
+                      />
+                    </>
                   )}
                 </Col>
               </Row>

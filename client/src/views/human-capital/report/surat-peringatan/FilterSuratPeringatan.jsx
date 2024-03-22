@@ -7,20 +7,18 @@ import { DownloadTableExcel } from 'react-export-table-to-excel';
 import DatePicker from 'react-datepicker';
 import { Label, Input } from 'reactstrap';
 import { SearchFilter, DropdownFilter } from 'src/ui-component/tableFilters';
-import { getStateMasterUnitBisnis, getStateReportTagihanGaji } from 'store/stateSelector';
+import { getStateMasterUnitBisnis, getStateReportSuratPeringatan } from 'store/stateSelector';
 import { getDropdownUnitBisnis } from 'store/actions/master-unit-bisnis';
 import {
-  getAllReportTagihanGaji,
-  getReportTagihanGaji
-} from 'store/actions/report-tagihan-gaji/reportTagihanGajiAction';
+  getAllReportSuratPeringatan,
+  getReportSuratPeringatan
+} from 'store/actions/report-surat-peringatan';
 import { formattedPeriod, renderDate } from 'utils/renderDate';
-import TableExcelTagihanGaji from './components/TableExcelTagihanGaji';
-import TableExcelRekapGaji from './components/TableExcelRekapGaji';
+import TableExcelTagihanGaji from './components/TableExcelSuratPeringatan';
 
-const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
+const FilterSuratPeringatan = ({ params, reportData, loadingData }) => {
   const dispatch = useDispatch();
-  const { reportAllTagihanGaji, loadingGetAll: loadingGetAllReportList } =
-    useSelector(getStateReportTagihanGaji);
+  const { reportAllSuratPeringatan, loadingGetAll } = useSelector(getStateReportSuratPeringatan);
   const { dropdownUnitBisnis } = useSelector(getStateMasterUnitBisnis);
   const [searchName, setSearchName] = useState('');
   const [searchPeriod, setSearchPeriod] = useState('');
@@ -29,7 +27,6 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
   const [searchParams, setSearchParams] = useState({ ...params });
   const [isFilteredTagihan, setIsFilteredTagihan] = useState(false);
   const tableRefTagihan = useRef(null);
-  const tableRefRekap = useRef(null);
 
   useEffect(() => {
     dispatch(getDropdownUnitBisnis());
@@ -70,7 +67,7 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
   };
 
   const onClickSearch = () => {
-    dispatch(getReportTagihanGaji(searchParams));
+    dispatch(getReportSuratPeringatan(searchParams));
     setIsFilteredTagihan(!isFilteredTagihan);
   };
 
@@ -79,7 +76,7 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
     setSearchPeriod('');
     setSearchUnitBisnis('');
     setSearchParams({ ...params });
-    dispatch(getReportTagihanGaji(params));
+    dispatch(getReportSuratPeringatan(params));
     setIsFilteredTagihan(!isFilteredTagihan);
   };
 
@@ -91,7 +88,7 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
 
   useEffect(() => {
     dispatch(
-      getAllReportTagihanGaji({
+      getAllReportSuratPeringatan({
         ...searchParams,
         page: 1,
         size: reportData?.total_record
@@ -146,7 +143,7 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
             color="primary"
             className="me-2"
             onClick={onClickSearch}
-            disabled={loadingData || loadingGetAllReportList}
+            disabled={loadingData || loadingGetAll}
           >
             <Search /> Search
           </Button>
@@ -155,34 +152,21 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
             color="primary"
             className="me-2 p-2-2"
             onClick={onClickReset}
-            disabled={loadingData || loadingGetAllReportList}
+            disabled={loadingData || loadingGetAll}
           >
             Reset
           </Button>
           <Button
             color="primary"
             className="me-2 p-2-2"
-            disabled={loadingData || loadingGetAllReportList}
+            disabled={loadingData || loadingGetAll || reportAllSuratPeringatan?.length === 0}
           >
             <DownloadTableExcel
-              filename={`tagihan-gaji_${dateToday}`}
-              sheet={`tagihan-gaji-${dateToday}`}
+              filename={`report-sp-${dateToday}`}
+              sheet={`report-sp-${dateToday}`}
               currentTableRef={tableRefTagihan.current}
             >
-              <Print /> Tagihan
-            </DownloadTableExcel>
-          </Button>
-          <Button
-            color="primary"
-            className="me-2 p-2-2"
-            disabled={loadingData || loadingGetAllReportList}
-          >
-            <DownloadTableExcel
-              filename={`rekap-gaji_${dateToday}`}
-              sheet={`rekap-gaji-${dateToday}`}
-              currentTableRef={tableRefRekap.current}
-            >
-              <Print /> Rekap Gaji
+              <Print /> Report Surat Peringatan
             </DownloadTableExcel>
           </Button>
         </Col>
@@ -191,17 +175,8 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
       <TableExcelTagihanGaji
         tableRef={tableRefTagihan}
         period={searchPeriod}
-        dataTotalTagihan={reportAllTagihanGaji}
-        dataTagihanGaji={reportAllTagihanGaji}
-        isFiltered={isFilteredTagihan}
-        unitBisnis={unitBisnis}
-      />
-
-      <TableExcelRekapGaji
-        tableRef={tableRefRekap}
-        period={searchPeriod}
-        dataTotalTagihan={reportAllTagihanGaji}
-        dataTagihanGaji={reportAllTagihanGaji}
+        dataTotalTagihan={reportAllSuratPeringatan}
+        dataTagihanGaji={reportAllSuratPeringatan}
         isFiltered={isFilteredTagihan}
         unitBisnis={unitBisnis}
       />
@@ -210,4 +185,4 @@ const FilterTagihanGaji = ({ params, reportData, loadingData }) => {
   );
 };
 
-export default FilterTagihanGaji;
+export default FilterSuratPeringatan;
