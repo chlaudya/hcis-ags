@@ -28,8 +28,7 @@ export const karyawanValidationSchema = Yup.object().shape({
   no_hp_keluarga: Yup.string().required('wajib diisi!'),
   rekening_atas_nama: Yup.string().required('wajib diisi!'),
   pendidikan_terakhir: Yup.array().min(1, 'wajib diisi!').required('wajib diisi!'),
-  surat_peringatan: Yup.string().required('wajib diisi!'),
-  tanggal_surat_peringatan: Yup.string().required('wajib diisi!')
+  surat_peringatan: Yup.string().required('wajib diisi!')
 });
 
 export const educationHistoryValidationSchema = Yup.object().shape({
